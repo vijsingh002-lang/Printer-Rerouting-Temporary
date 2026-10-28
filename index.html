@@ -254,7 +254,7 @@ a{color:inherit}
 <ul>
 <li><strong>FR-E1</strong> Only after server confirmation: close the dialog, show a toast "confirmed by the store server" naming the prep groups, the destination and any reprinted tickets, then show the banner, row labels and detail cards.</li>
 <li><strong>FR-E2</strong> Moved reroutes, reprinted tickets and the activation are each written to Reroute History.</li>
-<li><strong>FR-E3</strong> If the destination goes offline or faults, every surface for that reroute turns red and leads with Change Destination.</li>
+<li><strong>FR-E3</strong> If the destination goes offline or faults after activation, every surface for that reroute turns red and leads with Change Destination. The warning says when the destination went offline and that this happened after the reroute was activated. The event is logged as "Destination went offline", and as "Destination back online" when it recovers.</li>
 <li><strong>FR-E4</strong> When the original printer responds again, the blue recovery banner appears once and the event is logged as "Original printer responding".</li>
 <li><strong>FR-E5</strong> Change Destination reuses dialog C and authorization D.</li>
 </ul>
@@ -294,6 +294,14 @@ a{color:inherit}
 <tr>
 <td>Queued tickets reprinted</td>
 <td>Confirmed</td>
+</tr>
+<tr>
+<td>Destination went offline</td>
+<td>Not printing</td>
+</tr>
+<tr>
+<td>Destination back online</td>
+<td>Info</td>
 </tr>
 <tr>
 <td>Original printer responding</td>
@@ -348,13 +356,13 @@ a{color:inherit}
 <tr>
 <td>Not circular</td>
 <td>It is already rerouted to the original</td>
-<td>Cold Line Printer → Kitchen Printer A</td>
+<td>Rerouting Kitchen Printer B while Cold Line Printer → Kitchen Printer B is active: Cold Line Printer can't be the destination</td>
 <td>Already rerouted</td>
 </tr>
 <tr>
 <td>Not itself rerouted</td>
 <td>Its own tickets are rerouted elsewhere</td>
-<td>Any printer that is an active original</td>
+<td>Cold Line Printer while Cold Line → Kitchen Printer B is active</td>
 <td>Already rerouted</td>
 </tr>
 <tr>
@@ -367,6 +375,7 @@ a{color:inherit}
 </table>
 <p>All three assignment categories are allowed when they pass: same prep group (Kitchen Printer B), different prep group (Expo Printer) and no prep group (Spare Kitchen Printer).</p>
 <p>The original printer must have at least one prep group, and only one active reroute is allowed per original printer. A printer may receive tickets from several originals.</p>
+<p>Because these rules are checked when the reroute is activated, a reroute can only point at a printer that can't print if the destination fails <strong>after</strong> activation. That case is flagged on every surface (FR-E3).</p>
 <h2 id="printer-assignment-cases">Printer assignment cases</h2>
 <p>All three cases can be used for temporary rerouting. A reroute sends the original prep area's tickets to another printer without changing any prep area, menu category or printer assignment.</p>
 <div class="case-table">
@@ -491,7 +500,7 @@ a{color:inherit}
 </tr>
 <tr>
 <td>Outcome</td>
-<td>Confirmed / Failed / Rejected / Approved / Denied / Not confirmed / Info</td>
+<td>Confirmed / Failed / Rejected / Approved / Denied / Not confirmed / Not printing / Info</td>
 </tr>
 <tr>
 <td>User (requester)</td>
@@ -542,7 +551,7 @@ a{color:inherit}
 <li>[ ] Another reroute pointing at the original moves only when "Also move" is on.</li>
 <li>[ ] The original printer's IP, prep groups and menu item assignments are identical before and after a reroute.</li>
 <li>[ ] An active reroute is visible from the original row, the destination row, both detail dialogs and the banner, on every terminal, after restart.</li>
-<li>[ ] A reroute whose destination can't print is flagged red on every surface and offers Change Destination.</li>
+<li>[ ] A reroute whose destination fails after activation is flagged red on every surface, says when it failed, offers Change Destination, and is logged.</li>
 <li>[ ] When the original printer responds again, the user is prompted once to stop or keep the reroute.</li>
 <li>[ ] Stop Rerouting needs confirmation; stopping into a printer that still can't print leads with Change Destination Instead; a failed stop keeps the reroute marked unconfirmed.</li>
 <li>[ ] A concurrent change by another user is detected and never overwritten.</li>
@@ -1546,11 +1555,11 @@ class Component extends DCLogic {
     this.timers = [];
     this.state = {
       openPrinters: true, openServices: false, openHistory: false, panel: false, query: '', selectedId: 'a', verifying: {},
-      reroutes: [{ id: 'r1', from: 'cold', to: 'a', groups: ['Cold Line'], at: '10/26/2026, 6:42 PM', by: 'Priya Nair (Plum Support)', approvedBy: 'Meera Joshi (General manager)', unconfirmed: false }],
+      reroutes: [{ id: 'r1', from: 'cold', to: 'b', groups: ['Cold Line'], at: '10/26/2026, 6:42 PM', by: 'Priya Nair (Plum Support)', approvedBy: 'Meera Joshi (General manager)', unconfirmed: false }],
       dialog: null, mode: 'new', origId: null, step: 'select', dest: null, ack: false, checking: false, checkedAt: '',
-      activateAttempts: 0, conflictDone: false, pin: '', pinError: '', pinFails: 0, approver: '', stopId: null, stopStep: 'confirm', stopAttempts: 0, toast: null, verified: {}, moveChain: false, reprint: true, showUnavail: false, pinLocked: false, onlineOverride: {}, kept: {}, queued: { a: 3 },
+      activateAttempts: 0, conflictDone: false, pin: '', pinError: '', pinFails: 0, approver: '', stopId: null, stopStep: 'confirm', stopAttempts: 0, toast: null, verified: {}, moveChain: false, reprint: true, showUnavail: false, pinLocked: false, onlineOverride: {}, kept: {}, queued: { a: 3 }, wentDown: {},
       audit: [
-        { when: '10/26/2026, 6:42 PM', event: 'Reroute activated', outcome: 'Confirmed', k: OK, user: 'Priya Nair (Plum Support)', from: 'Cold Line Printer', to: 'Kitchen Printer A', groups: 'Cold Line', note: 'Paper-feed fault on Cold Line Printer.' },
+        { when: '10/26/2026, 6:42 PM', event: 'Reroute activated', outcome: 'Confirmed', k: OK, user: 'Priya Nair (Plum Support)', from: 'Cold Line Printer', to: 'Kitchen Printer B', groups: 'Cold Line', note: 'Paper-feed fault on Cold Line Printer.' },
         { when: '10/12/2026, 9:20 PM', event: 'Reroute stopped', outcome: 'Confirmed', k: OK, user: 'Goutam K. (Store manager)', from: 'Kitchen Printer A', to: 'Expo Printer', groups: 'Hot Line, Grill', note: 'Original routing restored.' },
         { when: '10/12/2026, 9:18 PM', event: 'Stop attempt', outcome: 'Not confirmed', k: FAIL, user: 'Goutam K. (Store manager)', from: 'Kitchen Printer A', to: 'Expo Printer', groups: 'Hot Line, Grill', note: 'Server timeout. Reroute stayed active.' },
         { when: '10/12/2026, 7:31 PM', event: 'Destination changed', outcome: 'Confirmed', k: OK, user: 'Goutam K. (Store manager)', from: 'Kitchen Printer A', to: 'Expo Printer', groups: 'Hot Line, Grill', note: 'Previous destination: Kitchen Printer B.' },
@@ -1559,7 +1568,19 @@ class Component extends DCLogic {
     };
   }
   componentWillUnmount() { this.timers.forEach(clearTimeout); }
-  on(p) { var o = this.state.onlineOverride[p.id]; return o === undefined ? p.online : o; }
+  destOff(props) { return ((props || this.props).destinationOffline || 'No').indexOf('Yes') === 0; }
+  componentDidUpdate(prev) {
+    var was = this.destOff(prev), now = this.destOff();
+    if (was === now) return;
+    var b = P('b'), t = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    var into = this.state.reroutes.filter(r => r.to === 'b');
+    this.setState(s => { var w = Object.assign({}, s.wentDown); if (now) w.b = t; else delete w.b; return { wentDown: w }; });
+    into.forEach(r => this.log(now
+      ? { event: 'Destination went offline', outcome: 'Not printing', k: FAIL, user: 'System', from: P(r.from).name, to: b.name, groups: r.groups.join(', '), note: b.name + ' stopped responding at ' + t + ', after this reroute was activated. ' + r.groups.join(', ') + ' tickets aren’t printing.' }
+      : { event: 'Destination back online', outcome: 'Info', k: INFO, user: 'System', from: P(r.from).name, to: b.name, groups: r.groups.join(', '), note: b.name + ' is responding again.' }));
+  }
+  wentNote(t, r) { var w = this.state.wentDown[t.id]; return w ? ' It went offline at ' + w + ', after this reroute was activated' + (r && r.at ? ' (' + r.at + ')' : '') + '.' : ''; }
+  on(p) { if (p.id === 'b' && this.destOff()) return false; var o = this.state.onlineOverride[p.id]; return o === undefined ? p.online : o; }
   down(p) { return !this.on(p) || !!p.fault; }
   after(ms, fn) { this.timers.push(setTimeout(fn, ms)); }
   me() { return USERS[this.props.role] || USERS['Store manager']; }
@@ -1704,7 +1725,7 @@ class Component extends DCLogic {
     var offlineText = sp.name + (this.on(sp) && sp.fault ? ' reports a ' + sp.fault.toLowerCase() + '. ' : ' isn’t responding. ');
     offlineText += outgoing ? 'Its tickets are temporarily rerouted to ' + P(outgoing.to).name + '.' : (sp.groups.length ? joinGroups(sp.groups) + ' tickets can’t print. Reroute printing to keep tickets moving.' : '');
     if (incomingSel.length) offlineText += ' Tickets rerouted here from ' + incomingSel.map(r => P(r.from).name).join(', ') + ' also can’t print.';
-    var sel = Object.assign({}, sst, { name: sp.name, ip: sp.ip, model: sp.model, items: sp.items, seen: (this.on(sp) && !sp['online']) ? 'responding again' : (sp.fault ? sp.fault.toLowerCase() : sp.seen), offline: this.down(sp), offlineText: offlineText, groupsText: sp.groups.length ? sp.groups.join(', ') : 'Not assigned' });
+    var sel = Object.assign({}, sst, { name: sp.name, ip: sp.ip, model: sp.model, items: sp.items, seen: (!this.on(sp) && sp['online']) ? 'since ' + (s.wentDown[sp.id] || 'just now') : ((this.on(sp) && !sp['online']) ? 'responding again' : (sp.fault ? sp.fault.toLowerCase() : sp.seen)), offline: this.down(sp), offlineText: offlineText, groupsText: sp.groups.length ? sp.groups.join(', ') : 'Not assigned' });
     var disabledReason = readOnly ? 'You don’t have permission to reroute printers. Ask a store manager or Plum Support.' : (!outgoing && sp.groups.length === 0 ? 'Not assigned to any prep group, so there’s nothing to reroute.' : '');
     var rerouteDisabled = readOnly || sp.groups.length === 0;
 
@@ -1719,7 +1740,7 @@ class Component extends DCLogic {
         fromStatus: this.statusOf(f, false).statusLabel, fromStatusFg: this.statusOf(f, false).statusFg,
         toStatus: this.statusOf(t, false).statusLabel, toStatusFg: this.statusOf(t, false).statusFg,
         groups: r.groups.join(', '), at: r.at, by: r.by, approvedBy: r.approvedBy || 'Not recorded', unconfirmed: r.unconfirmed,
-        alertText: r.unconfirmed ? 'The last stop request wasn’t confirmed. Rerouting may still be active.' : (tDown ? t.name + (this.on(t) ? ' reports a ' + t.fault.toLowerCase() : ' isn’t responding') + ', so ' + joinGroups(r.groups) + ' tickets aren’t printing. Change the destination to get them moving.' : ''),
+        alertText: r.unconfirmed ? 'The last stop request wasn’t confirmed. Rerouting may still be active.' : (tDown ? t.name + (this.on(t) ? ' reports a ' + t.fault.toLowerCase() : ' isn’t responding') + ', so ' + joinGroups(r.groups) + ' tickets aren’t printing.' + this.wentNote(t, r) + ' Change the destination to get them moving.' : ''),
         canChange: isOut, otherName: isOut ? t.name : f.name,
         stop: () => this.openStop(r.id), change: () => this.openDialog('change', sp.id),
         jump: () => this.setState({ selectedId: isOut ? t.id : f.id })
@@ -1737,7 +1758,7 @@ class Component extends DCLogic {
         showChange: tDown, showKeep: !!recovered, rank: (r.unconfirmed || tDown) ? 0 : (recovered ? 1 : 2)
       };
       if (r.unconfirmed) return Object.assign(base, { title: 'Reroute status unconfirmed: ' + f.name + ' → ' + t.name, text: 'The last stop request wasn’t confirmed. Rerouting may still be active.', fg: '#FFB4AC', bg: '#4A2422', border: '#C2564C' });
-      if (tDown) return Object.assign(base, { title: 'Tickets not printing: ' + f.name + ' → ' + t.name, text: joinGroups(r.groups) + ' tickets are rerouted to ' + t.name + ', which ' + (this.on(t) ? 'reports a ' + t.fault.toLowerCase() : 'isn’t responding') + '. Change the destination to get them printing.', fg: '#FFB4AC', bg: '#4A2422', border: '#C2564C' });
+      if (tDown) return Object.assign(base, { title: 'Tickets not printing: ' + f.name + ' → ' + t.name, text: joinGroups(r.groups) + ' tickets are rerouted to ' + t.name + ', which ' + (this.on(t) ? 'reports a ' + t.fault.toLowerCase() : 'isn’t responding') + '.' + this.wentNote(t) + ' Change the destination to get them printing.', fg: '#FFB4AC', bg: '#4A2422', border: '#C2564C' });
       if (recovered) return Object.assign(base, { title: f.name + ' is responding again', text: joinGroups(r.groups) + ' tickets still print on ' + t.name + '. Stop rerouting to restore the original routing, or keep the reroute for now.', fg: '#CFE6F8', bg: '#213A4F', border: '#3F6E93' });
       return Object.assign(base, { title: 'Temporary Reroute Active: ' + f.name + ' → ' + t.name, text: r.groups.join(', ') + ' tickets print on ' + t.name + '. Activated ' + r.at + ' by ' + r.by + '. Until manually reverted.', fg: '#FFC27A', bg: '#4A3418', border: '#B8792E' });
     }).sort((a, b) => a.rank - b.rank);
@@ -1885,7 +1906,7 @@ class Component extends DCLogic {
   }
 }
 
-DC.define("prototype", document.getElementById("tpl-prototype").textContent, Component, {"role": {"editor": "enum", "options": ["Store manager", "Plum support agent", "Read-only staff"], "default": "Store manager", "section": "Prototype"}, "activationOutcome": {"editor": "enum", "options": ["Confirmed", "System error, then confirmed on retry", "Concurrent update by another user"], "default": "Confirmed", "section": "Prototype"}, "managerAuth": {"editor": "enum", "options": ["Approves", "Wrong PIN first, then approves", "Wrong PIN 3 times (locks PIN entry)"], "default": "Approves", "section": "Prototype"}, "originalRecovers": {"editor": "enum", "options": ["Yes, 9 s after a new reroute", "No"], "default": "Yes, 9 s after a new reroute", "section": "Prototype"}, "reversalOutcome": {"editor": "enum", "options": ["Confirmed", "Fails first, confirmed on retry"], "default": "Fails first, confirmed on retry", "section": "Prototype"}, "$preview": {"width": 1280, "height": 800}}, {w:1280,h:800});
+DC.define("prototype", document.getElementById("tpl-prototype").textContent, Component, {"role": {"editor": "enum", "options": ["Store manager", "Plum support agent", "Read-only staff"], "default": "Store manager", "section": "Prototype"}, "activationOutcome": {"editor": "enum", "options": ["Confirmed", "System error, then confirmed on retry", "Concurrent update by another user"], "default": "Confirmed", "section": "Prototype"}, "managerAuth": {"editor": "enum", "options": ["Approves", "Wrong PIN first, then approves", "Wrong PIN 3 times (locks PIN entry)"], "default": "Approves", "section": "Prototype"}, "destinationOffline": {"editor": "enum", "options": ["No", "Yes: Kitchen Printer B goes offline"], "default": "No", "section": "Prototype"}, "originalRecovers": {"editor": "enum", "options": ["Yes, 9 s after a new reroute", "No"], "default": "Yes, 9 s after a new reroute", "section": "Prototype"}, "reversalOutcome": {"editor": "enum", "options": ["Confirmed", "Fails first, confirmed on retry"], "default": "Fails first, confirmed on retry", "section": "Prototype"}, "$preview": {"width": 1280, "height": 800}}, {w:1280,h:800});
 })();</script><script type="text/x-template" id="tpl-states">
 
 
@@ -1978,10 +1999,10 @@ DC.define("prototype", document.getElementById("tpl-prototype").textContent, Com
       <h2 style="margin: 0; background: #4A4F57; padding: 12px 16px; font-size: 17px; font-weight: 500">Destination not printing <span style="font-size: 13px; font-weight: 600; color: #1D1A24; background: #E8A6E8; border-radius: 10px; padding: 1px 8px; margin-left: 6px; vertical-align: 2px">New</span></h2>
       <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 12px">
         <div role="alert" style="background: #4A2422; border: 1px solid #C2564C; border-radius: 6px; padding: 12px 14px; color: #FFD2CC; font-size: 14px">
-          <div style="font-weight: 700; color: #FFB4AC; font-size: 15px">Tickets not printing: Cold Line Printer → Kitchen Printer A</div>
-          Cold Line tickets are rerouted to Kitchen Printer A, which isn’t responding. Change the destination to get them printing.
+          <div style="font-weight: 700; color: #FFB4AC; font-size: 15px">Tickets not printing: Cold Line Printer → Kitchen Printer B</div>
+          Cold Line tickets are rerouted to Kitchen Printer B, which isn’t responding. It went offline at 12:31 AM, after this reroute was activated. Change the destination to get them printing.
         </div>
-        <div style="display: flex; gap: 28px"><div><div style="color: #FFB4AC; font-weight: 600">To Kitchen Printer A</div><div style="color: #FFB4AC; font-size: 14px">Destination not printing</div></div></div>
+        <div style="display: flex; gap: 28px"><div><div style="color: #FFB4AC; font-weight: 600">To Kitchen Printer B</div><div style="color: #FFB4AC; font-size: 14px">Destination not printing</div></div></div>
         <div style="display: flex; justify-content: flex-end; gap: 10px">
           <button type="button" style="height: 44px; padding: 0 16px; white-space: nowrap; border: 2px solid #FF8A80; border-radius: 24px; background: transparent; color: #FFB4AC; font-size: 16px; font-weight: 600">Stop Rerouting</button>
           <button type="button" style="height: 44px; padding: 0 16px; white-space: nowrap; border: 0; border-radius: 24px; background: #8E3FB4; color: #FFFFFF; font-size: 16px; font-weight: 600">Change Destination</button>
@@ -2048,7 +2069,7 @@ DC.define("states", document.getElementById("tpl-states").textContent, Component
         <div><div style="color: #FFC27A; font-weight: 600">To Kitchen Printer B</div><div style="color: #FFC27A; font-size: 14px">Reroute Active</div></div>
         <div><div style="color: #F0C4F0; font-weight: 600">From Kitchen Printer A</div><div style="color: #E8A6E8; font-size: 14px">Receiving reroute</div></div>
         <div><div style="color: #FFB4AC; font-weight: 600">Status unconfirmed</div><div style="color: #FFB4AC; font-size: 14px">Reroute to Kitchen Printer B</div></div>
-        <div><div style="color: #FFB4AC; font-weight: 600">To Kitchen Printer A</div><div style="color: #FFB4AC; font-size: 14px">Destination not printing</div></div>
+        <div><div style="color: #FFB4AC; font-weight: 600">To Kitchen Printer B</div><div style="color: #FFB4AC; font-size: 14px">Destination not printing</div></div>
       </div>
     </section>
 
@@ -2098,7 +2119,7 @@ DC.define("states", document.getElementById("tpl-states").textContent, Component
     <section style="display: flex; flex-direction: column; gap: 10px">
       <h2 style="margin: 0; color: #E8A6E8; font-size: 19px; font-weight: 500">Banner and alerts</h2>
       <div style="background: #4A3418; border: 1px solid #B8792E; border-radius: 6px; padding: 10px 14px"><div style="font-weight: 700; color: #FFC27A">Temporary Reroute Active: Kitchen Printer A → Kitchen Printer B</div><div style="color: #E6E8EB; font-size: 14px">Hot Line, Grill tickets print on Kitchen Printer B. Until manually reverted.</div></div>
-      <div style="background: #4A2422; border: 1px solid #C2564C; border-radius: 6px; padding: 10px 14px"><div style="font-weight: 700; color: #FFB4AC">Tickets not printing: Cold Line Printer → Kitchen Printer A</div><div style="color: #E6E8EB; font-size: 14px">Escalated banner. Sorted above every other banner, with Change Destination.</div></div>
+      <div style="background: #4A2422; border: 1px solid #C2564C; border-radius: 6px; padding: 10px 14px"><div style="font-weight: 700; color: #FFB4AC">Tickets not printing: Cold Line Printer → Kitchen Printer B</div><div style="color: #E6E8EB; font-size: 14px">Escalated banner. Sorted above every other banner, with Change Destination.</div></div>
       <div style="background: #213A4F; border: 1px solid #3F6E93; border-radius: 6px; padding: 9px 12px; color: #CFE6F8; font-size: 14px">Info: context and recovery prompts, never blocking.</div>
       <div style="background: #3E3346; border: 1px solid #8E5FA0; border-radius: 6px; padding: 9px 12px; color: #F1DDF4; font-size: 14px">Pending: waiting for the store server. No success shown yet.</div>
       <div style="background: #4A2422; border: 1px solid #C2564C; border-radius: 6px; padding: 9px 12px; color: #FFD2CC; font-size: 14px">Error: what failed, current state, what to do next.</div>
@@ -2124,7 +2145,7 @@ DC.define("components", document.getElementById("tpl-components").textContent, C
     <p style="margin: 4px 0 0; color: #D5D9DE; max-width: 860px">Changes from the design review, built into the Prototype, System states and Components tabs. Blue lines say where to try each one.</p>
   </div>
   <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px">
-<section style="display: flex; flex-direction: column"><h2 style="margin: 0 0 8px; color: #E8A6E8; font-size: 19px; font-weight: 500">Keeping tickets printing</h2><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">A dead-end reroute is flagged everywhere</div><div style="color: #E6E8EB; font-size: 14px">If a reroute’s destination is offline or faulted, the banner, the printer row, the section badge and the details card turn red, and the banner leads with Change Destination.</div><div style="color: #7AD4F2; font-size: 14px">Open the prototype: Cold Line → Kitchen Printer A is flagged.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Chained reroutes move together</div><div style="color: #E6E8EB; font-size: 14px">Rerouting a printer that is receiving another reroute offers to move that reroute too. It’s on by default when the printer is down.</div><div style="color: #7AD4F2; font-size: 14px">Reroute Kitchen Printer A and look at the review step.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Queued tickets are explicit</div><div style="color: #E6E8EB; font-size: 14px">Review says the reroute applies to new tickets and offers to reprint the 3 tickets already waiting on Kitchen Printer A.</div><div style="color: #7AD4F2; font-size: 14px">Same flow, review step.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Prompt when the original printer recovers</div><div style="color: #E6E8EB; font-size: 14px">When the original printer responds again, a blue banner offers Stop Rerouting or Keep Reroute, and History records it.</div><div style="color: #7AD4F2; font-size: 14px">Reroute Kitchen Printer A, then wait about 10 seconds.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Fault status</div><div style="color: #E6E8EB; font-size: 14px">A printer that responds but can’t print (paper-feed fault) shows Fault in red and can’t be picked as a destination.</div><div style="color: #7AD4F2; font-size: 14px">Cold Line Printer row.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Stopping into a dead printer</div><div style="color: #E6E8EB; font-size: 14px">When the original printer is still down, the stop dialog leads with Change Destination Instead; Stop Anyway is secondary.</div><div style="color: #7AD4F2; font-size: 14px">Stop Rerouting on the Cold Line banner.</div></div></section>
+<section style="display: flex; flex-direction: column"><h2 style="margin: 0 0 8px; color: #E8A6E8; font-size: 19px; font-weight: 500">Keeping tickets printing</h2><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">A dead-end reroute is flagged everywhere</div><div style="color: #E6E8EB; font-size: 14px">If a reroute’s destination is offline or faulted, the banner, the printer row, the section badge and the details card turn red, and the banner leads with Change Destination.</div><div style="color: #7AD4F2; font-size: 14px">Prototype controls › Destination Offline: Cold Line → Kitchen Printer B turns red.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Chained reroutes move together</div><div style="color: #E6E8EB; font-size: 14px">Rerouting a printer that is receiving another reroute offers to move that reroute too. It’s on by default when the printer is down.</div><div style="color: #7AD4F2; font-size: 14px">Reroute Kitchen Printer B and look at the review step.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Queued tickets are explicit</div><div style="color: #E6E8EB; font-size: 14px">Review says the reroute applies to new tickets and offers to reprint the 3 tickets already waiting on Kitchen Printer A.</div><div style="color: #7AD4F2; font-size: 14px">Same flow, review step.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Prompt when the original printer recovers</div><div style="color: #E6E8EB; font-size: 14px">When the original printer responds again, a blue banner offers Stop Rerouting or Keep Reroute, and History records it.</div><div style="color: #7AD4F2; font-size: 14px">Reroute Kitchen Printer A, then wait about 10 seconds.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Fault status</div><div style="color: #E6E8EB; font-size: 14px">A printer that responds but can’t print (paper-feed fault) shows Fault in red and can’t be picked as a destination.</div><div style="color: #7AD4F2; font-size: 14px">Cold Line Printer row.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Stopping into a dead printer</div><div style="color: #E6E8EB; font-size: 14px">When the original printer is still down, the stop dialog leads with Change Destination Instead; Stop Anyway is secondary.</div><div style="color: #7AD4F2; font-size: 14px">Stop Rerouting on the Cold Line banner.</div></div></section>
 <section style="display: flex; flex-direction: column"><h2 style="margin: 0 0 8px; color: #E8A6E8; font-size: 19px; font-weight: 500">Flow</h2><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Less friction to activate</div><div style="color: #E6E8EB; font-size: 14px">The acknowledgment checkbox is gone. The review screen and manager approval already cover it.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Buttons say what happens next</div><div style="color: #E6E8EB; font-size: 14px">“Confirm Reroute” is now “Continue to Manager Approval”. Step 3 is “Approve and activate”.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Approval matches the role</div><div style="color: #E6E8EB; font-size: 14px">A store manager confirms with their own PIN. Remote Plum Support is told an on-site manager must approve.</div><div style="color: #7AD4F2; font-size: 14px">Prototype controls › Role.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">PIN lockout</div><div style="color: #E6E8EB; font-size: 14px">Three wrong PINs lock PIN entry for 5 minutes; fingerprint and manager card stay available.</div><div style="color: #7AD4F2; font-size: 14px">Prototype controls › Manager Auth.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Unavailable printers can be checked</div><div style="color: #E6E8EB; font-size: 14px">Ineligible destinations sit in a collapsed list with a reason for each, instead of a single “4 others are hidden” line.</div><div style="color: #7AD4F2; font-size: 14px">Reroute dialog, below the options.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Leaving a conflict reloads routing</div><div style="color: #E6E8EB; font-size: 14px">Cancel on “Routing changed while you were reviewing” loads the latest routing too, so the screen is never stale.</div><div style="color: #7AD4F2; font-size: 14px">Prototype controls › Activation Outcome.</div></div></section>
 <section style="display: flex; flex-direction: column"><h2 style="margin: 0 0 8px; color: #E8A6E8; font-size: 19px; font-weight: 500">Visual consistency</h2><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">One stop action</div><div style="color: #E6E8EB; font-size: 14px">“Stop Rerouting”, outlined red, everywhere. Filled red stays only on the final confirm.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Red means trouble only</div><div style="color: #E6E8EB; font-size: 14px">Ineligible destinations use neutral gray badges (“Already rerouted”, “Unavailable”).</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Verify is secondary and reports back</div><div style="color: #E6E8EB; font-size: 14px">Verify is outlined and writes its result under the status, for example “4 ms reply” or “No response”.</div><div style="color: #7AD4F2; font-size: 14px">Tap Verify on any row.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Printer names look tappable</div><div style="color: #E6E8EB; font-size: 14px">A chevron after each name shows it opens the details panel on touch screens.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Approval screen legibility</div><div style="color: #E6E8EB; font-size: 14px">Back has enough contrast; fingerprint and manager card have text labels.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">System states</div><div style="color: #E6E8EB; font-size: 14px">Wording aligned (Checking, Check again, the server named plainly) and three new states added.</div><div style="color: #7AD4F2; font-size: 14px">System states tab.</div></div></section>
   </div>
