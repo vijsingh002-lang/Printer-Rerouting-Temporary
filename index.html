@@ -18,6 +18,14 @@ button:focus-visible,input:focus-visible{outline:2px solid #7AD4F2;outline-offse
 @media (prefers-reduced-motion:reduce){.spin,.pulse{animation:none}}
 .namebtn:hover{text-decoration:underline}
 input::placeholder{color:#AEB4BB}
+.story-hl{outline:3px solid #FFC94D!important;outline-offset:3px;animation:storyGlow 1.6s ease-in-out infinite;position:relative;z-index:2}
+@keyframes storyGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,201,77,.6)}50%{box-shadow:0 0 0 12px rgba(255,201,77,0)}}
+@media (prefers-reduced-motion:reduce){.story-hl{animation:none}}
+.pos-btn{border:0;border-top:3px solid #2E8C8C;border-radius:3px;background:#262A2E;color:#FFFFFF;font-size:16px;line-height:1.25}
+.pos-btn:disabled{color:#7C8288}
+.fn-btn{height:58px;border:0;border-radius:4px;background:#2B2E31;color:#FFFFFF;font-size:14px;line-height:1.3;box-shadow:0 1px 2px rgba(0,0,0,.35)}
+.fn-btn:disabled{background:#6E747B;color:#B7BCC2}
+.cat-btn{height:48px;border:0;border-radius:3px;background:#4A3048;color:#ECE4EC;font-size:14px;line-height:1.2}
 
 
 a{color:#7AD4F2}a:hover{color:#B5E8F9}
@@ -103,6 +111,34 @@ a{color:inherit}
 .case-note h3{color:#1F3F6E}
 .doc-toc a.toc-key{background:#FFF4E6;color:#7A3300;font-weight:700;border-left:4px solid #E07B12}
 .doc-toc a.toc-key:hover{background:#FFEBD2;color:#7A3300}
+/* story */
+.proto-wrap{display:flex;align-items:flex-start;justify-content:center;gap:4px;padding:12px 0 0 16px}
+.proto-mount{flex:0 1 auto;min-width:0}
+.proto-mount .proto-stage{padding-top:0}
+.story{flex:0 0 330px;position:sticky;top:68px;max-height:calc(100vh - 140px);overflow-y:auto;background:#2C2E31;border:1px solid #4A4F57;border-radius:12px;padding:16px;color:#FFFFFF}
+.story.collapsed{flex-basis:auto;padding:8px}
+.story.collapsed .story-body{display:none}
+.story h2{margin:0;font-size:18px;font-weight:600;color:#E8A6E8}
+.story .lead{margin:4px 0 12px;color:#D5D9DE;font-size:14px;line-height:1.4}
+.story-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.story-mini{border:1px solid #6A7078;background:transparent;color:#E6E8EB;border-radius:16px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}
+.story-mini:hover{background:#3A3B3D}
+.persona{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.persona button{flex:1 1 auto;border:1px solid #6A7078;background:#3A3B3D;color:#E6E8EB;border-radius:18px;padding:7px 10px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.persona button[aria-pressed=true]{background:#8E3FB4;border-color:#8E3FB4;color:#FFFFFF}
+.story ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.story li{display:grid;grid-template-columns:26px 1fr;gap:10px;padding:7px 8px;border-radius:8px}
+.story li .num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:#4A4F57;color:#D5D9DE}
+.story li.done .num{background:#3FA36B;color:#FFFFFF}
+.story li.done .t{color:#B9BEC4}
+.story li.current{background:#3A3B3D;border:1px solid #8E3FB4}
+.story li.current .num{background:#8E3FB4;color:#FFFFFF}
+.story li .t{font-weight:600;font-size:15px}
+.story li .d{margin-top:4px;font-size:14px;color:#E6E8EB;line-height:1.45}
+.story li .a{margin-top:8px;font-size:14px;font-weight:600;color:#1D1A24;background:#FFC94D;border-radius:6px;padding:6px 10px}
+.story .done-box{margin-top:12px;background:#1F3D2B;border:1px solid #3FA36B;border-radius:8px;padding:10px 12px;color:#CFF5DD;font-size:14px}
+.story-foot{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+@media (max-width:1100px){.proto-wrap{flex-direction:column;align-items:stretch;padding-right:16px}.story{position:static;max-height:none;flex-basis:auto}}
 /* design */
 .design-tabs{display:flex;gap:6px;justify-content:center;padding:10px 16px 0}
 .design-tabs a{text-decoration:none;color:#E6E8EB;padding:7px 16px;border-radius:18px;font-size:15px;border:1px solid #4A4F57}
@@ -175,7 +211,13 @@ a{color:inherit}
 <td>No; a manager approves</td>
 </tr>
 <tr>
-<td>Read-only staff (server, cashier)</td>
+<td>Cashier</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No; the manager on duty approves on the terminal</td>
+</tr>
+<tr>
+<td>Read-only staff (server)</td>
 <td>Yes</td>
 <td>No</td>
 <td>No</td>
@@ -193,7 +235,29 @@ a{color:inherit}
 </ul>
 <p><strong>Out of scope:</strong> changing printer IP or prep group setup, splitting prep groups across several destinations, scheduled or time-limited reroutes, and automatic chaining of reroutes (A → B → C). Another reroute pointing at the original printer moves only when the user chooses to move it.</p>
 <h2 id="screens-and-functional-requirements">Screens and functional requirements</h2>
-<p>Seven screens, all in the existing Terminal Devices visual style (dark modal, value over cyan label, pill buttons).</p>
+<p>The feature is reached from the existing POS screens and then uses the Terminal Devices visual style (dark modal, value over cyan label, pill buttons).</p>
+<h3 id="entry-path-quick-sale-functions-support-devices">Entry path: Quick Sale → Functions → Support → Devices</h3>
+<ul>
+<li><strong>FR-P1</strong> On <strong>Quick Sale</strong>, tap <strong>Functions</strong> in the action bar. The Functions menu opens.</li>
+<li><strong>FR-P2</strong> In Functions, tap <strong>Support</strong>. The Support menu opens (Devices, Status, Servers, Refresh Config, Export Log To Server, Export DB To Server, Credit Card Batch Close, Test Swipe Card).</li>
+<li><strong>FR-P3</strong> In Support, tap <strong>Devices</strong>. <strong>Terminal Devices</strong> opens. Its Close button returns to Quick Sale.</li>
+<li><strong>FR-P4</strong> The Quick Sale status bar shows the printer state, so staff notice without opening Terminal Devices:<ul>
+<li>red: the printer connection error, for example "Kitchen Printer A (3): failed to connect to /192.168.20.187 (port 9100)";</li>
+<li>orange: "Kitchen Printer A offline. Hot Line and Grill tickets rerouted to Kitchen Printer B.";</li>
+<li>blue: "Kitchen Printer A is responding again. Tickets still print on Kitchen Printer B.";</li>
+<li>red: a reroute whose destination isn't printing, pointing to Functions › Support › Devices.</li>
+</ul>
+</li>
+</ul>
+<h3 id="story-rerouting-an-offline-printer">Story: rerouting an offline printer</h3>
+<ol>
+<li>During service, Kitchen Printer A (Hot Line, Grill) stops responding and the Quick Sale status bar shows the error.</li>
+<li>The store manager or a cashier opens Functions › Support › Devices.</li>
+<li>In Terminal Devices, Kitchen Printer A shows Offline. They tap <strong>Reroute</strong>, choose Kitchen Printer B, review the scope and the 3 queued tickets, and tap <strong>Continue to Manager Approval</strong>.</li>
+<li>Manager Authorization: a store manager uses their own PIN; a cashier calls the manager on duty. PIN, fingerprint or manager card.</li>
+<li>The store server confirms. Hot Line and Grill tickets print on Kitchen Printer B, and the status bar shows the reroute.</li>
+<li>When Kitchen Printer A responds again, a blue banner asks to stop or keep the reroute. They tap <strong>Stop Rerouting</strong>, confirm, and the original routing is restored. Reroute History records every step.</li>
+</ol>
 <h3 id="a-terminal-devices">A. Terminal Devices</h3>
 <ul>
 <li><strong>FR-A1</strong> Kitchen Printer(s) lists every configured printer with name, type, IP address, status, prep group and reroute status. Status is one of Online, Offline, Fault (responds but can't print, for example a paper-feed fault) or Checking.</li>
@@ -561,7 +625,26 @@ a{color:inherit}
 
 <div id="view-design" hidden>
   <nav class="design-tabs" aria-label="Design screens"><a href="#design/prototype" data-sub="prototype">Prototype</a><a href="#design/states" data-sub="states">System states</a><a href="#design/components" data-sub="components">Components</a><a href="#design/changes" data-sub="changes">What changed</a><a class="to-doc" href="#doc">Read the functional document</a></nav>
-  <div class="design-host" id="host-prototype" hidden></div><div class="design-host" id="host-states" hidden></div><div class="design-host" id="host-components" hidden></div><div class="design-host" id="host-changes" hidden></div>
+  <div class="design-host proto-wrap" id="host-prototype" hidden>
+  <aside class="story" id="story" aria-label="Story guide">
+    <div class="story-top"><h2>Story</h2><button type="button" class="story-mini" id="story-collapse" aria-expanded="true">Hide story</button></div>
+    <div class="story-body">
+      <p class="lead">Kitchen Printer A goes offline during service. Follow one person through rerouting its tickets and restoring them later. Highlighted buttons show where to tap.</p>
+      <div class="persona" role="group" aria-label="Who is rerouting">
+        <button type="button" data-role="Store manager">Store manager</button>
+        <button type="button" data-role="Cashier">Cashier</button>
+      </div>
+      <p class="lead" id="story-who"></p>
+      <ol id="story-steps"></ol>
+      <div class="done-box" id="story-done" hidden>Story complete. Kitchen Printer A prints its own tickets again, and Reroute History in Terminal Devices records every step. Pick another persona to replay.</div>
+      <div class="story-foot">
+        <button type="button" class="story-mini" id="story-restart">Restart story</button>
+        <button type="button" class="story-mini" id="story-guide" aria-pressed="true">Highlights on</button>
+      </div>
+    </div>
+  </aside>
+  <div class="proto-mount" id="mount-prototype"></div>
+</div><div class="design-host" id="host-states" hidden></div><div class="design-host" id="host-components" hidden></div><div class="design-host" id="host-changes" hidden></div>
 </div>
 
 <script>/**
@@ -961,7 +1044,10 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
     return h.apply(null, [tag, props].concat(renderNodes(node.childNodes, scopes)));
   }
 
-  var DC = { components: {} };
+  var DC = { components: {}, apps: {} };
+  // Updates props of a mounted screen from outside (used by the story panel).
+  DC.setProps = function (name, patch) { var app = DC.apps[name]; if (app) app.setState(function (st) { return { props: Object.assign({}, st.props, patch) }; }); };
+  DC.getProps = function (name) { var app = DC.apps[name]; return app ? app.state.props : null; };
   DC.parse = function (src) {
     var doc = new DOMParser().parseFromString('<dc-root>' + src + '</dc-root>', 'application/xml');
     var err = doc.getElementsByTagName('parsererror')[0];
@@ -982,21 +1068,22 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
 
   // Mounts a registered screen into el, scaled to fit, with prototype controls for enum props.
   DC.mount = function (name, el, opts) {
-    var def = DC.components[name], size = def.size, reserve = (opts && opts.reserveHeight) || 72;
+    var def = DC.components[name], size = def.size, reserve = (opts && opts.reserveHeight) || 72, reserveW = (opts && opts.reserveWidth) || 0;
     var defaults = {}, controls = [];
     Object.keys(def.schema).forEach(function (k) {
       if (k.charAt(0) === '$') return;
       var s = def.schema[k];
       defaults[k] = s.default;
-      if (s.editor === 'enum') controls.push({ key: k, options: s.options });
+      if (s.editor === 'enum' && s.section !== 'Story') controls.push({ key: k, options: s.options });
     });
     function label(k) { return k.replace(/([A-Z])/g, ' $1').replace(/^./, function (c) { return c.toUpperCase(); }); }
     class App extends React.Component {
       constructor(p) { super(p); this.state = { props: defaults, scale: 1, open: false }; this.onResize = this.onResize.bind(this); }
-      componentDidMount() { window.addEventListener('resize', this.onResize); this.onResize(); }
+      componentDidMount() { DC.apps[name] = this; window.addEventListener('resize', this.onResize); this.onResize(); }
       componentWillUnmount() { window.removeEventListener('resize', this.onResize); }
       onResize() {
-        var availW = window.innerWidth - 32, availH = window.innerHeight - reserve;
+        var rw = typeof reserveW === 'function' ? reserveW() : reserveW;
+        var availW = window.innerWidth - 32 - rw, availH = window.innerHeight - reserve;
         this.setState({ scale: Math.max(0.3, Math.min(1, availW / size.w, availH / size.h)) });
       }
       render() {
@@ -1024,14 +1111,112 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
 
 
 
-<div style="width: 1280px; height: 800px; position: relative; overflow: hidden; background: #1F2023; color: #FFFFFF; font-family: 'Source Sans 3', 'Source Sans Pro', Roboto, system-ui, sans-serif; font-size: 15px; line-height: 1.35">
+<div style="width: 1280px; height: 800px; position: relative; overflow: hidden; background: #121212; color: #FFFFFF; font-family: 'Source Sans 3', 'Source Sans Pro', Roboto, system-ui, sans-serif; font-size: 15px; line-height: 1.35">
+
+  <!-- Quick Sale (POS home) -->
+  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; background: #121212">
+    <div style="flex: 1 1 auto; display: flex; gap: 6px; padding: 6px 4px 6px 4px; min-height: 0">
+      <div style="width: 278px; flex: 0 0 auto; border: 1px solid #2E2E2E; border-radius: 3px; padding: 10px 12px; display: flex; flex-direction: column">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px"><span style="color: #4FC3D9; font-size: 12px; font-weight: 700">Order:</span><span style="background: #8E2C9E; color: #FFFFFF; border-radius: 3px; padding: 4px 10px; font-size: 14px">Dine-In</span></div>
+            <div style="color: #4FC3D9; font-size: 12px; font-weight: 700; margin-top: 6px">QuickSale {{posUser}}</div>
+          </div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #3B8FD0; display: flex; align-items: center; justify-content: center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4V3h6v1"></path><path d="M9 10h6M9 14h6"></path></svg>
+          </div>
+        </div>
+        <div style="flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
+          <svg width="150" height="120" viewBox="0 0 150 120" aria-hidden="true"><circle cx="75" cy="62" r="56" fill="#1E2426"></circle><path d="M35 62h80c0 20-18 34-40 34S35 82 35 62z" fill="#3A4447"></path><path d="M60 40c0-6 4-6 4-12M75 40c0-6 4-6 4-12M90 40c0-6 4-6 4-12" stroke="#3A4447" stroke-width="3" fill="none" stroke-linecap="round"></path><circle cx="64" cy="74" r="2.5" fill="#1E2426"></circle><circle cx="86" cy="74" r="2.5" fill="#1E2426"></circle><path d="M68 84h14" stroke="#1E2426" stroke-width="2.5" stroke-linecap="round"></path></svg>
+          <div style="color: #E6E6E6; font-size: 14px">No items added yet</div>
+        </div>
+        <div style="font-size: 15px; display: flex; flex-direction: column; gap: 6px">
+          <div style="display: flex; justify-content: space-between; color: #E6E6E6"><span>Sub Total</span><span>0.00</span></div>
+          <div style="display: flex; justify-content: space-between; color: #E6E6E6; padding-bottom: 8px; border-bottom: 1px solid #3A3A3A"><span>Tax</span><span>0.00</span></div>
+          <div style="display: flex; justify-content: space-between; color: #4FC3D9; font-weight: 700; font-size: 17px; padding-bottom: 8px; border-bottom: 1px solid #3A3A3A"><span>Total</span><span>0.00</span></div>
+        </div>
+      </div>
+      <div style="flex: 1 1 auto; border: 1px solid #2E2E2E; border-radius: 3px"></div>
+      <div style="width: 108px; flex: 0 0 auto; border: 1px solid #2E2E2E; border-radius: 3px; padding: 6px 4px; display: flex; flex-direction: column; gap: 10px; overflow: hidden">
+        <sc-for list="{{categories}}" as="c" hint-placeholder-count="10"><button type="button" class="cat-btn">{{c.name}}</button></sc-for>
+      </div>
+    </div>
+    <div style="flex: 0 0 auto; height: 70px; display: flex; gap: 8px; padding: 4px 4px 4px 4px">
+      <button type="button" class="pos-btn" style="width: 96px">0.00<br/>Pay</button>
+      <button type="button" class="pos-btn" style="width: 96px">Credit Card</button>
+      <button type="button" class="pos-btn" style="width: 96px">Cash</button>
+      <button type="button" class="pos-btn" style="width: 22px; border-top-color: #262A2E" aria-label="More">»</button>
+      <button type="button" class="pos-btn" style="width: 96px">Kiosk<br/>Orders</button>
+      <button type="button" class="pos-btn" style="width: 96px; position: relative">Online<br/>Orders<span style="position: absolute; top: 2px; right: 6px; width: 22px; height: 22px; border-radius: 50%; background: #E2533F; font-size: 11px; display: flex; align-items: center; justify-content: center">15</span></button>
+      <button type="button" class="pos-btn" style="width: 96px">Tables/<br/>New Order</button>
+      <button type="button" class="pos-btn" style="width: 96px">Find</button>
+      <button type="button" class="pos-btn" style="width: 96px" disabled="{{ true }}">Send To<br/>Kitchen</button>
+      <button type="button" class="pos-btn" style="width: 96px" disabled="{{ true }}">Send &amp;<br/>Stay</button>
+      <button type="button" class="pos-btn" style="width: 96px">Transactions</button>
+      <button type="button" class="pos-btn {{hl.functions}}" style="width: 96px" onClick="{{openFunctions}}">Functions</button>
+      <button type="button" class="pos-btn" style="width: 22px; border-top-color: #262A2E" aria-label="More">»</button>
+    </div>
+    <div style="flex: 0 0 auto; height: 40px; display: flex; align-items: center; gap: 14px; padding: 0 12px; background: #121212; border-top: 1px solid #222; font-size: 13px; color: #E6E6E6; white-space: nowrap">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 16px; border-radius: 50%; background: #8E3FB4"></span>Powered by PlumPOS</span>
+      <span>Cashier Station</span>
+      <span style="width: 24px; height: 24px; border-radius: 50%; background: #2F7FC1; color: #FFFFFF; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: Georgia, serif">i</span>
+      <span>{{posEvents}}</span>
+      <sc-if value="{{posTicker.show}}" hint-placeholder-val="{{ true }}">
+        <span role="status" style="flex: 0 1 540px; min-width: 0; display: flex; align-items: center; gap: 8px; background: #262626; border-radius: 12px; padding: 3px 12px; color: {{posTicker.fg}}; white-space: nowrap; overflow: hidden">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="{{posTicker.fg}}" aria-hidden="true" style="flex: 0 0 auto"><path d="M12 2L1 21h22z"></path></svg>
+          <span style="overflow: hidden; text-overflow: ellipsis">{{posTicker.text}}</span>
+        </span>
+      </sc-if>
+      <span style="margin-left: auto">{{posUser}}</span>
+      <span>Wed, Oct 28 8:39 A, PDT</span>
+      <svg width="24" height="18" viewBox="0 0 24 18" fill="none" stroke="#2DBE60" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M2 6a15 15 0 0 1 20 0"></path><path d="M5.5 9.5a10 10 0 0 1 13 0"></path><path d="M9 13a5 5 0 0 1 6 0"></path><circle cx="12" cy="16" r="1" fill="#2DBE60"></circle></svg>
+    </div>
+  </div>
+
+  <!-- Functions -->
+  <sc-if value="{{screenFunctions}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 5">
+      <div role="dialog" aria-modal="true" aria-labelledby="fn-title" style="position: absolute; left: 328px; top: 24px; width: 624px; height: 752px; background: #5A6068; border-radius: 6px; overflow: hidden; display: flex; flex-direction: column">
+        <h2 id="fn-title" style="margin: 0; height: 54px; flex: 0 0 auto; background: #4E5359; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 500">Functions</h2>
+        <div style="flex: 1 1 auto; overflow-y: auto; padding: 30px 34px">
+          <div style="display: grid; grid-template-columns: repeat(4, 118px); gap: 25px 25px">
+            <sc-for list="{{fnGroup1}}" as="f" hint-placeholder-count="16"><button type="button" class="fn-btn {{f.hl}}" onClick="{{f.press}}">{{f.label}}</button></sc-for>
+          </div>
+          <div style="height: 1px; background: #7A8088; margin: 26px 10px"></div>
+          <div style="display: grid; grid-template-columns: repeat(4, 118px); gap: 25px 25px">
+            <sc-for list="{{fnGroup2}}" as="f" hint-placeholder-count="12"><button type="button" class="fn-btn" disabled="{{f.disabled}}">{{f.label}}</button></sc-for>
+          </div>
+        </div>
+        <div style="height: 62px; flex: 0 0 auto; background: #4E5359; display: flex; align-items: center; justify-content: center">
+          <button type="button" onClick="{{closeToPos}}" style="width: 90px; height: 36px; border: 0; border-radius: 18px; background: #E6E6E6; color: #2B2E31; font-size: 13px">Close</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- Support -->
+  <sc-if value="{{screenSupport}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 5">
+      <div role="dialog" aria-modal="true" aria-labelledby="sup-title" style="position: absolute; left: 328px; top: 250px; width: 624px; background: #5A6068; border-radius: 6px; overflow: hidden">
+        <h2 id="sup-title" style="margin: 0; height: 54px; background: #4E5359; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 500">Support</h2>
+        <div style="padding: 32px 34px; display: grid; grid-template-columns: repeat(4, 118px); gap: 25px 25px">
+          <sc-for list="{{supportItems}}" as="f" hint-placeholder-count="8"><button type="button" class="fn-btn {{f.hl}}" onClick="{{f.press}}">{{f.label}}</button></sc-for>
+        </div>
+        <div style="height: 62px; background: #4E5359; display: flex; align-items: center; justify-content: center">
+          <button type="button" onClick="{{closeToPos}}" style="width: 90px; height: 36px; border: 0; border-radius: 18px; background: #E6E6E6; color: #2B2E31; font-size: 13px">Close</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
 
   <!-- Terminal Devices modal -->
+  <sc-if value="{{screenDevices}}" hint-placeholder-val="{{ true }}">
+  <div style="position: absolute; inset: 0; background: rgba(0, 0, 0, 0.55)"></div>
   <div style="position: absolute; left: 16px; right: 16px; top: 14px; bottom: 14px; background: #565C64; border-radius: 10px; display: flex; flex-direction: column; overflow: hidden">
 
     <div style="position: relative; height: 60px; flex: 0 0 auto; background: #4A4F57; display: flex; align-items: center; justify-content: center">
       <h1 style="margin: 0; font-size: 24px; font-weight: 500; letter-spacing: 0.01em">Terminal Devices</h1>
-      <button type="button" style="position: absolute; right: 14px; top: 10px; width: 150px; height: 40px; border: 0; border-radius: 22px; background: #E0262A; color: #FFFFFF; font-size: 17px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.3)">Close</button>
+      <button type="button" onClick="{{closeDevices}}" class="{{hl.closeDevices}}" style="position: absolute; right: 14px; top: 10px; width: 150px; height: 40px; border: 0; border-radius: 22px; background: #E0262A; color: #FFFFFF; font-size: 17px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.3)">Close</button>
     </div>
 
     <div style="flex: 1 1 auto; overflow-y: auto; padding: 18px 24px 28px; display: flex; flex-direction: column; gap: 16px">
@@ -1047,7 +1232,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
           <button type="button" onClick="{{b.view}}" style="height: 40px; padding: 0 18px; border: 1px solid {{b.border}}; border-radius: 22px; background: transparent; color: {{b.fg}}; font-weight: 600; flex: 0 0 auto">View</button>
           <sc-if value="{{b.showChange}}"><button type="button" onClick="{{b.change}}" disabled="{{readOnly}}" style="height: 40px; padding: 0 18px; border: 0; border-radius: 22px; background: #8E3FB4; color: #FFFFFF; font-weight: 600; flex: 0 0 auto">Change Destination</button></sc-if>
           <sc-if value="{{b.showKeep}}"><button type="button" onClick="{{b.keep}}" style="height: 40px; padding: 0 18px; border: 1px solid #8D939A; border-radius: 22px; background: transparent; color: #FFFFFF; font-weight: 600; flex: 0 0 auto">Keep Reroute</button></sc-if>
-          <button type="button" onClick="{{b.stop}}" disabled="{{readOnly}}" style="height: 40px; padding: 0 18px; border: 2px solid #FF8A80; border-radius: 22px; background: transparent; color: #FFB4AC; font-weight: 600; flex: 0 0 auto">Stop Rerouting</button>
+          <button type="button" class="{{b.hlStop}}" onClick="{{b.stop}}" disabled="{{readOnly}}" style="height: 40px; padding: 0 18px; border: 2px solid #FF8A80; border-radius: 22px; background: transparent; color: #FFB4AC; font-weight: 600; flex: 0 0 auto">Stop Rerouting</button>
         </div>
       </sc-for>
 
@@ -1109,7 +1294,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
                     <button type="button" onClick="{{r.stop}}" disabled="{{readOnly}}" style="width: 140px; height: 44px; border: 2px solid #FF8A80; border-radius: 24px; background: transparent; color: #FFB4AC; font-size: 15px; font-weight: 600; white-space: nowrap">Stop Rerouting</button>
                   </sc-if>
                   <sc-if value="{{r.showReroute}}" hint-placeholder-val="{{ true }}">
-                    <button type="button" onClick="{{r.reroute}}" disabled="{{r.rerouteDisabled}}" style="width: 130px; height: 44px; border: 0; border-radius: 24px; background: {{r.rerouteBg}}; color: {{r.rerouteFg}}; font-size: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.3)">Reroute</button>
+                    <button type="button" class="{{r.hl}}" onClick="{{r.reroute}}" disabled="{{r.rerouteDisabled}}" style="width: 130px; height: 44px; border: 0; border-radius: 24px; background: {{r.rerouteBg}}; color: {{r.rerouteFg}}; font-size: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.3)">Reroute</button>
                   </sc-if>
                 </div>
               </div>
@@ -1180,6 +1365,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
     </div>
 
   </div>
+  </sc-if>
 
   <!-- Printer details (opened from View or a printer name) -->
   <sc-if value="{{panelOpen}}" hint-placeholder-val="{{ false }}">
@@ -1314,7 +1500,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
               </div>
               <div role="radiogroup" aria-labelledby="dest-label" style="display: flex; flex-direction: column; gap: 6px">
                 <sc-for list="{{destOptions}}" as="d" hint-placeholder-count="7">
-                  <label style="display: grid; grid-template-columns: 26px minmax(0, 1fr) 140px 96px 150px; gap: 12px; align-items: center; background: {{d.bg}}; border: 2px solid {{d.border}}; border-radius: 6px; padding: 8px 12px; cursor: {{d.cursor}}">
+                  <label class="{{d.hl}}" style="display: grid; grid-template-columns: 26px minmax(0, 1fr) 140px 96px 150px; gap: 12px; align-items: center; background: {{d.bg}}; border: 2px solid {{d.border}}; border-radius: 6px; padding: 8px 12px; cursor: {{d.cursor}}">
                     <input type="radio" name="dest" checked="{{d.selected}}" disabled="{{d.disabled}}" onChange="{{d.pick}}" style="width: 20px; height: 20px; margin: 0; accent-color: #B46BD6"/>
                     <div style="min-width: 0; color: {{d.textColor}}">
                       <div style="font-weight: 600">{{d.name}}</div>
@@ -1409,10 +1595,10 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
           </div>
           <button type="button" onClick="{{closeDialog}}" disabled="{{busy}}" style="height: 44px; padding: 0 24px; border: 1px solid #8D939A; border-radius: 24px; background: transparent; color: #FFFFFF; font-size: 16px">Cancel</button>
           <sc-if value="{{stepSelect}}" hint-placeholder-val="{{ true }}">
-            <button type="button" onClick="{{toReview}}" disabled="{{continueDisabled}}" style="height: 44px; padding: 0 24px; border: 0; border-radius: 24px; background: {{continueBg}}; color: {{continueFg}}; font-size: 16px">Continue to review</button>
+            <button type="button" class="{{hl.toReview}}" onClick="{{toReview}}" disabled="{{continueDisabled}}" style="height: 44px; padding: 0 24px; border: 0; border-radius: 24px; background: {{continueBg}}; color: {{continueFg}}; font-size: 16px">Continue to review</button>
           </sc-if>
           <sc-if value="{{stepReview}}" hint-placeholder-val="{{ false }}">
-            <button type="button" onClick="{{toAuth}}" disabled="{{confirmDisabled}}" style="height: 44px; padding: 0 24px; border: 0; border-radius: 24px; background: {{confirmBg}}; color: {{confirmFg}}; font-size: 16px; font-weight: 600">{{confirmLabel}}</button>
+            <button type="button" class="{{hl.toAuth}}" onClick="{{toAuth}}" disabled="{{confirmDisabled}}" style="height: 44px; padding: 0 24px; border: 0; border-radius: 24px; background: {{confirmBg}}; color: {{confirmFg}}; font-size: 16px; font-weight: 600">{{confirmLabel}}</button>
           </sc-if>
           <sc-if value="{{stepActivating}}" hint-placeholder-val="{{ false }}">
             <button type="button" disabled="{{ true }}" style="height: 44px; padding: 0 24px; border: 0; border-radius: 24px; background: #6E4A85; color: #FFFFFF; font-size: 16px; display: flex; align-items: center; gap: 8px"><svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"></path></svg>Confirming…</button>
@@ -1454,7 +1640,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
             <sc-for list="{{keys}}" as="k" hint-placeholder-count="12">
               <button type="button" onClick="{{k.press}}" aria-label="{{k.aria}}" disabled="{{k.disabled}}" style="height: 60px; border: 0; border-radius: 4px; background: {{k.bg}}; color: {{k.fg}}; font-size: {{k.fs}}; opacity: {{k.opacity}}">{{k.label}}</button>
             </sc-for>
-            <button type="button" onClick="{{authorize}}" disabled="{{authDisabled}}" style="grid-column: span 3; height: 60px; border: 0; border-radius: 4px; background: #50565C; color: {{acceptFg}}; font-size: 22px">{{authLabel}}</button>
+            <button type="button" class="{{hl.accept}}" onClick="{{authorize}}" disabled="{{authDisabled}}" style="grid-column: span 3; height: 60px; border: 0; border-radius: 4px; background: #50565C; color: {{acceptFg}}; font-size: 22px">{{authLabel}}</button>
           </div>
           <div style="margin-top: 26px; font-weight: 700; font-size: 16px">OR</div>
           <div style="margin-top: 14px; display: flex; align-items: center; gap: 22px">
@@ -1501,17 +1687,17 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
         <div style="padding: 12px 18px; background: #3A3B3D; display: flex; justify-content: flex-end; gap: 10px">
           <button type="button" onClick="{{closeStop}}" disabled="{{stopStopping}}" style="height: 44px; padding: 0 24px; border: 1px solid #8D939A; border-radius: 24px; background: transparent; color: #FFFFFF; font-size: 16px">{{stopCancelLabel}}</button>
           <sc-if value="{{stopConfirmPlain}}">
-            <button type="button" onClick="{{doStop}}" style="height: 44px; padding: 0 24px; border: 0; border-radius: 24px; background: #E0262A; color: #FFFFFF; font-size: 16px; font-weight: 600">Stop Rerouting</button>
+            <button type="button" class="{{hl.doStop}}" onClick="{{doStop}}" style="height: 44px; padding: 0 24px; border: 0; border-radius: 24px; background: #E0262A; color: #FFFFFF; font-size: 16px; font-weight: 600">Stop Rerouting</button>
           </sc-if>
           <sc-if value="{{stopConfirmOffline}}">
-            <button type="button" onClick="{{doStop}}" style="height: 44px; padding: 0 20px; border: 2px solid #FF8A80; border-radius: 24px; background: transparent; color: #FFB4AC; font-size: 16px; font-weight: 600; white-space: nowrap">Stop Anyway</button>
+            <button type="button" class="{{hl.doStop}}" onClick="{{doStop}}" style="height: 44px; padding: 0 20px; border: 2px solid #FF8A80; border-radius: 24px; background: transparent; color: #FFB4AC; font-size: 16px; font-weight: 600; white-space: nowrap">Stop Anyway</button>
             <button type="button" onClick="{{stopToChange}}" style="height: 44px; padding: 0 22px; border: 0; border-radius: 24px; background: #8E3FB4; color: #FFFFFF; font-size: 16px; font-weight: 600; white-space: nowrap">Change Destination Instead</button>
           </sc-if>
           <sc-if value="{{stopStopping}}" hint-placeholder-val="{{ false }}">
             <button type="button" disabled="{{ true }}" style="height: 44px; padding: 0 24px; border: 0; border-radius: 24px; background: #A84A4C; color: #FFFFFF; font-size: 16px; display: flex; align-items: center; gap: 8px"><svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"></path></svg>Stopping…</button>
           </sc-if>
           <sc-if value="{{stopFailed}}" hint-placeholder-val="{{ false }}">
-            <button type="button" onClick="{{doStop}}" style="height: 44px; padding: 0 24px; border: 0; border-radius: 24px; background: #E0262A; color: #FFFFFF; font-size: 16px; font-weight: 600">Try stopping again</button>
+            <button type="button" class="{{hl.doStop}}" onClick="{{doStop}}" style="height: 44px; padding: 0 24px; border: 0; border-radius: 24px; background: #E0262A; color: #FFFFFF; font-size: 16px; font-weight: 600">Try stopping again</button>
           </sc-if>
         </div>
       </div>
@@ -1544,7 +1730,18 @@ function P(id) { for (var i = 0; i < PRINTERS.length; i++) { if (PRINTERS[i].id 
 function joinGroups(g) { if (!g.length) return 'no prep groups'; if (g.length === 1) return g[0]; return g.slice(0, -1).join(', ') + ' and ' + g[g.length - 1]; }
 function fmt(d) { return d.toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric', hour: 'numeric', minute: '2-digit' }); }
 function fmtTime(d) { return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' }); }
-var USERS = { 'Store manager': 'Goutam K. (Store manager)', 'Plum support agent': 'Priya Nair (Plum Support)', 'Read-only staff': 'Aman S. (Server)' };
+var USERS = { 'Store manager': 'Goutam K. (Store manager)', 'Cashier': 'D. Emp (Cashier)', 'Plum support agent': 'Priya Nair (Plum Support)', 'Read-only staff': 'Aman S. (Server)' };
+var POS_USER = { 'Store manager': 'Goutam K.', 'Cashier': 'D. Emp', 'Plum support agent': 'Priya N. (remote)', 'Read-only staff': 'Aman S.' };
+var CATEGORIES = ['Seasonal Drinks', 'Brewed Coffee Drinks', 'Nirvanas', 'Signature Pizzas', 'Nitros', 'Lattes', 'Blended & Infusions', 'Teas & More', 'Bakery', 'Breakfast'];
+var FN1 = ['Reports', '86', 'Recall Pay In/Out', 'Change Terminal', 'Employees', 'Loyalty', 'Support', 'Display Settings', 'Timeslip(s) Summary', 'Online Ordering', 'Show/Hide LTA Item', 'Language', 'Close Day', 'Safe Count', 'Gift Card Deactivate', 'Void Deactivated Gift Card'];
+var FN2 = ['Print', 'Open Cash Drawer', 'Release Cash Drawer', 'Recall Order', 'Pay In/Out', 'Orders', 'Timeslip', 'House Account', 'Gift Card Balance', 'Gift Card Reload', 'GiftCard Issue', 'Search & Issue'];
+var SUPPORT = ['Devices', 'Status', 'Servers', 'Refresh Config', 'Export Log To Server', 'Export DB To Server', 'Credit Card Batch Close', 'Test Swipe Card'];
+var PERSONA = {
+  'Store manager': { who: 'Goutam, the store manager', short: 'Goutam' },
+  'Cashier': { who: 'D. Emp, the cashier on Cashier Station', short: 'The cashier' },
+  'Plum support agent': { who: 'Priya from Plum Support, connected remotely to the terminal', short: 'Priya' },
+  'Read-only staff': { who: 'Aman, a server with read-only access', short: 'Aman' }
+};
 var OK = ['#7EE2A0', '#1F3D2B'], FAIL = ['#FFB4AC', '#4A2422'], WARN = ['#FFC27A', '#4A3418'];
 var ON = '#7EE2A0', OFF = '#FF9A90';
 var INFO = ['#CFE6F8', '#213A4F'];
@@ -1553,8 +1750,11 @@ class Component extends DCLogic {
   constructor(props) {
     super(props);
     this.timers = [];
-    this.state = {
-      openPrinters: true, openServices: false, openHistory: false, panel: false, query: '', selectedId: 'a', verifying: {},
+    this.state = this.initialState();
+  }
+  initialState() {
+    return {
+      screen: 'pos', storyDone: false, openPrinters: true, openServices: false, openHistory: false, panel: false, query: '', selectedId: 'a', verifying: {},
       reroutes: [{ id: 'r1', from: 'cold', to: 'b', groups: ['Cold Line'], at: '10/26/2026, 6:42 PM', by: 'Priya Nair (Plum Support)', approvedBy: 'Meera Joshi (General manager)', unconfirmed: false }],
       dialog: null, mode: 'new', origId: null, step: 'select', dest: null, ack: false, checking: false, checkedAt: '',
       activateAttempts: 0, conflictDone: false, pin: '', pinError: '', pinFails: 0, approver: '', stopId: null, stopStep: 'confirm', stopAttempts: 0, toast: null, verified: {}, moveChain: false, reprint: true, showUnavail: false, pinLocked: false, onlineOverride: {}, kept: {}, queued: { a: 3 }, wentDown: {},
@@ -1569,7 +1769,14 @@ class Component extends DCLogic {
   }
   componentWillUnmount() { this.timers.forEach(clearTimeout); }
   destOff(props) { return ((props || this.props).destinationOffline || 'No').indexOf('Yes') === 0; }
+  componentDidMount() { this.emitStory(); }
   componentDidUpdate(prev) {
+    if (prev.storyRun !== this.props.storyRun) {
+      this.timers.forEach(clearTimeout); this.timers = [];
+      this.setState(this.initialState());
+      return;
+    }
+    this.emitStory();
     var was = this.destOff(prev), now = this.destOff();
     if (was === now) return;
     var b = P('b'), t = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
@@ -1680,10 +1887,64 @@ class Component extends DCLogic {
         this.log({ event: 'Stop attempt', outcome: 'Not confirmed', k: FAIL, from: from.name, to: to.name, groups: r.groups.join(', '), note: 'Server timeout. Rerouting may still be active.' });
         return;
       }
-      this.setState({ reroutes: cur.reroutes.filter(x => x.id !== r.id), dialog: null, stopAttempts: 0 });
+      this.setState({ reroutes: cur.reroutes.filter(x => x.id !== r.id), dialog: null, stopAttempts: 0, storyDone: cur.storyDone || r.from === 'a' });
       this.log({ event: 'Reroute stopped', outcome: 'Confirmed', k: OK, from: from.name, to: to.name, groups: r.groups.join(', '), note: 'Original routing restored.' });
       this.showToast('Original routing restored', 'Confirmed by the store server. ' + joinGroups(r.groups) + ' tickets route to ' + from.name + ' again.');
     });
+  }
+  storyInfo() {
+    var s = this.state, role = this.props.role || 'Store manager', per = PERSONA[role] || PERSONA['Store manager'];
+    var outA = s.reroutes.filter(r => r.from === 'a')[0];
+    var recovered = outA && s.onlineOverride.a && !s.kept[outA.id];
+    var stopA = s.dialog === 'stop' && outA && s.stopId === outA.id;
+    var cur;
+    if (s.storyDone && !outA) cur = 11;
+    else if (stopA) cur = 10;
+    else if (outA) cur = recovered ? 9 : 8;
+    else if (s.dialog === 'reroute' && s.origId === 'a') cur = s.step === 'select' ? 5 : (s.step === 'review' || s.step === 'error' || s.step === 'conflict' ? 6 : 7);
+    else cur = s.screen === 'devices' ? 4 : (s.screen === 'support' ? 3 : (s.screen === 'functions' ? 2 : 1));
+    var approve = {
+      'Store manager': 'Manager Authorization opens. Goutam is a manager, so he confirms with his own PIN (any 4 digits here) and taps Accept.',
+      'Cashier': 'Manager Authorization opens: “Printer reroute requires a Manager.” The cashier calls the manager on duty, who enters their PIN (any 4 digits here) or uses fingerprint or manager card.',
+      'Read-only staff': 'Read-only staff can’t start a reroute; Reroute is disabled with a reason. Switch persona to continue.'
+    }[role] || 'Manager Authorization opens. A manager on site approves with PIN (any 4 digits here), fingerprint or manager card.';
+    var steps = [
+      ['Kitchen Printer A goes offline', 'It is lunch rush. Kitchen Printer A (Hot Line, Grill) stops responding, and the Quick Sale status bar shows the connection error. ' + per.who + ' decides to reroute its tickets for now.', 'Tap Functions.'],
+      ['Open Support', 'The Functions menu opens.', 'Tap Support.'],
+      ['Open Devices', 'The Support menu lists the terminal tools.', 'Tap Devices.'],
+      ['Find the failed printer', 'Terminal Devices opens. Under Kitchen Printer(s), Kitchen Printer A shows Offline.', role === 'Read-only staff' ? 'Reroute is disabled for this role.' : 'Tap Reroute on Kitchen Printer A.'],
+      ['Choose a destination', 'Only online, compatible printers can be picked; the rest sit under “Show unavailable printers” with a reason. Kitchen Printer B serves the same prep group.', s.dest ? 'Tap Continue to review.' : 'Select Kitchen Printer B.'],
+      ['Review the reroute', 'The review shows scope (Hot Line, Grill), that it applies to new tickets, and offers to reprint the 3 tickets already waiting on Kitchen Printer A.', 'Tap Continue to Manager Approval.'],
+      ['Manager approval', approve, s.step === 'activating' ? 'Waiting for the store server to confirm…' : 'Enter a 4-digit PIN and tap Accept.'],
+      ['Reroute active', 'The store server confirms. Hot Line and Grill tickets now print on Kitchen Printer B, and the queued tickets reprint there. The reroute shows in the banner, both printer rows and Reroute History.', s.screen === 'devices' ? 'Tap Close to return to Quick Sale; the status bar now shows the reroute.' : ((this.props.originalRecovers || '').indexOf('Yes') === 0 ? 'Keep serving. Kitchen Printer A comes back in a few seconds.' : 'Kitchen Printer A stays offline (Prototype controls › Original Recovers is “No”).')],
+      ['Kitchen Printer A is back', 'Kitchen Printer A responds again. A blue banner in Terminal Devices asks whether to restore the original routing or keep the reroute.', s.screen === 'devices' ? 'Tap Stop Rerouting on the blue banner.' : (s.screen === 'pos' ? 'Tap Functions.' : (s.screen === 'functions' ? 'Tap Support.' : 'Tap Devices.'))],
+      ['Restore the original routing', 'The confirmation explains that Hot Line and Grill tickets go back to Kitchen Printer A. No manager approval is needed to stop.', s.stopStep === 'stopping' ? 'Waiting for the store server to confirm…' : (s.stopStep === 'failed' ? 'Tap Try stopping again.' : 'Tap Stop Rerouting.')]
+    ];
+    var hl = {};
+    var on = (this.props.story || 'On') !== 'Off';
+    if (on) {
+      if (cur === 1 || (cur === 9 && s.screen === 'pos')) hl.functions = 'story-hl';
+      if (cur === 2 || (cur === 9 && s.screen === 'functions')) hl.support = 'story-hl';
+      if (cur === 3 || (cur === 9 && s.screen === 'support')) hl.devices = 'story-hl';
+      if (cur === 4 && !s.panel) hl.rerouteA = 'story-hl';
+      if (cur === 5) { if (s.dest) hl.toReview = 'story-hl'; else hl.destB = 'story-hl'; }
+      if (cur === 6 && s.step === 'review') hl.toAuth = 'story-hl';
+      if (cur === 7 && s.step === 'auth') hl.accept = 'story-hl';
+      if (cur === 8 && s.screen === 'devices' && !s.dialog && !s.panel) hl.closeDevices = 'story-hl';
+      if (cur === 9 && s.screen === 'devices' && !s.dialog && !s.panel) hl.stopA = 'story-hl';
+      if (cur === 10 && s.stopStep !== 'stopping') hl.doStop = 'story-hl';
+    }
+    return {
+      hl: hl,
+      detail: { persona: role, personaWho: per.who, current: cur, done: cur === 11,
+        steps: steps.map((st, i) => ({ n: i + 1, title: st[0], text: st[1], action: st[2], state: i + 1 < cur ? 'done' : (i + 1 === cur ? 'current' : 'todo') })) }
+    };
+  }
+  emitStory() {
+    var d = this.storyInfo().detail, key = JSON.stringify(d);
+    if (key === this.lastStory) return;
+    this.lastStory = key;
+    try { window.dispatchEvent(new CustomEvent('dc-story', { detail: d })); } catch (e) {}
   }
   statusOf(p, checking) {
     if (checking) return { statusLabel: 'Checking', statusFg: '#E6E8EB', dotClass: 'pulse' };
@@ -1695,6 +1956,7 @@ class Component extends DCLogic {
   renderVals() {
     var s = this.state, props = this.props;
     var readOnly = (props.role || 'Store manager') === 'Read-only staff';
+    var story = this.storyInfo(), hl = story.hl;
     var q = s.query.trim().toLowerCase();
 
     var rows = PRINTERS.filter(p => !q || (p.name + ' ' + p.ip + ' ' + p.groups.join(' ')).toLowerCase().indexOf(q) >= 0).map(p => {
@@ -1715,6 +1977,7 @@ class Component extends DCLogic {
         showStop: !!out, showReroute: !out, rerouteDisabled: dis,
         rerouteBg: dis ? '#6A7078' : '#8E3FB4', rerouteFg: dis ? '#D5D9DE' : '#FFFFFF',
         reroute: () => this.openDialog('new', p.id), stop: () => this.openStop(out.id),
+        hl: p.id === 'a' ? (hl.rerouteA || '') : '',
         open: () => this.setState({ selectedId: p.id, panel: true })
       });
     });
@@ -1755,6 +2018,7 @@ class Component extends DCLogic {
         view: () => this.setState({ selectedId: f.id, panel: true }), stop: () => this.openStop(r.id),
         change: () => this.openDialog('change', f.id),
         keep: () => this.setState(s2 => ({ kept: Object.assign({}, s2.kept, { [r.id]: true }) })),
+        hlStop: f.id === 'a' ? (hl.stopA || '') : '',
         showChange: tDown, showKeep: !!recovered, rank: (r.unconfirmed || tDown) ? 0 : (recovered ? 1 : 2)
       };
       if (r.unconfirmed) return Object.assign(base, { title: 'Reroute status unconfirmed: ' + f.name + ' → ' + t.name, text: 'The last stop request wasn’t confirmed. Rerouting may still be active.', fg: '#FFB4AC', bg: '#4A2422', border: '#C2564C' });
@@ -1803,6 +2067,7 @@ class Component extends DCLogic {
         keep: keep, disabled: disabled, selected: picked,
         border: picked ? '#C98BE6' : 'transparent', bg: picked ? '#43304A' : (disabled ? '#35363A' : '#3A3B3D'),
         textColor: disabled ? '#C9CDD3' : '#FFFFFF', cursor: disabled ? 'not-allowed' : 'pointer',
+        hl: p.id === 'b' ? (hl.destB || '') : '',
         pick: () => { if (!disabled) this.setState({ dest: p.id }); }
       });
     }).sort((a, b) => a.r - b.r);
@@ -1836,7 +2101,24 @@ class Component extends DCLogic {
       if (sr) { var sf = P(sr.from), stt = P(sr.to); stopR = { fromName: sf.name, toName: stt.name, groups: joinGroups(sr.groups), fromOffline: this.down(sf), fromStatus: this.statusOf(sf, false).statusLabel, fromStatusFg: this.statusOf(sf, false).statusFg }; }
     }
 
+    var outA = s.reroutes.filter(r => r.from === 'a')[0], aP = P('a');
+    var posTicker = { show: false, text: '', fg: '#FF6B6B' };
+    if (outA && this.down(P(outA.to))) posTicker = { show: true, fg: '#FF6B6B', text: 'Kitchen Printer A rerouted to ' + P(outA.to).name + ', which isn’t printing. Open Functions › Support › Devices.' };
+    else if (outA && this.on(aP)) posTicker = { show: true, fg: '#7FC4F0', text: 'Kitchen Printer A is responding again. Tickets still print on ' + P(outA.to).name + '.' };
+    else if (outA) posTicker = { show: true, fg: '#FFB347', text: 'Kitchen Printer A offline. Hot Line and Grill tickets rerouted to ' + P(outA.to).name + '.' };
+    else if (!this.on(aP)) posTicker = { show: true, fg: '#FF6B6B', text: 'Kitchen Printer A (3): failed to connect to /192.168.20.187 (port 9100) from /172.16.1.12 (port 39660) after 3000ms' };
+    var go = (screen) => () => this.setState({ screen: screen });
     return {
+      posUser: POS_USER[props.role || 'Store manager'] || 'D. Emp',
+      posEvents: posTicker.show ? '1 Active Event' : 'No Active Events', posTicker: posTicker,
+      categories: CATEGORIES.map(c => ({ name: c })),
+      screenFunctions: s.screen === 'functions', screenSupport: s.screen === 'support', screenDevices: s.screen === 'devices',
+      openFunctions: go('functions'), closeToPos: go('pos'),
+      closeDevices: () => this.setState({ screen: 'pos', panel: false }),
+      fnGroup1: FN1.map(l => ({ label: l, hl: l === 'Support' ? (hl.support || '') : '', press: l === 'Support' ? go('support') : () => {} })),
+      fnGroup2: FN2.map(l => ({ label: l, disabled: l === 'Release Cash Drawer' })),
+      supportItems: SUPPORT.map(l => ({ label: l, hl: l === 'Devices' ? (hl.devices || '') : '', press: l === 'Devices' ? go('devices') : () => {} })),
+      hl: { functions: hl.functions || '', closeDevices: hl.closeDevices || '', toReview: hl.toReview || '', toAuth: hl.toAuth || '', accept: hl.accept || '', doStop: hl.doStop || '' },
       readOnly: readOnly,
       openPrinters: s.openPrinters, openServices: s.openServices, openHistory: s.openHistory,
       printersChevron: s.openPrinters ? 0 : 180, servicesChevron: s.openServices ? 0 : 180, historyChevron: s.openHistory ? 0 : 180,
@@ -1906,7 +2188,7 @@ class Component extends DCLogic {
   }
 }
 
-DC.define("prototype", document.getElementById("tpl-prototype").textContent, Component, {"role": {"editor": "enum", "options": ["Store manager", "Plum support agent", "Read-only staff"], "default": "Store manager", "section": "Prototype"}, "activationOutcome": {"editor": "enum", "options": ["Confirmed", "System error, then confirmed on retry", "Concurrent update by another user"], "default": "Confirmed", "section": "Prototype"}, "managerAuth": {"editor": "enum", "options": ["Approves", "Wrong PIN first, then approves", "Wrong PIN 3 times (locks PIN entry)"], "default": "Approves", "section": "Prototype"}, "destinationOffline": {"editor": "enum", "options": ["No", "Yes: Kitchen Printer B goes offline"], "default": "No", "section": "Prototype"}, "originalRecovers": {"editor": "enum", "options": ["Yes, 9 s after a new reroute", "No"], "default": "Yes, 9 s after a new reroute", "section": "Prototype"}, "reversalOutcome": {"editor": "enum", "options": ["Confirmed", "Fails first, confirmed on retry"], "default": "Fails first, confirmed on retry", "section": "Prototype"}, "$preview": {"width": 1280, "height": 800}}, {w:1280,h:800});
+DC.define("prototype", document.getElementById("tpl-prototype").textContent, Component, {"role": {"editor": "enum", "options": ["Store manager", "Cashier", "Plum support agent", "Read-only staff"], "default": "Store manager", "section": "Prototype"}, "activationOutcome": {"editor": "enum", "options": ["Confirmed", "System error, then confirmed on retry", "Concurrent update by another user"], "default": "Confirmed", "section": "Prototype"}, "managerAuth": {"editor": "enum", "options": ["Approves", "Wrong PIN first, then approves", "Wrong PIN 3 times (locks PIN entry)"], "default": "Approves", "section": "Prototype"}, "destinationOffline": {"editor": "enum", "options": ["No", "Yes: Kitchen Printer B goes offline"], "default": "No", "section": "Prototype"}, "originalRecovers": {"editor": "enum", "options": ["Yes, 9 s after a new reroute", "No"], "default": "Yes, 9 s after a new reroute", "section": "Prototype"}, "reversalOutcome": {"editor": "enum", "options": ["Confirmed", "Fails first, confirmed on retry"], "default": "Confirmed", "section": "Prototype"}, "story": {"editor": "enum", "options": ["On", "Off"], "default": "On", "section": "Story"}, "storyRun": {"editor": "number", "default": 0, "section": "Story"}, "$preview": {"width": 1280, "height": 800}}, {w:1280,h:800});
 })();</script><script type="text/x-template" id="tpl-states">
 
 
@@ -2162,6 +2444,39 @@ DC.define("changes", document.getElementById("tpl-changes").textContent, Compone
 <script>
 (function () {
   var mounted = {}, mermaidDone = false;
+
+  var storyEl = document.getElementById('story');
+  function storyWidth() { return (!storyEl || storyEl.classList.contains('collapsed') || window.innerWidth <= 1100) ? (storyEl && storyEl.classList.contains('collapsed') && window.innerWidth > 1100 ? storyEl.offsetWidth + 8 : 0) : 350; }
+  function esc(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+  function setProto(patch) { if (window.DC && DC.apps.prototype) DC.setProps('prototype', patch); }
+  window.addEventListener('dc-story', function (e) {
+    var d = e.detail;
+    document.querySelectorAll('.persona button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.role === d.persona)); });
+    document.getElementById('story-who').textContent = 'Acting as ' + d.personaWho + '.';
+    document.getElementById('story-steps').innerHTML = d.steps.map(function (st) {
+      var cur = st.state === 'current';
+      return '<li class="' + st.state + '"' + (cur ? ' aria-current="step"' : '') + '><span class="num">' + (st.state === 'done' ? '&#10003;' : st.n) + '</span><div><div class="t">' + esc(st.title) + '</div>' +
+        (cur ? '<div class="d">' + esc(st.text) + '</div><div class="a">' + esc(st.action) + '</div>' : '') + '</div></li>';
+    }).join('');
+    document.getElementById('story-done').hidden = !d.done;
+    var curLi = document.querySelector('#story-steps li.current');
+    if (curLi && storyEl.scrollHeight > storyEl.clientHeight) curLi.scrollIntoView({ block: 'nearest' });
+  });
+  document.querySelectorAll('.persona button').forEach(function (b) {
+    b.addEventListener('click', function () { setProto({ role: b.dataset.role, storyRun: Date.now() }); });
+  });
+  document.getElementById('story-restart').addEventListener('click', function () { setProto({ storyRun: Date.now() }); });
+  document.getElementById('story-guide').addEventListener('click', function () {
+    var on = this.getAttribute('aria-pressed') !== 'true';
+    this.setAttribute('aria-pressed', String(on)); this.textContent = on ? 'Highlights on' : 'Highlights off';
+    setProto({ story: on ? 'On' : 'Off' });
+  });
+  document.getElementById('story-collapse').addEventListener('click', function () {
+    var c = storyEl.classList.toggle('collapsed');
+    this.textContent = c ? 'Show story' : 'Hide story'; this.setAttribute('aria-expanded', String(!c));
+    window.dispatchEvent(new Event('resize'));
+  });
+
   var hasMermaid = typeof mermaid !== 'undefined';
   if (hasMermaid) mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
   function show(id, on) { var el = document.getElementById(id); if (el) el.hidden = !on; }
@@ -2187,7 +2502,7 @@ DC.define("changes", document.getElementById("tpl-changes").textContent, Compone
       document.querySelectorAll('.design-tabs a[data-sub]').forEach(function (a) {
         if (a.dataset.sub === sub) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
       });
-      if (!mounted[sub]) { mounted[sub] = true; DC.mount(sub, document.getElementById('host-' + sub), { reserveHeight: 124 }); }
+      if (!mounted[sub]) { mounted[sub] = true; var mt = document.getElementById('mount-' + sub) || document.getElementById('host-' + sub); DC.mount(sub, mt, { reserveHeight: 124, reserveWidth: sub === 'prototype' ? storyWidth : 0 }); }
     }
   }
   // Every in-page link is handled here, so navigation works even where the address bar can't change
