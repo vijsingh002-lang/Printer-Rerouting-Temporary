@@ -83,6 +83,9 @@ a{color:inherit}
 .doc-body h1{font-size:30px;line-height:1.2;margin:0 0 8px}
 .doc-body h2{margin-top:40px;border-bottom:1px solid #E3E1E8;padding-bottom:6px;scroll-margin-top:72px}
 .doc-body h3{margin-top:26px;scroll-margin-top:72px}
+.doc-body h4{scroll-margin-top:72px}
+.doc-body li.check{list-style:none;position:relative}
+.doc-body li.check::before{content:'';position:absolute;left:-24px;top:5px;width:13px;height:13px;border:1.5px solid #8E3FB4;border-radius:3px}
 .doc-body table{border-collapse:collapse;width:100%;font-size:14px;margin:12px 0;display:block;overflow-x:auto}
 .doc-body th,.doc-body td{border:1px solid #E3E1E8;padding:6px 10px;text-align:left;vertical-align:top}
 .doc-body th{background:#F3F1F6}
@@ -104,13 +107,14 @@ a{color:inherit}
 .case-2{--cc:#8E3FB4;--cb:#DCCFE8;--cbg:#FAF6FD;--ct:#3F1C5E}
 .case-3{--cc:#E07B12;--cb:#F2C792;--cbg:#FFF8EE;--ct:#7A3300}
 .case-badge{display:inline-block;background:var(--cc);color:#FFFFFF;font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;border-radius:14px;padding:3px 12px}
-.case h3{margin:8px 0 10px;color:var(--ct);font-size:21px}
-.case h3 + p{background:#FFFFFF;border:1px solid var(--cb);border-radius:8px;padding:10px 14px}
-.case-1 h3 + p{color:#14532D}.case-2 h3 + p{color:#3F1C5E}.case-3 h3 + p{color:#7A3300}
+.case h3,.case h4{margin:8px 0 10px;color:var(--ct);font-size:21px}
+.case h3 + p,.case h4 + p{background:#FFFFFF;border:1px solid var(--cb);border-radius:8px;padding:10px 14px}
+.case-1 h4 + p{color:#14532D}.case-2 h4 + p{color:#3F1C5E}.case-3 h4 + p{color:#7A3300}
 .case-note{background:#F2F6FC;border:1px solid #C9D8EE;border-left:8px solid #2878C8;border-radius:10px;padding:6px 20px;margin:22px 0}
-.case-note h3{color:#1F3F6E}
-.doc-toc a.toc-key{background:#FFF4E6;color:#7A3300;font-weight:700;border-left:4px solid #E07B12}
-.doc-toc a.toc-key:hover{background:#FFEBD2;color:#7A3300}
+.case-note h3,.case-note h4{color:#1F3F6E;margin-top:14px}
+.doc-toc a{border-left:4px solid transparent}
+.doc-toc a.active{background:#EFE5F7;color:#3F1C5E;font-weight:700;border-left-color:#8E3FB4}
+.doc-toc a.active:hover{background:#E6D8F1;color:#3F1C5E}
 /* story */
 .proto-wrap{display:flex;align-items:flex-start;justify-content:center;gap:4px;padding:12px 0 0 16px}
 .proto-mount{flex:0 1 auto;min-width:0}
@@ -168,20 +172,39 @@ a{color:inherit}
   <h1>Temporary Printer Rerouting</h1>
   <p class="lead">Redirect kitchen tickets from a failed printer to another printer from the POS Terminal Devices screen, without changing any printer setup.</p>
   <div class="cards">
-    <a class="card" href="#doc"><span class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><path d="M14 3v6h6"></path><path d="M8 13h8M8 17h6"></path></svg></span><h2>Functional Document</h2><p>Scope, printer assignment cases, screens, eligibility rules, states and acceptance criteria.</p><span class="go">Open document</span></a>
+    <a class="card" href="#doc"><span class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><path d="M14 3v6h6"></path><path d="M8 13h8M8 17h6"></path></svg></span><h2>Functional Document</h2><p>Overview, business requirement and cases, R&amp;D on other POS products, screens, test cases and acceptance criteria.</p><span class="go">Open document</span></a>
     <a class="card" href="#design/prototype"><span class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"></rect><path d="M8 20h8"></path><path d="M12 16v4"></path></svg></span><h2>Design</h2><p>Clickable Terminal Devices prototype with Manager Authorization, plus system states and components.</p><span class="go">Open design</span></a>
   </div>
 </main>
 
 <div id="view-doc" class="doc-view" hidden>
-  <nav class="doc-toc" aria-label="Document sections"><p>Contents</p><a href="#doc/overview">Overview</a><a href="#doc/screens-and-functional-requirements">Screens and functional requirements</a><a href="#doc/destination-eligibility">Destination eligibility</a><a href="#doc/printer-assignment-cases" class="toc-key">Printer assignment cases</a><a href="#doc/audit-data-and-acceptance-criteria">Audit data and acceptance criteria</a><a class="to-design" href="#design/prototype">Open the design</a></nav>
+  <nav class="doc-toc" aria-label="Document sections"><p>Contents</p><a href="#doc/overview">Overview</a><a href="#doc/business-requirement">Business Requirement</a><a href="#doc/rd-details">R&amp;D Details</a><a href="#doc/screens-and-functional-requirements">Screens and functional requirements</a><a href="#doc/test-cases">Test Cases</a><a href="#doc/audit-data-and-acceptance-criteria">Audit Data and Acceptance Criteria</a><a class="to-design" href="#design/prototype">Open the design</a></nav>
   <article class="doc-body"><h1 id="temporary-printer-rerouting-functional-specification">Temporary Printer Rerouting – Functional Specification</h1>
-<p>Version 2.0 · 2026-10-28 · matches Design v2</p>
+<p>Version 2.1 · 2026-10-29 · matches Design v2</p>
 <div class="cases-callout"><strong>Printer assignment cases</strong><span>Case 1 no prep area · Case 2 different prep area · Case 3 same prep area fallback</span><a href="#doc/printer-assignment-cases">View cases</a></div>
 
 <h2 id="overview">Overview</h2>
 <p>Temporary Printer Rerouting lets an authorized user send all kitchen tickets from a failed printer to another compatible printer, without changing any printer configuration. It lives in the POS <strong>Terminal Devices</strong> screen under Kitchen Printer(s), and every activation needs manager authorization on the terminal.</p>
-<p><strong>Users</strong></p>
+<p><strong>Principles</strong></p>
+<ul>
+<li>A reroute is a temporary routing override, never a printer reassignment. The original printer's IP address, prep group assignments and menu item assignments never change.</li>
+<li>Scope is fixed: all prep groups served by the original printer. Receipts and other printers' tickets are never redirected.</li>
+<li>A reroute applies to new tickets from the moment the store server confirms it. Tickets already waiting on the original printer can be reprinted on the destination.</li>
+<li>Duration is until manually reverted. When the original printer responds again, the user is asked whether to restore the original routing.</li>
+<li>The UI shows success only after the store server confirms the change. Until then the state is shown as pending.</li>
+<li>Every attempt, success or failure is written to Reroute History.</li>
+</ul>
+<h2 id="business-requirement">Business Requirement</h2>
+<h3 id="problem">Problem</h3>
+<p>When a kitchen printer fails during service, tickets for its prep areas stop printing and orders are delayed or lost. Today staff have no way on the POS to send those tickets to another printer without a back-office configuration change, which is slow, needs support, and has to be undone by hand.</p>
+<h3 id="business-goals">Business goals</h3>
+<ul>
+<li>Keep tickets printing within a minute of a printer failure, from the POS terminal.</li>
+<li>Let the people on shift (store manager, or a cashier with manager approval) handle it without calling support.</li>
+<li>Never change the store's printer configuration, so nothing needs undoing afterwards.</li>
+<li>Make every reroute visible and traceable: who requested it, who approved it and when it ended.</li>
+</ul>
+<h3 id="users-and-permissions">Users and permissions</h3>
 <table>
 <thead>
 <tr>
@@ -224,16 +247,223 @@ a{color:inherit}
 </tr>
 </tbody>
 </table>
-<p><strong>Principles</strong></p>
-<ul>
-<li>A reroute is a temporary routing override, never a printer reassignment. The original printer's IP address, prep group assignments and menu item assignments never change.</li>
-<li>Scope is fixed: all prep groups served by the original printer. Receipts and other printers' tickets are never redirected.</li>
-<li>A reroute applies to new tickets from the moment the store server confirms it. Tickets already waiting on the original printer can be reprinted on the destination.</li>
-<li>Duration is until manually reverted. When the original printer responds again, the user is asked whether to restore the original routing.</li>
-<li>The UI shows success only after the store server confirms the change. Until then the state is shown as pending.</li>
-<li>Every attempt, success or failure is written to Reroute History.</li>
-</ul>
+<h3 id="scope">Scope</h3>
+<p><strong>In scope:</strong> temporary rerouting of one kitchen printer's tickets to another printer from the POS; manager approval; monitoring, recovery prompt and stopping; Alert(s) shortcut; Reroute History.</p>
 <p><strong>Out of scope:</strong> changing printer IP or prep group setup, splitting prep groups across several destinations, scheduled or time-limited reroutes, and automatic chaining of reroutes (A → B → C). Another reroute pointing at the original printer moves only when the user chooses to move it.</p>
+<h3 id="printer-assignment-cases">Printer assignment cases</h3>
+<p>All three cases can be used for temporary rerouting. A reroute sends the original prep area's tickets to another printer without changing any prep area, menu category or printer assignment.</p>
+<div class="case-table">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Case 1: No prep area</th>
+<th>Case 2: Different prep area</th>
+<th>Case 3: Same prep area fallback</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Can be a reroute destination</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>How it's triggered</td>
+<td>Manual reroute + manager approval</td>
+<td>Manual reroute + manager approval</td>
+<td>Automatic (existing); manual reroute also allowed</td>
+</tr>
+<tr>
+<td>What the destination prints</td>
+<td>Only the rerouted tickets</td>
+<td>Its own tickets + the rerouted tickets</td>
+<td>Its own tickets + the failed printer's tickets</td>
+</tr>
+<tr>
+<td>Destination's assignments changed</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Menu category match needed</td>
+<td>No</td>
+<td>No</td>
+<td>Already shared</td>
+</tr>
+<tr>
+<td>Ends when</td>
+<td>User stops the reroute</td>
+<td>User stops the reroute</td>
+<td>Fallback: original back online. Manual: user stops it</td>
+</tr>
+<tr>
+<td>Label in the destination list</td>
+<td>Configured, no prep group</td>
+<td>Other prep group: &lt;its prep group&gt;</td>
+<td>Same prep group: &lt;its prep group&gt;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="case case-1">
+<p><span class="case-badge">Case 1</span></p>
+<h4 id="printer-not-assigned-to-any-prep-area">Printer not assigned to any prep area</h4>
+<p><strong>Answer:</strong> Yes. The printer can be selected and used directly; it is the simplest case because no other tickets print there.</p>
+<p><strong>Example:</strong> Kitchen Printer A (Hot Line, Grill) is offline. Spare Kitchen Printer (192.168.20.193) is online and has no prep area.</p>
+<ol>
+<li>Spare Kitchen Printer appears in the destination list as "Configured, no prep group" when it is online, has no fault and can print kitchen tickets.</li>
+<li>After manager approval and server confirmation, all new Hot Line and Grill tickets print on Spare Kitchen Printer, plus any queued tickets the user chose to reprint.</li>
+<li>Spare Kitchen Printer stays unassigned in configuration. No prep area or menu category is added to it.</li>
+<li>When the reroute is stopped, it goes back to printing nothing.</li>
+</ol>
+</div>
+<div class="case case-2">
+<p><span class="case-badge">Case 2</span></p>
+<h4 id="printer-assigned-to-a-different-prep-area">Printer assigned to a different prep area</h4>
+<p><strong>Answer:</strong> Yes, even when its prep area has none of the same menu categories. The reroute is a local routing override on the failed printer: tickets for the original prep area are sent to the destination printer's address. The destination's prep area and menu categories are never read or changed.</p>
+<p><strong>Example:</strong> Kitchen Printer A (Hot Line, Grill) is offline. Expo Printer is online and assigned to Expo, which has no Hot Line or Grill categories.</p>
+<ol>
+<li>An order item resolves to its prep area exactly as today (for example Burger → Grill → Kitchen Printer A).</li>
+<li>Because Kitchen Printer A has an active reroute, the ticket is sent to Expo Printer instead.</li>
+<li>The ticket keeps its original prep area content and format, with a header: <strong>REROUTED – Grill (Kitchen Printer A)</strong>.</li>
+<li>Expo Printer keeps printing its own Expo tickets as normal.</li>
+</ol>
+<p>What does not change: Expo's menu categories and printer assignment; Kitchen Printer A's prep areas, menu categories and IP address. Grill items are not added to Expo's category list, and reports by prep area still count them as Grill.</p>
+<p>Operational notes: tickets print at a different station, so the review step lists the affected prep groups and the ticket header names the original prep area. The destination now carries two prep areas' volume; the destination list shows each printer's current prep group so the user can judge load.</p>
+</div>
+<div class="case case-3">
+<p><span class="case-badge">Case 3</span></p>
+<h4 id="same-prep-area-fallback-existing">Same prep area fallback (existing)</h4>
+<p><strong>Answer:</strong> No change to today's behaviour. When Printer A fails, its items print automatically on the fallback Printer B in the same prep area, with no user action or manager approval.</p>
+<ul>
+<li>Fallback is automatic and ends by itself when Printer A is back online. A temporary reroute is manual and lasts until someone stops it.</li>
+<li>A manual reroute is still allowed, for example when Printer B is also offline or Printer A reports online but has a fault.</li>
+<li>An active manual reroute takes priority over the fallback for as long as it runs.</li>
+<li>In the destination list the fallback printer appears as "Same prep group: &lt;prep group&gt;".</li>
+</ul>
+</div>
+<div class="case-note">
+<h4 id="routing-precedence">Routing precedence</h4>
+<ol>
+<li>The original printer has an active manual reroute → print on the reroute destination.</li>
+<li>The original printer is offline and has an online fallback → print on the fallback (existing).</li>
+<li>Otherwise → print on the original printer.</li>
+</ol>
+<p>Reroutes don't chain automatically: a ticket does not follow the destination's own reroute or fallback. If the destination can't print, the reroute is flagged red everywhere and the user is led to Change Destination. When rerouting a printer that is itself receiving another reroute, the user can move that reroute in the same step.</p>
+</div>
+<h2 id="rd-details">R&amp;D Details</h2>
+<p>We reviewed how three POS products let restaurant staff move kitchen printing when a printer fails, to check that Plum's approach matches what operators already expect.</p>
+<h3 id="sources-reviewed">Sources reviewed</h3>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Source</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Upserve (Lightspeed)</td>
+<td><a href="https://help.upserve.com/articles/en_US/Breadcrumb/Printing-Overview?utm_source=chatgpt.com#troubleshooting" target="_blank" rel="noopener">Printing Overview – Troubleshooting</a></td>
+<td>Printer status in Device Center and troubleshooting steps for offline printers, ending with re-routing printing</td>
+</tr>
+<tr>
+<td>PAR POS</td>
+<td><a href="https://product-docs.partech.com/docs/par-pos/learning-resources/step-by-step-guides/manager-functions/reroute-videos-printers?utm_source=chatgpt.com" target="_blank" rel="noopener">How Do I Reroute Videos &amp; Printers?</a></td>
+<td>Manager function to reroute printers and kitchen video queues, with Reset to restore</td>
+</tr>
+<tr>
+<td>NCR Aloha Table Service</td>
+<td><a href="https://docs.ncrvoyix.com/downloads/aloha-pos/TS_ManagerGuide.pdf?utm_source=chatgpt.com" target="_blank" rel="noopener">Manager Guide (PDF)</a></td>
+<td>Reroute Printer and Reroute Printer Group from Special Functions › System, with Reset All</td>
+</tr>
+</tbody>
+</table>
+<h3 id="findings">Findings</h3>
+<p><strong>Upserve.</strong> An offline printer is flagged with a red X in Device Center. Its troubleshooting guide walks staff through clearing paper or error lights, power-cycling the printer and printing a test slip to confirm its IP address; if the printer still won't print, the guidance is to re-route printing and contact Upserve Support. Device Center stays available even when the terminals are in Offline Mode. <em>Note: the Upserve help site blocks automated reading, so this summary is based on Upserve's related "One printer is offline" and "Offline Mode" articles.</em></p>
+<p><strong>PAR POS.</strong> Rerouting is a <strong>Manager</strong> function with two options, Reroute Videos (kitchen queues) and Reroute Printers. The manager picks a target destination for each printer and taps OK. A <strong>Reset</strong> button returns every printer to its original destination. Use cases named: equipment malfunction, or consolidating counter and drive-thru orders.</p>
+<p><strong>NCR Aloha.</strong> From <strong>Special Functions › System › Reroute Printer</strong>, the manager selects the printer, taps Change Routing, picks the new printer and confirms. Printers can be configured to reroute automatically to a backup printer, and the manual reroute overrides that. <strong>Reset All</strong> restores the original routing when the printer is back online. Aloha also supports rerouting a whole <strong>printer group</strong> (for example when a station or the patio closes) and rerouting kitchen video monitors. Functions that need a manager use a Manager Approval screen, and the manager's ID is recorded with the transaction.</p>
+<h3 id="comparison-with-plum">Comparison with Plum</h3>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Upserve</th>
+<th>PAR POS</th>
+<th>NCR Aloha</th>
+<th>Plum (this design)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Where staff start</td>
+<td>Device Center</td>
+<td>Manager › Reroute Printers</td>
+<td>Special Functions › System › Reroute Printer</td>
+<td>Functions › Support › Devices, or status bar alert › Alert(s) › View</td>
+</tr>
+<tr>
+<td>Offline indicator</td>
+<td>Red X in Device Center</td>
+<td>Not described</td>
+<td>Error message on terminal login</td>
+<td>Status bar alert, Alert(s) card, red status in Terminal Devices</td>
+</tr>
+<tr>
+<td>Unit rerouted</td>
+<td>Printer</td>
+<td>Each printer (and kitchen queues)</td>
+<td>Printer or printer group (and video monitors)</td>
+<td>One printer, all its prep groups</td>
+</tr>
+<tr>
+<td>Automatic backup</td>
+<td>Not described</td>
+<td>Not described</td>
+<td>Backup printer, manual override allowed</td>
+<td>Same prep area fallback (Case 3), manual override allowed</td>
+</tr>
+<tr>
+<td>Approval</td>
+<td>Not described</td>
+<td>Manager function</td>
+<td>Manager functions; Manager Approval records the ID</td>
+<td>Manager Authorization (PIN, fingerprint, manager card) on every activation</td>
+</tr>
+<tr>
+<td>Restore</td>
+<td>Not described</td>
+<td>Reset (all printers)</td>
+<td>Reset All</td>
+<td>Stop Rerouting per reroute, with a prompt when the printer responds again</td>
+</tr>
+<tr>
+<td>Destination safety checks</td>
+<td>Not described</td>
+<td>Not described</td>
+<td>Not described</td>
+<td>Only online, fault-free, compatible, non-circular printers</td>
+</tr>
+<tr>
+<td>Audit</td>
+<td>Not described</td>
+<td>Not described</td>
+<td>Manager ID on the transaction</td>
+<td>Reroute History with requester, approver and outcome</td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-this-means-for-plum">What this means for Plum</h3>
+<ul>
+<li>Rerouting from a manager-level menu and restoring it later is the industry pattern; Plum follows it and adds confirmation from the store server before showing success.</li>
+<li>Competitors restore with a single <strong>Reset All</strong>. Plum restores one reroute at a time and prompts when the printer recovers. A store-wide "Stop all reroutes" could be added later if operators ask for it.</li>
+<li>Aloha's printer-group reroute (closing a whole station) and PAR/Aloha's kitchen video reroute are out of scope for this release and are candidates for a later phase.</li>
+<li>None of the reviewed guides describe blocking unsafe destinations or recording who approved the change; these are Plum's differentiators.</li>
+</ul>
 <h2 id="screens-and-functional-requirements">Screens and functional requirements</h2>
 <p>The feature is reached from the existing POS screens and then uses the Terminal Devices visual style (dark modal, value over cyan label, pill buttons).</p>
 <h3 id="entry-path-quick-sale-functions-support-devices">Entry path: Quick Sale → Functions → Support → Devices</h3>
@@ -241,7 +471,8 @@ a{color:inherit}
 <li><strong>FR-P1</strong> On <strong>Quick Sale</strong>, tap <strong>Functions</strong> in the action bar. The Functions menu opens.</li>
 <li><strong>FR-P2</strong> In Functions, tap <strong>Support</strong>. The Support menu opens (Devices, Status, Servers, Refresh Config, Export Log To Server, Export DB To Server, Credit Card Batch Close, Test Swipe Card).</li>
 <li><strong>FR-P3</strong> In Support, tap <strong>Devices</strong>. <strong>Terminal Devices</strong> opens. Its Close button returns to Quick Sale.</li>
-<li><strong>FR-P4</strong> The Quick Sale status bar shows the printer state, so staff notice without opening Terminal Devices:<ul>
+<li><strong>FR-P4</strong> Shortcut: the alert in the Quick Sale status bar, and the "N Active Events" count beside it, open <strong>Alert(s)</strong>. Each alert is a card with Type (for example "Printer [Offline]"), the source (printer name and IP, or device IP), a message, Created On and ID. Printer alerts are listed first and have a <strong>View</strong> button (eye icon) that opens Terminal Devices with that printer's row highlighted. Other store alerts (Db [Replication], Pay Device [Unbatched]) have no View. Close returns to Quick Sale.</li>
+<li><strong>FR-P5</strong> The Quick Sale status bar shows the printer state, so staff notice without opening Terminal Devices:<ul>
 <li>red: the printer connection error, for example "Kitchen Printer A (3): failed to connect to /192.168.20.187 (port 9100)";</li>
 <li>orange: "Kitchen Printer A offline. Hot Line and Grill tickets rerouted to Kitchen Printer B.";</li>
 <li>blue: "Kitchen Printer A is responding again. Tickets still print on Kitchen Printer B.";</li>
@@ -252,7 +483,7 @@ a{color:inherit}
 <h3 id="story-rerouting-an-offline-printer">Story: rerouting an offline printer</h3>
 <ol>
 <li>During service, Kitchen Printer A (Hot Line, Grill) stops responding and the Quick Sale status bar shows the error.</li>
-<li>The store manager or a cashier opens Functions › Support › Devices.</li>
+<li>The store manager or a cashier taps the red alert in the status bar and taps <strong>View</strong> on Kitchen Printer A in Alert(s), or opens Functions › Support › Devices.</li>
 <li>In Terminal Devices, Kitchen Printer A shows Offline. They tap <strong>Reroute</strong>, choose Kitchen Printer B, review the scope and the 3 queued tickets, and tap <strong>Continue to Manager Approval</strong>.</li>
 <li>Manager Authorization: a store manager uses their own PIN; a cashier calls the manager on duty. PIN, fingerprint or manager card.</li>
 <li>The store server confirms. Hot Line and Grill tickets print on Kitchen Printer B, and the status bar shows the reroute.</li>
@@ -381,7 +612,7 @@ a{color:inherit}
 </tr>
 </tbody>
 </table>
-<h2 id="destination-eligibility">Destination eligibility</h2>
+<h3 id="destination-eligibility">Destination eligibility</h3>
 <p>A printer can be chosen as a destination only if it passes every rule below; the server re-checks all rules on submit.</p>
 <table>
 <thead>
@@ -420,13 +651,13 @@ a{color:inherit}
 <tr>
 <td>Not circular</td>
 <td>It is already rerouted to the original</td>
-<td>Rerouting Kitchen Printer B while Cold Line Printer → Kitchen Printer B is active: Cold Line Printer can't be the destination</td>
+<td>While Kitchen Printer A → Kitchen Printer B is active, rerouting Kitchen Printer B can't use Kitchen Printer A</td>
 <td>Already rerouted</td>
 </tr>
 <tr>
 <td>Not itself rerouted</td>
 <td>Its own tickets are rerouted elsewhere</td>
-<td>Cold Line Printer while Cold Line → Kitchen Printer B is active</td>
+<td>Kitchen Printer A while Kitchen Printer A → Kitchen Printer B is active</td>
 <td>Already rerouted</td>
 </tr>
 <tr>
@@ -440,111 +671,171 @@ a{color:inherit}
 <p>All three assignment categories are allowed when they pass: same prep group (Kitchen Printer B), different prep group (Expo Printer) and no prep group (Spare Kitchen Printer).</p>
 <p>The original printer must have at least one prep group, and only one active reroute is allowed per original printer. A printer may receive tickets from several originals.</p>
 <p>Because these rules are checked when the reroute is activated, a reroute can only point at a printer that can't print if the destination fails <strong>after</strong> activation. That case is flagged on every surface (FR-E3).</p>
-<h2 id="printer-assignment-cases">Printer assignment cases</h2>
-<p>All three cases can be used for temporary rerouting. A reroute sends the original prep area's tickets to another printer without changing any prep area, menu category or printer assignment.</p>
-<div class="case-table">
+<h2 id="test-cases">Test Cases</h2>
+<p>Preconditions unless stated: Store 1042, logged in on Cashier Station. Kitchen Printer A (Hot Line, Grill) is offline with 3 tickets queued; Kitchen Printer B (Hot Line), Expo Printer (Expo) and Spare Kitchen Printer (no prep group) are online; Cold Line Printer has a paper-feed fault; Patio Bar Printer is offline; Packaging Label Printer is a label printer. No reroute is active.</p>
 <table>
 <thead>
 <tr>
-<th></th>
-<th>Case 1: No prep area</th>
-<th>Case 2: Different prep area</th>
-<th>Case 3: Same prep area fallback</th>
+<th>ID</th>
+<th>Area</th>
+<th>Scenario and steps</th>
+<th>Expected result</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Can be a reroute destination</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Yes</td>
+<td>TC-01</td>
+<td>Navigation</td>
+<td>Quick Sale › Functions › Support › Devices</td>
+<td>Terminal Devices opens; Close returns to Quick Sale</td>
 </tr>
 <tr>
-<td>How it's triggered</td>
-<td>Manual reroute + manager approval</td>
-<td>Manual reroute + manager approval</td>
-<td>Automatic (existing); manual reroute also allowed</td>
+<td>TC-02</td>
+<td>Alerts</td>
+<td>Tap the red alert in the status bar</td>
+<td>Alert(s) opens; Kitchen Printer A "Printer [Offline]" card is first, with Created On, ID and a View icon</td>
 </tr>
 <tr>
-<td>What the destination prints</td>
-<td>Only the rerouted tickets</td>
-<td>Its own tickets + the rerouted tickets</td>
-<td>Its own tickets + the failed printer's tickets</td>
+<td>TC-03</td>
+<td>Alerts</td>
+<td>In Alert(s), tap View on Kitchen Printer A</td>
+<td>Terminal Devices opens with Kitchen Printer A's row highlighted</td>
 </tr>
 <tr>
-<td>Destination's assignments changed</td>
-<td>No</td>
-<td>No</td>
-<td>No</td>
+<td>TC-04</td>
+<td>Alerts</td>
+<td>Check the Pay Device and Db alerts</td>
+<td>Cards show Type, source, message, Created On and ID; no View icon</td>
 </tr>
 <tr>
-<td>Menu category match needed</td>
-<td>No</td>
-<td>No</td>
-<td>Already shared</td>
+<td>TC-05</td>
+<td>Eligibility</td>
+<td>Reroute Kitchen Printer A, open the destination list</td>
+<td>Selectable: Kitchen Printer B, Expo Printer, Spare Kitchen Printer. Unavailable list: Cold Line (Unavailable, fault), Patio Bar (Unavailable, offline), Packaging Label (Incompatible). Kitchen Printer A is not listed</td>
 </tr>
 <tr>
-<td>Ends when</td>
-<td>User stops the reroute</td>
-<td>User stops the reroute</td>
-<td>Fallback: original back online. Manual: user stops it</td>
+<td>TC-06</td>
+<td>Case 1</td>
+<td>Choose Spare Kitchen Printer, approve</td>
+<td>New Hot Line and Grill tickets print on Spare Kitchen Printer; its configuration stays "Not assigned"</td>
 </tr>
 <tr>
-<td>Label in the destination list</td>
-<td>Configured, no prep group</td>
-<td>Other prep group: &lt;its prep group&gt;</td>
-<td>Same prep group: &lt;its prep group&gt;</td>
+<td>TC-07</td>
+<td>Case 2</td>
+<td>Choose Expo Printer, approve</td>
+<td>Rerouted tickets print on Expo with the REROUTED header; Expo keeps printing its own tickets; Expo's categories are unchanged</td>
+</tr>
+<tr>
+<td>TC-08</td>
+<td>Case 3</td>
+<td>Kitchen Printer A has a configured fallback in its prep area and goes offline, no manual reroute</td>
+<td>Tickets print on the fallback automatically, with no approval; when A returns, routing goes back by itself</td>
+</tr>
+<tr>
+<td>TC-09</td>
+<td>Review</td>
+<td>On the review step, leave "Reprint 3 tickets" on</td>
+<td>After confirmation, the 3 queued tickets print on the destination and History logs "Queued tickets reprinted"</td>
+</tr>
+<tr>
+<td>TC-10</td>
+<td>Review</td>
+<td>Turn "Reprint 3 tickets" off</td>
+<td>Queued tickets are not reprinted</td>
+</tr>
+<tr>
+<td>TC-11</td>
+<td>Approval</td>
+<td>Store manager enters own PIN and taps Accept</td>
+<td>Reroute is sent; approver recorded as the store manager</td>
+</tr>
+<tr>
+<td>TC-12</td>
+<td>Approval</td>
+<td>Cashier requests; manager approves with PIN, fingerprint or manager card</td>
+<td>Reroute is sent; requester = cashier, approver = manager</td>
+</tr>
+<tr>
+<td>TC-13</td>
+<td>Approval</td>
+<td>Enter a wrong PIN 3 times</td>
+<td>Attempts left are shown; after the third, PIN entry locks for 5 minutes, fingerprint and card stay available; each attempt is logged</td>
+</tr>
+<tr>
+<td>TC-14</td>
+<td>Approval</td>
+<td>Tap Back on Manager Authorization</td>
+<td>Returns to review; nothing is sent</td>
+</tr>
+<tr>
+<td>TC-15</td>
+<td>Activation</td>
+<td>Server confirms</td>
+<td>Toast, orange banner, row labels on A and B, status bar shows the reroute</td>
+</tr>
+<tr>
+<td>TC-16</td>
+<td>Activation</td>
+<td>Server doesn't confirm within 15 s</td>
+<td>"The reroute wasn't activated"; routing unchanged; Try again offered</td>
+</tr>
+<tr>
+<td>TC-17</td>
+<td>Activation</td>
+<td>Another terminal reroutes A during review</td>
+<td>"Routing changed while you were reviewing"; the other change is kept; Load latest routing</td>
+</tr>
+<tr>
+<td>TC-18</td>
+<td>Monitoring</td>
+<td>Destination goes offline after activation</td>
+<td>Banner, rows and details turn red with "went offline … after this reroute was activated"; Change Destination offered; History logs it</td>
+</tr>
+<tr>
+<td>TC-19</td>
+<td>Monitoring</td>
+<td>Kitchen Printer A responds again</td>
+<td>Blue banner and blue status bar alert; Keep Reroute dismisses it; History logs "Original printer responding"</td>
+</tr>
+<tr>
+<td>TC-20</td>
+<td>Stop</td>
+<td>Stop Rerouting while A is online, confirm</td>
+<td>Toast "Original routing restored"; banner and labels removed; History logs "Reroute stopped"</td>
+</tr>
+<tr>
+<td>TC-21</td>
+<td>Stop</td>
+<td>Stop Rerouting while A is still offline</td>
+<td>Dialog warns and leads with Change Destination Instead; Stop Anyway still possible</td>
+</tr>
+<tr>
+<td>TC-22</td>
+<td>Stop</td>
+<td>Stop request times out</td>
+<td>"Couldn't confirm the reroute was removed"; status Unconfirmed; Try stopping again</td>
+</tr>
+<tr>
+<td>TC-23</td>
+<td>Permissions</td>
+<td>Read-only staff opens Terminal Devices</td>
+<td>Reroute and Stop Rerouting are disabled with a reason</td>
+</tr>
+<tr>
+<td>TC-24</td>
+<td>Configuration</td>
+<td>Compare Kitchen Printer A's IP, prep groups and menu items before and after a reroute</td>
+<td>Identical</td>
+</tr>
+<tr>
+<td>TC-25</td>
+<td>Audit</td>
+<td>Open Reroute History after TC-11 to TC-22</td>
+<td>Every attempt and outcome is listed with time, user, approver, printers and prep groups</td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="case case-1">
-<p><span class="case-badge">Case 1</span></p>
-<h3 id="printer-not-assigned-to-any-prep-area">Printer not assigned to any prep area</h3>
-<p><strong>Answer:</strong> Yes. The printer can be selected and used directly; it is the simplest case because no other tickets print there.</p>
-<p><strong>Example:</strong> Kitchen Printer A (Hot Line, Grill) is offline. Spare Kitchen Printer (192.168.20.193) is online and has no prep area.</p>
-<ol>
-<li>Spare Kitchen Printer appears in the destination list as "Configured, no prep group" when it is online, has no fault and can print kitchen tickets.</li>
-<li>After manager approval and server confirmation, all new Hot Line and Grill tickets print on Spare Kitchen Printer, plus any queued tickets the user chose to reprint.</li>
-<li>Spare Kitchen Printer stays unassigned in configuration. No prep area or menu category is added to it.</li>
-<li>When the reroute is stopped, it goes back to printing nothing.</li>
-</ol>
-</div>
-<div class="case case-2">
-<p><span class="case-badge">Case 2</span></p>
-<h3 id="printer-assigned-to-a-different-prep-area">Printer assigned to a different prep area</h3>
-<p><strong>Answer:</strong> Yes, even when its prep area has none of the same menu categories. The reroute is a local routing override on the failed printer: tickets for the original prep area are sent to the destination printer's address. The destination's prep area and menu categories are never read or changed.</p>
-<p><strong>Example:</strong> Kitchen Printer A (Hot Line, Grill) is offline. Expo Printer is online and assigned to Expo, which has no Hot Line or Grill categories.</p>
-<ol>
-<li>An order item resolves to its prep area exactly as today (for example Burger → Grill → Kitchen Printer A).</li>
-<li>Because Kitchen Printer A has an active reroute, the ticket is sent to Expo Printer instead.</li>
-<li>The ticket keeps its original prep area content and format, with a header: <strong>REROUTED – Grill (Kitchen Printer A)</strong>.</li>
-<li>Expo Printer keeps printing its own Expo tickets as normal.</li>
-</ol>
-<p>What does not change: Expo's menu categories and printer assignment; Kitchen Printer A's prep areas, menu categories and IP address. Grill items are not added to Expo's category list, and reports by prep area still count them as Grill.</p>
-<p>Operational notes: tickets print at a different station, so the review step lists the affected prep groups and the ticket header names the original prep area. The destination now carries two prep areas' volume; the destination list shows each printer's current prep group so the user can judge load.</p>
-</div>
-<div class="case case-3">
-<p><span class="case-badge">Case 3</span></p>
-<h3 id="same-prep-area-fallback-existing">Same prep area fallback (existing)</h3>
-<p><strong>Answer:</strong> No change to today's behaviour. When Printer A fails, its items print automatically on the fallback Printer B in the same prep area, with no user action or manager approval.</p>
-<ul>
-<li>Fallback is automatic and ends by itself when Printer A is back online. A temporary reroute is manual and lasts until someone stops it.</li>
-<li>A manual reroute is still allowed, for example when Printer B is also offline or Printer A reports online but has a fault.</li>
-<li>An active manual reroute takes priority over the fallback for as long as it runs.</li>
-<li>In the destination list the fallback printer appears as "Same prep group: &lt;prep group&gt;".</li>
-</ul>
-</div>
-<div class="case-note">
-<h3 id="routing-precedence">Routing precedence</h3>
-<ol>
-<li>The original printer has an active manual reroute → print on the reroute destination.</li>
-<li>The original printer is offline and has an online fallback → print on the fallback (existing).</li>
-<li>Otherwise → print on the original printer.</li>
-</ol>
-<p>Reroutes don't chain automatically: a ticket does not follow the destination's own reroute or fallback. If the destination can't print, the reroute is flagged red everywhere and the user is led to Change Destination. When rerouting a printer that is itself receiving another reroute, the user can move that reroute in the same step.</p>
-</div>
-<h2 id="audit-data-and-acceptance-criteria">Audit data and acceptance criteria</h2>
+<h2 id="audit-data-and-acceptance-criteria">Audit Data and Acceptance Criteria</h2>
 <p>Each Reroute History record holds these fields and is never edited or deleted.</p>
 <table>
 <thead>
@@ -606,20 +897,20 @@ a{color:inherit}
 </table>
 <p><strong>Acceptance criteria</strong></p>
 <ul>
-<li>[ ] Only online, fault-free, compatible printers can be chosen; the others are listed with a reason, and the original printer is never offered.</li>
-<li>[ ] Circular and already-rerouted destinations are rejected by both client and server.</li>
-<li>[ ] Continue to Manager Approval always leads to Manager Authorization; nothing is sent before approval.</li>
-<li>[ ] Three wrong PINs lock PIN entry for 5 minutes while fingerprint and manager card stay available; each attempt is logged.</li>
-<li>[ ] Success toasts, banners and labels appear only after server confirmation.</li>
-<li>[ ] New tickets for every prep group of the original print on the destination; no other tickets move. Queued tickets reprint only when the option is on.</li>
-<li>[ ] Another reroute pointing at the original moves only when "Also move" is on.</li>
-<li>[ ] The original printer's IP, prep groups and menu item assignments are identical before and after a reroute.</li>
-<li>[ ] An active reroute is visible from the original row, the destination row, both detail dialogs and the banner, on every terminal, after restart.</li>
-<li>[ ] A reroute whose destination fails after activation is flagged red on every surface, says when it failed, offers Change Destination, and is logged.</li>
-<li>[ ] When the original printer responds again, the user is prompted once to stop or keep the reroute.</li>
-<li>[ ] Stop Rerouting needs confirmation; stopping into a printer that still can't print leads with Change Destination Instead; a failed stop keeps the reroute marked unconfirmed.</li>
-<li>[ ] A concurrent change by another user is detected and never overwritten.</li>
-<li>[ ] Every attempt and outcome appears in Reroute History with the fields above.</li>
+<li class="check">Only online, fault-free, compatible printers can be chosen; the others are listed with a reason, and the original printer is never offered.</li>
+<li class="check">Circular and already-rerouted destinations are rejected by both client and server.</li>
+<li class="check">Continue to Manager Approval always leads to Manager Authorization; nothing is sent before approval.</li>
+<li class="check">Three wrong PINs lock PIN entry for 5 minutes while fingerprint and manager card stay available; each attempt is logged.</li>
+<li class="check">Success toasts, banners and labels appear only after server confirmation.</li>
+<li class="check">New tickets for every prep group of the original print on the destination; no other tickets move. Queued tickets reprint only when the option is on.</li>
+<li class="check">Another reroute pointing at the original moves only when "Also move" is on.</li>
+<li class="check">The original printer's IP, prep groups and menu item assignments are identical before and after a reroute.</li>
+<li class="check">An active reroute is visible from the original row, the destination row, both detail dialogs and the banner, on every terminal, after restart.</li>
+<li class="check">A reroute whose destination fails after activation is flagged red on every surface, says when it failed, offers Change Destination, and is logged.</li>
+<li class="check">When the original printer responds again, the user is prompted once to stop or keep the reroute.</li>
+<li class="check">Stop Rerouting needs confirmation; stopping into a printer that still can't print leads with Change Destination Instead; a failed stop keeps the reroute marked unconfirmed.</li>
+<li class="check">A concurrent change by another user is detected and never overwritten.</li>
+<li class="check">Every attempt and outcome appears in Reroute History with the fields above.</li>
 </ul></article>
 </div>
 
@@ -1160,18 +1451,54 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
       <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 16px; border-radius: 50%; background: #8E3FB4"></span>Powered by PlumPOS</span>
       <span>Cashier Station</span>
       <span style="width: 24px; height: 24px; border-radius: 50%; background: #2F7FC1; color: #FFFFFF; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: Georgia, serif">i</span>
-      <span>{{posEvents}}</span>
+      <button type="button" onClick="{{openAlerts}}" style="border: 0; background: transparent; color: #E6E6E6; padding: 4px 2px; font-size: 13px; text-decoration: underline; text-underline-offset: 3px">{{posEvents}}</button>
       <sc-if value="{{posTicker.show}}" hint-placeholder-val="{{ true }}">
-        <span role="status" style="flex: 0 1 540px; min-width: 0; display: flex; align-items: center; gap: 8px; background: #262626; border-radius: 12px; padding: 3px 12px; color: {{posTicker.fg}}; white-space: nowrap; overflow: hidden">
+        <button type="button" class="{{hl.alert}}" onClick="{{openAlerts}}" aria-label="Open alerts" style="flex: 0 1 540px; min-width: 0; display: flex; align-items: center; gap: 8px; background: #262626; border: 0; border-radius: 12px; padding: 4px 12px; color: {{posTicker.fg}}; font-size: 13px; white-space: nowrap; overflow: hidden; text-align: left">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="{{posTicker.fg}}" aria-hidden="true" style="flex: 0 0 auto"><path d="M12 2L1 21h22z"></path></svg>
           <span style="overflow: hidden; text-overflow: ellipsis">{{posTicker.text}}</span>
-        </span>
+        </button>
       </sc-if>
       <span style="margin-left: auto">{{posUser}}</span>
       <span>Wed, Oct 28 8:39 A, PDT</span>
       <svg width="24" height="18" viewBox="0 0 24 18" fill="none" stroke="#2DBE60" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M2 6a15 15 0 0 1 20 0"></path><path d="M5.5 9.5a10 10 0 0 1 13 0"></path><path d="M9 13a5 5 0 0 1 6 0"></path><circle cx="12" cy="16" r="1" fill="#2DBE60"></circle></svg>
     </div>
   </div>
+
+  <!-- Alert(s) (from the status bar alert) -->
+  <sc-if value="{{screenAlerts}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 5">
+      <div role="dialog" aria-modal="true" aria-labelledby="al-title" style="position: absolute; left: 16px; right: 16px; top: 14px; bottom: 14px; background: #565C64; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column">
+        <div style="position: relative; height: 60px; flex: 0 0 auto; background: #4A4F57; display: flex; align-items: center; justify-content: center">
+          <h2 id="al-title" style="margin: 0; font-size: 21px; font-weight: 500">Alert(s)</h2>
+          <button type="button" onClick="{{closeToPos}}" style="position: absolute; right: 14px; top: 10px; width: 150px; height: 40px; border: 0; border-radius: 22px; background: #E0262A; color: #FFFFFF; font-size: 17px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.3)">Close</button>
+        </div>
+        <div style="flex: 1 1 auto; overflow-y: auto; padding: 26px 26px 30px; display: flex; flex-direction: column; gap: 26px">
+          <sc-for list="{{alerts}}" as="e" hint-placeholder-count="5">
+            <div style="flex: 0 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) 340px 60px; gap: 16px; align-items: start; background: #1C1D20; border-radius: 8px; padding: 18px 20px; min-height: 92px; box-sizing: border-box; box-shadow: 0 2px 4px rgba(0,0,0,0.3)">
+              <div style="min-width: 0; display: flex; flex-direction: column; gap: 12px">
+                <div style="font-size: 17px">Type: {{e.type}}</div>
+                <sc-if value="{{e.source}}" hint-placeholder-val="{{ true }}"><div style="font-size: 17px">{{e.source}}</div></sc-if>
+                <sc-if value="{{e.message}}" hint-placeholder-val="{{ true }}">
+                  <div style="display: flex; align-items: baseline; gap: 12px; font-weight: 700; font-size: 15px"><span style="width: 6px; height: 6px; border-radius: 50%; background: {{e.dot}}; flex: 0 0 auto; transform: translateY(-2px)"></span><span>{{e.message}}</span></div>
+                </sc-if>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 14px; font-size: 15px; color: #E6E8EB">
+                <div>Created On: {{e.created}}</div>
+                <div>ID: {{e.id}}</div>
+              </div>
+              <div style="display: flex; justify-content: flex-end">
+                <sc-if value="{{e.canView}}" hint-placeholder-val="{{ true }}">
+                  <button type="button" class="{{e.hl}}" onClick="{{e.view}}" aria-label="{{e.aria}}" title="View in Terminal Devices" style="width: 50px; height: 50px; border: 0; border-radius: 50%; background: #2878C8; color: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.4)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
 
   <!-- Functions -->
   <sc-if value="{{screenFunctions}}" hint-placeholder-val="{{ false }}">
@@ -1754,12 +2081,11 @@ class Component extends DCLogic {
   }
   initialState() {
     return {
-      screen: 'pos', storyDone: false, openPrinters: true, openServices: false, openHistory: false, panel: false, query: '', selectedId: 'a', verifying: {},
-      reroutes: [{ id: 'r1', from: 'cold', to: 'b', groups: ['Cold Line'], at: '10/26/2026, 6:42 PM', by: 'Priya Nair (Plum Support)', approvedBy: 'Meera Joshi (General manager)', unconfirmed: false }],
+      screen: 'pos', viaAlerts: false, focusRow: null, storyDone: false, openPrinters: true, openServices: false, openHistory: false, panel: false, query: '', selectedId: 'a', verifying: {},
+      reroutes: [],
       dialog: null, mode: 'new', origId: null, step: 'select', dest: null, ack: false, checking: false, checkedAt: '',
       activateAttempts: 0, conflictDone: false, pin: '', pinError: '', pinFails: 0, approver: '', stopId: null, stopStep: 'confirm', stopAttempts: 0, toast: null, verified: {}, moveChain: false, reprint: true, showUnavail: false, pinLocked: false, onlineOverride: {}, kept: {}, queued: { a: 3 }, wentDown: {},
       audit: [
-        { when: '10/26/2026, 6:42 PM', event: 'Reroute activated', outcome: 'Confirmed', k: OK, user: 'Priya Nair (Plum Support)', from: 'Cold Line Printer', to: 'Kitchen Printer B', groups: 'Cold Line', note: 'Paper-feed fault on Cold Line Printer.' },
         { when: '10/12/2026, 9:20 PM', event: 'Reroute stopped', outcome: 'Confirmed', k: OK, user: 'Goutam K. (Store manager)', from: 'Kitchen Printer A', to: 'Expo Printer', groups: 'Hot Line, Grill', note: 'Original routing restored.' },
         { when: '10/12/2026, 9:18 PM', event: 'Stop attempt', outcome: 'Not confirmed', k: FAIL, user: 'Goutam K. (Store manager)', from: 'Kitchen Printer A', to: 'Expo Printer', groups: 'Hot Line, Grill', note: 'Server timeout. Reroute stayed active.' },
         { when: '10/12/2026, 7:31 PM', event: 'Destination changed', outcome: 'Confirmed', k: OK, user: 'Goutam K. (Store manager)', from: 'Kitchen Printer A', to: 'Expo Printer', groups: 'Hot Line, Grill', note: 'Previous destination: Kitchen Printer B.' },
@@ -1902,28 +2228,30 @@ class Component extends DCLogic {
     else if (stopA) cur = 10;
     else if (outA) cur = recovered ? 9 : 8;
     else if (s.dialog === 'reroute' && s.origId === 'a') cur = s.step === 'select' ? 5 : (s.step === 'review' || s.step === 'error' || s.step === 'conflict' ? 6 : 7);
-    else cur = s.screen === 'devices' ? 4 : (s.screen === 'support' ? 3 : (s.screen === 'functions' ? 2 : 1));
+    else cur = s.screen === 'devices' ? 4 : (s.screen === 'support' || s.screen === 'alerts' ? 3 : (s.screen === 'functions' ? 2 : 1));
     var approve = {
       'Store manager': 'Manager Authorization opens. Goutam is a manager, so he confirms with his own PIN (any 4 digits here) and taps Accept.',
       'Cashier': 'Manager Authorization opens: “Printer reroute requires a Manager.” The cashier calls the manager on duty, who enters their PIN (any 4 digits here) or uses fingerprint or manager card.',
       'Read-only staff': 'Read-only staff can’t start a reroute; Reroute is disabled with a reason. Switch persona to continue.'
     }[role] || 'Manager Authorization opens. A manager on site approves with PIN (any 4 digits here), fingerprint or manager card.';
     var steps = [
-      ['Kitchen Printer A goes offline', 'It is lunch rush. Kitchen Printer A (Hot Line, Grill) stops responding, and the Quick Sale status bar shows the connection error. ' + per.who + ' decides to reroute its tickets for now.', 'Tap Functions.'],
-      ['Open Support', 'The Functions menu opens.', 'Tap Support.'],
-      ['Open Devices', 'The Support menu lists the terminal tools.', 'Tap Devices.'],
+      ['Kitchen Printer A goes offline', 'It is lunch rush. Kitchen Printer A (Hot Line, Grill) stops responding, and the Quick Sale status bar shows the connection error. ' + per.who + ' decides to reroute its tickets for now.', 'Tap the red alert in the status bar, or tap Functions.'],
+      s.viaAlerts ? ['Open Alert(s)', 'The alert opens Alert(s), the list of the store’s active alerts.', 'Tap View on Kitchen Printer A.'] : ['Open Support', 'The Functions menu opens.', 'Tap Support.'],
+      s.viaAlerts ? ['View the printer', 'Alert(s) shows “Type: Printer [Offline]” for Kitchen Printer A at the top, with a View button (eye icon). Other store alerts, such as pay devices, have no View.', 'Tap View on Kitchen Printer A.'] : ['Open Devices', 'The Support menu lists the terminal tools.', 'Tap Devices.'],
       ['Find the failed printer', 'Terminal Devices opens. Under Kitchen Printer(s), Kitchen Printer A shows Offline.', role === 'Read-only staff' ? 'Reroute is disabled for this role.' : 'Tap Reroute on Kitchen Printer A.'],
       ['Choose a destination', 'Only online, compatible printers can be picked; the rest sit under “Show unavailable printers” with a reason. Kitchen Printer B serves the same prep group.', s.dest ? 'Tap Continue to review.' : 'Select Kitchen Printer B.'],
       ['Review the reroute', 'The review shows scope (Hot Line, Grill), that it applies to new tickets, and offers to reprint the 3 tickets already waiting on Kitchen Printer A.', 'Tap Continue to Manager Approval.'],
       ['Manager approval', approve, s.step === 'activating' ? 'Waiting for the store server to confirm…' : 'Enter a 4-digit PIN and tap Accept.'],
       ['Reroute active', 'The store server confirms. Hot Line and Grill tickets now print on Kitchen Printer B, and the queued tickets reprint there. The reroute shows in the banner, both printer rows and Reroute History.', s.screen === 'devices' ? 'Tap Close to return to Quick Sale; the status bar now shows the reroute.' : ((this.props.originalRecovers || '').indexOf('Yes') === 0 ? 'Keep serving. Kitchen Printer A comes back in a few seconds.' : 'Kitchen Printer A stays offline (Prototype controls › Original Recovers is “No”).')],
-      ['Kitchen Printer A is back', 'Kitchen Printer A responds again. A blue banner in Terminal Devices asks whether to restore the original routing or keep the reroute.', s.screen === 'devices' ? 'Tap Stop Rerouting on the blue banner.' : (s.screen === 'pos' ? 'Tap Functions.' : (s.screen === 'functions' ? 'Tap Support.' : 'Tap Devices.'))],
+      ['Kitchen Printer A is back', 'Kitchen Printer A responds again. A blue banner in Terminal Devices asks whether to restore the original routing or keep the reroute.', s.screen === 'devices' ? 'Tap Stop Rerouting on the blue banner.' : (s.screen === 'pos' ? 'Tap the blue alert in the status bar, or Functions.' : (s.screen === 'functions' ? 'Tap Support.' : (s.screen === 'alerts' ? 'Tap View on Kitchen Printer A.' : 'Tap Devices.')))],
       ['Restore the original routing', 'The confirmation explains that Hot Line and Grill tickets go back to Kitchen Printer A. No manager approval is needed to stop.', s.stopStep === 'stopping' ? 'Waiting for the store server to confirm…' : (s.stopStep === 'failed' ? 'Tap Try stopping again.' : 'Tap Stop Rerouting.')]
     ];
     var hl = {};
     var on = (this.props.story || 'On') !== 'Off';
     if (on) {
-      if (cur === 1 || (cur === 9 && s.screen === 'pos')) hl.functions = 'story-hl';
+      if (cur === 1 || (cur === 9 && s.screen === 'pos')) { hl.functions = 'story-hl'; hl.alert = 'story-hl'; }
+      if (cur === 3 && s.screen === 'alerts') hl.viewA = 'story-hl';
+      if (cur === 9 && s.screen === 'alerts') hl.viewA = 'story-hl';
       if (cur === 2 || (cur === 9 && s.screen === 'functions')) hl.support = 'story-hl';
       if (cur === 3 || (cur === 9 && s.screen === 'support')) hl.devices = 'story-hl';
       if (cur === 4 && !s.panel) hl.rerouteA = 'story-hl';
@@ -1971,7 +2299,7 @@ class Component extends DCLogic {
         name: p.name, ip: p.ip, lines: lines,
         statusSub: (s.verified[p.id] && !s.verifying[p.id]) ? (!this.on(p) ? 'No response' : (p.fault ? 'Paper fault' : ((p.seen.match(/(\d+) ms/) || [])[1] || '5') + ' ms reply')) : 'Status',
         statusSubFg: (s.verified[p.id] && !s.verifying[p.id]) ? '#E6E8EB' : '#7AD4F2',
-        rowBg: out ? (out.unconfirmed || this.down(P(out.to)) ? 'rgba(255, 110, 100, 0.10)' : 'rgba(255, 178, 89, 0.08)') : 'transparent',
+        rowBg: s.focusRow === p.id ? 'rgba(255, 201, 77, 0.22)' : out ? (out.unconfirmed || this.down(P(out.to)) ? 'rgba(255, 110, 100, 0.10)' : 'rgba(255, 178, 89, 0.08)') : 'transparent',
         groupsText: p.groups.length ? p.groups.join(', ') : 'Not assigned', groupColor: p.groups.length ? '#FFFFFF' : '#D5D9DE',
         verifying: !!s.verifying[p.id], verifyLabel: s.verifying[p.id] ? 'Verifying' : 'Verify', verify: () => this.verify(p.id),
         showStop: !!out, showReroute: !out, rerouteDisabled: dis,
@@ -2108,17 +2436,51 @@ class Component extends DCLogic {
     else if (outA) posTicker = { show: true, fg: '#FFB347', text: 'Kitchen Printer A offline. Hot Line and Grill tickets rerouted to ' + P(outA.to).name + '.' };
     else if (!this.on(aP)) posTicker = { show: true, fg: '#FF6B6B', text: 'Kitchen Printer A (3): failed to connect to /192.168.20.187 (port 9100) from /172.16.1.12 (port 39660) after 3000ms' };
     var go = (screen) => () => this.setState({ screen: screen });
+    var EVT = { a: ['11:52 PM', 'Kitchen Printer A (3): failed to connect to /192.168.20.187 (port 9100) from /172.16.1.12 (port 39660) after 3000ms'],
+                patio: ['10:05 PM', 'Patio Bar Printer (6): failed to connect to /192.168.20.201 (port 9100) from /172.16.1.12'],
+                cold: ['9:40 PM', 'Cold Line Printer (4): paper-feed fault reported by the printer'] };
+    var events = [];
+    PRINTERS.forEach(p => {
+      var outP = s.reroutes.filter(r => r.from === p.id)[0];
+      var inDown = s.reroutes.filter(r => r.to === p.id).length && this.down(p);
+      if (outP && this.down(P(outP.to))) events.push({ id: p.id, rank: 0, color: '#FF6B6B', level: 'Not printing', title: p.name + ' tickets aren’t printing', detail: 'Rerouted to ' + P(outP.to).name + ', which can’t print. Change the destination.', time: s.wentDown[outP.to] || 'Now' });
+      else if (outP && this.on(p) && !p.fault) events.push({ id: p.id, rank: 2, color: '#7FC4F0', level: 'Info', title: p.name + ' is responding again', detail: 'Tickets still print on ' + P(outP.to).name + '. Stop the reroute to restore the original routing.', time: 'Now' });
+      else if (outP) events.push({ id: p.id, rank: 1, color: '#FFB347', level: 'Rerouted', title: p.name + ' offline, tickets rerouted', detail: joinGroups(outP.groups) + ' tickets print on ' + P(outP.to).name + '.', time: outP.at.split(', ').pop() });
+      else if (inDown && !EVT[p.id]) events.push({ id: p.id, rank: 0, color: '#FF6B6B', level: 'Offline', title: p.name + ' offline', detail: 'It is receiving rerouted tickets and can’t print them.', time: s.wentDown[p.id] || 'Now' });
+      else if (this.down(p) && EVT[p.id]) events.push({ id: p.id, rank: p.id === 'a' ? 0 : 1, color: p.fault && this.on(p) ? '#FFB347' : '#FF6B6B', level: p.fault && this.on(p) ? 'Fault' : 'Offline', title: p.name + (p.fault && this.on(p) ? ' fault' : ' offline'), detail: EVT[p.id][1], time: EVT[p.id][0] });
+    });
+    events.sort((x, y) => x.rank - y.rank);
+    var PIDS = { a: 401220, patio: 401206, cold: 401204, b: 401221, expo: 401222, spare: 401223, label: 401224 };
+    var CREATED = { a: '10/27/2026 11:52p', patio: '10/27/2026 10:05p', cold: '10/27/2026 9:40p' };
+    var TYPE = { 'Offline': 'Printer [Offline]', 'Fault': 'Printer [Fault]', 'Rerouted': 'Printer [Rerouted]', 'Not printing': 'Printer [Not printing]', 'Info': 'Printer [Online again]' };
+    var alertItems = events.map(e => ({
+      type: TYPE[e.level] || 'Printer', source: P(e.id).name + ' (' + P(e.id).ip + ')', message: e.detail,
+      dot: e.color, created: CREATED[e.id] || ('10/28/2026 ' + e.time.replace(' AM', 'a').replace(' PM', 'p')), id: PIDS[e.id] || 401299,
+      canView: true, aria: 'View ' + P(e.id).name + ' in Terminal Devices', hl: e.id === 'a' ? (hl.viewA || '') : '',
+      view: () => this.setState({ screen: 'devices', focusRow: e.id, openPrinters: true, panel: false, query: '' })
+    })).concat([
+      { type: 'Db [Replication]', source: '', message: '', dot: '#FF6B6B', created: '10/28/2026 10:22a', id: 1110, canView: false },
+      { type: 'Pay Device [Unbatched]', source: '172.16.0.69', message: 'No batch for device 172.16.0.69, Network read failed. busy', dot: '#FF6B6B', created: '10/29/2026 5:20a', id: 101220, canView: false },
+      { type: 'Pay Device [Unbatched]', source: '172.16.2.153', message: 'Batch error for device 172.16.2.153, null', dot: '#FF6B6B', created: '10/29/2026 5:20a', id: 201220, canView: false },
+      { type: 'Pay Device [Unbatched]', source: '172.16.2.185', message: 'Batch error for device 172.16.2.185, null', dot: '#FF6B6B', created: '10/29/2026 4:13a', id: 301220, canView: false }
+    ]);
+    var eventItems = events.map(e => Object.assign({}, e, {
+      aria: 'View ' + P(e.id).name + ' in Terminal Devices', hl: e.id === 'a' ? (hl.viewA || '') : '',
+      view: () => this.setState({ screen: 'devices', focusRow: e.id, openPrinters: true, panel: false, query: '' })
+    }));
     return {
       posUser: POS_USER[props.role || 'Store manager'] || 'D. Emp',
-      posEvents: posTicker.show ? '1 Active Event' : 'No Active Events', posTicker: posTicker,
+      posEvents: alertItems.length + ' Active Events', posTicker: posTicker, alerts: alertItems,
+      events: eventItems, noEvents: events.length === 0, eventsCount: events.length + (events.length === 1 ? ' event' : ' events'),
+      screenAlerts: s.screen === 'alerts', openAlerts: () => this.setState({ screen: 'alerts', viaAlerts: true }),
       categories: CATEGORIES.map(c => ({ name: c })),
       screenFunctions: s.screen === 'functions', screenSupport: s.screen === 'support', screenDevices: s.screen === 'devices',
-      openFunctions: go('functions'), closeToPos: go('pos'),
-      closeDevices: () => this.setState({ screen: 'pos', panel: false }),
+      openFunctions: () => this.setState({ screen: 'functions', viaAlerts: false }), closeToPos: go('pos'),
+      closeDevices: () => this.setState({ screen: 'pos', panel: false, focusRow: null }),
       fnGroup1: FN1.map(l => ({ label: l, hl: l === 'Support' ? (hl.support || '') : '', press: l === 'Support' ? go('support') : () => {} })),
       fnGroup2: FN2.map(l => ({ label: l, disabled: l === 'Release Cash Drawer' })),
       supportItems: SUPPORT.map(l => ({ label: l, hl: l === 'Devices' ? (hl.devices || '') : '', press: l === 'Devices' ? go('devices') : () => {} })),
-      hl: { functions: hl.functions || '', closeDevices: hl.closeDevices || '', toReview: hl.toReview || '', toAuth: hl.toAuth || '', accept: hl.accept || '', doStop: hl.doStop || '' },
+      hl: { alert: hl.alert || '', functions: hl.functions || '', closeDevices: hl.closeDevices || '', toReview: hl.toReview || '', toAuth: hl.toAuth || '', accept: hl.accept || '', doStop: hl.doStop || '' },
       readOnly: readOnly,
       openPrinters: s.openPrinters, openServices: s.openServices, openHistory: s.openHistory,
       printersChevron: s.openPrinters ? 0 : 180, servicesChevron: s.openServices ? 0 : 180, historyChevron: s.openHistory ? 0 : 180,
@@ -2427,7 +2789,7 @@ DC.define("components", document.getElementById("tpl-components").textContent, C
     <p style="margin: 4px 0 0; color: #D5D9DE; max-width: 860px">Changes from the design review, built into the Prototype, System states and Components tabs. Blue lines say where to try each one.</p>
   </div>
   <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px">
-<section style="display: flex; flex-direction: column"><h2 style="margin: 0 0 8px; color: #E8A6E8; font-size: 19px; font-weight: 500">Keeping tickets printing</h2><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">A dead-end reroute is flagged everywhere</div><div style="color: #E6E8EB; font-size: 14px">If a reroute’s destination is offline or faulted, the banner, the printer row, the section badge and the details card turn red, and the banner leads with Change Destination.</div><div style="color: #7AD4F2; font-size: 14px">Prototype controls › Destination Offline: Cold Line → Kitchen Printer B turns red.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Chained reroutes move together</div><div style="color: #E6E8EB; font-size: 14px">Rerouting a printer that is receiving another reroute offers to move that reroute too. It’s on by default when the printer is down.</div><div style="color: #7AD4F2; font-size: 14px">Reroute Kitchen Printer B and look at the review step.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Queued tickets are explicit</div><div style="color: #E6E8EB; font-size: 14px">Review says the reroute applies to new tickets and offers to reprint the 3 tickets already waiting on Kitchen Printer A.</div><div style="color: #7AD4F2; font-size: 14px">Same flow, review step.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Prompt when the original printer recovers</div><div style="color: #E6E8EB; font-size: 14px">When the original printer responds again, a blue banner offers Stop Rerouting or Keep Reroute, and History records it.</div><div style="color: #7AD4F2; font-size: 14px">Reroute Kitchen Printer A, then wait about 10 seconds.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Fault status</div><div style="color: #E6E8EB; font-size: 14px">A printer that responds but can’t print (paper-feed fault) shows Fault in red and can’t be picked as a destination.</div><div style="color: #7AD4F2; font-size: 14px">Cold Line Printer row.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Stopping into a dead printer</div><div style="color: #E6E8EB; font-size: 14px">When the original printer is still down, the stop dialog leads with Change Destination Instead; Stop Anyway is secondary.</div><div style="color: #7AD4F2; font-size: 14px">Stop Rerouting on the Cold Line banner.</div></div></section>
+<section style="display: flex; flex-direction: column"><h2 style="margin: 0 0 8px; color: #E8A6E8; font-size: 19px; font-weight: 500">Keeping tickets printing</h2><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">A dead-end reroute is flagged everywhere</div><div style="color: #E6E8EB; font-size: 14px">If a reroute’s destination is offline or faulted, the banner, the printer row, the section badge and the details card turn red, and the banner leads with Change Destination.</div><div style="color: #7AD4F2; font-size: 14px">Reroute Kitchen Printer A to Kitchen Printer B, then Prototype controls › Destination Offline.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Chained reroutes move together</div><div style="color: #E6E8EB; font-size: 14px">Rerouting a printer that is receiving another reroute offers to move that reroute too. It’s on by default when the printer is down.</div><div style="color: #7AD4F2; font-size: 14px">Reroute Kitchen Printer A to B, then reroute Kitchen Printer B and look at the review step.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Queued tickets are explicit</div><div style="color: #E6E8EB; font-size: 14px">Review says the reroute applies to new tickets and offers to reprint the 3 tickets already waiting on Kitchen Printer A.</div><div style="color: #7AD4F2; font-size: 14px">Same flow, review step.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Prompt when the original printer recovers</div><div style="color: #E6E8EB; font-size: 14px">When the original printer responds again, a blue banner offers Stop Rerouting or Keep Reroute, and History records it.</div><div style="color: #7AD4F2; font-size: 14px">Reroute Kitchen Printer A, then wait about 10 seconds.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Fault status</div><div style="color: #E6E8EB; font-size: 14px">A printer that responds but can’t print (paper-feed fault) shows Fault in red and can’t be picked as a destination.</div><div style="color: #7AD4F2; font-size: 14px">Cold Line Printer row.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Stopping into a dead printer</div><div style="color: #E6E8EB; font-size: 14px">When the original printer is still down, the stop dialog leads with Change Destination Instead; Stop Anyway is secondary.</div><div style="color: #7AD4F2; font-size: 14px">Reroute Kitchen Printer A, then Stop Rerouting before it comes back.</div></div></section>
 <section style="display: flex; flex-direction: column"><h2 style="margin: 0 0 8px; color: #E8A6E8; font-size: 19px; font-weight: 500">Flow</h2><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Less friction to activate</div><div style="color: #E6E8EB; font-size: 14px">The acknowledgment checkbox is gone. The review screen and manager approval already cover it.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Buttons say what happens next</div><div style="color: #E6E8EB; font-size: 14px">“Confirm Reroute” is now “Continue to Manager Approval”. Step 3 is “Approve and activate”.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Approval matches the role</div><div style="color: #E6E8EB; font-size: 14px">A store manager confirms with their own PIN. Remote Plum Support is told an on-site manager must approve.</div><div style="color: #7AD4F2; font-size: 14px">Prototype controls › Role.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">PIN lockout</div><div style="color: #E6E8EB; font-size: 14px">Three wrong PINs lock PIN entry for 5 minutes; fingerprint and manager card stay available.</div><div style="color: #7AD4F2; font-size: 14px">Prototype controls › Manager Auth.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Unavailable printers can be checked</div><div style="color: #E6E8EB; font-size: 14px">Ineligible destinations sit in a collapsed list with a reason for each, instead of a single “4 others are hidden” line.</div><div style="color: #7AD4F2; font-size: 14px">Reroute dialog, below the options.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Leaving a conflict reloads routing</div><div style="color: #E6E8EB; font-size: 14px">Cancel on “Routing changed while you were reviewing” loads the latest routing too, so the screen is never stale.</div><div style="color: #7AD4F2; font-size: 14px">Prototype controls › Activation Outcome.</div></div></section>
 <section style="display: flex; flex-direction: column"><h2 style="margin: 0 0 8px; color: #E8A6E8; font-size: 19px; font-weight: 500">Visual consistency</h2><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">One stop action</div><div style="color: #E6E8EB; font-size: 14px">“Stop Rerouting”, outlined red, everywhere. Filled red stays only on the final confirm.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Red means trouble only</div><div style="color: #E6E8EB; font-size: 14px">Ineligible destinations use neutral gray badges (“Already rerouted”, “Unavailable”).</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Verify is secondary and reports back</div><div style="color: #E6E8EB; font-size: 14px">Verify is outlined and writes its result under the status, for example “4 ms reply” or “No response”.</div><div style="color: #7AD4F2; font-size: 14px">Tap Verify on any row.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Printer names look tappable</div><div style="color: #E6E8EB; font-size: 14px">A chevron after each name shows it opens the details panel on touch screens.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">Approval screen legibility</div><div style="color: #E6E8EB; font-size: 14px">Back has enough contrast; fingerprint and manager card have text labels.</div></div><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid #4A4F57"><div style="font-weight: 600; font-size: 16px">System states</div><div style="color: #E6E8EB; font-size: 14px">Wording aligned (Checking, Check again, the server named plainly) and three new states added.</div><div style="color: #7AD4F2; font-size: 14px">System states tab.</div></div></section>
   </div>
@@ -2494,6 +2856,7 @@ DC.define("changes", document.getElementById("tpl-changes").textContent, Compone
       if (hasMermaid && !mermaidDone) { mermaidDone = true; try { mermaid.run({ querySelector: 'pre.mermaid' }); } catch (e) {} }
       var target = parts[1] && document.getElementById(parts[1]);
       if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
+      updateToc(parts[1]);
     } else { window.scrollTo(0, 0); }
     if (view === 'design') {
       var sub = parts[1] || 'prototype';
@@ -2515,6 +2878,42 @@ DC.define("changes", document.getElementById("tpl-changes").textContent, Compone
     try { history.pushState(null, '', '#' + hash); } catch (err) {}
     route(hash);
   });
+
+  // Highlights the contents entry for the section being read.
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.doc-toc a[href^="#doc/"]'));
+  var tocHeads = tocLinks.map(function (a) { return document.getElementById(a.getAttribute('href').slice(5)); });
+  function setActive(i) {
+    tocLinks.forEach(function (a, j) {
+      a.classList.toggle('active', j === i);
+      if (j === i) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+    });
+  }
+  function updateToc(jumpId) {
+    if (document.getElementById('view-doc').hidden) return;
+    if (jumpId) {
+      // A contents link or "View cases": highlight the section that holds the target.
+      var t = document.getElementById(jumpId), k = -1;
+      tocHeads.forEach(function (hd, j) { if (hd && t && (hd === t || (hd.compareDocumentPosition(t) & Node.DOCUMENT_POSITION_FOLLOWING))) k = j; });
+      if (k >= 0) { setActive(k); return; }
+    }
+    var line = 90, cur = 0;
+    tocHeads.forEach(function (hd, j) { if (hd && hd.getBoundingClientRect().top <= line) cur = j; });
+    // At the very bottom of the page, the last section is the one being read.
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) cur = tocHeads.length - 1;
+    setActive(cur);
+  }
+  var tocTick = false, tocLock = 0;
+  window.addEventListener('scroll', function () {
+    if (Date.now() < tocLock || tocTick) return;
+    tocTick = true;
+    requestAnimationFrame(function () { tocTick = false; updateToc(); });
+  }, { passive: true });
+  window.addEventListener('resize', function () { updateToc(); });
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#doc/"]');
+    if (a) tocLock = Date.now() + 400;
+  }, true);
+
   window.addEventListener('popstate', function () { route(readHash()); });
   window.addEventListener('hashchange', function () { var h = readHash(); if (h !== current) route(h); });
   route(readHash());
