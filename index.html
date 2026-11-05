@@ -196,7 +196,7 @@ a{color:inherit}
 <div id="view-doc" class="doc-view" hidden>
   <nav class="doc-toc" aria-label="Document sections"><p>Contents</p><a href="#doc/overview">Overview</a><a href="#doc/business-requirement">Business Requirement</a><a href="#doc/rd-details">R&amp;D Details</a><a href="#doc/screens-and-functional-requirements">Screens and functional requirements</a><a href="#doc/test-cases">Test Cases</a><a href="#doc/audit-data-and-acceptance-criteria">Audit Data and Acceptance Criteria</a><a class="to-design" href="#design/prototype">Open the design</a></nav>
   <article class="doc-body"><h1 id="temporary-printer-rerouting-functional-specification">Temporary Printer Rerouting – Functional Specification</h1>
-<p>Version 3.8 · 2026-11-04 · matches Design v3.8 (back-office report and printer settings indicator, full-page re-routing wizard with Verify and Add Kitchen Printer, friendly audit log, manager authorization and audit, Printer Re-Routing in Support, reporting in Reports)</p>
+<p>Version 3.9 · 2026-11-04 · matches Design v3.9 (back-office report and printer settings indicator, full-page re-routing wizard with Verify and Add Kitchen Printer, friendly audit log, manager authorization and audit, Printer Re-Routing in Support, reporting in Reports)</p>
 <div class="cases-callout"><strong>Printer assignment cases</strong><span>Case 1 no prep area · Case 2 different prep area · Case 3 same prep area fallback</span><a href="#doc/printer-assignment-cases">View cases</a></div>
 
 <h2 id="overview">Overview</h2>
@@ -592,7 +592,14 @@ Other store alerts (Db [Replication], Pay Device [Unbatched]) have no View. Clos
 <li>The change is written to the audit log ("updated the IP of … – IP changed from 192.168.2.205 to 192.168.20.205").</li>
 </ol>
 </li>
-<li><strong>Edit IP is only for printers added from the POS.</strong> Printers that were set up by an admin keep their configuration; re-routing never changes it. If one of them has a wrong IP, staff re-route to another printer and the admin corrects the IP in Back Office › Printers.</li>
+<li><strong>Every printer added from the POS has an editable IP, wherever it appears</strong>, whether it is online or not:<ul>
+<li>in Choose Destination, in the selectable list and in the unavailable list;</li>
+<li>in the Kitchen Printer(s) table of <strong>Terminal Devices</strong> and <strong>Printer Re-Routing</strong>, where its type line reads "remotePrinter · Added on POS";</li>
+<li>in <strong>Printer details</strong> (tap the printer name), next to the IP in Configuration.
+The <strong>✎ Edit IP</strong> button always sits right next to the IP address and opens <strong>Update Printer IP</strong> (name, IP, port and type pre-filled). Saving tests the connection, saves the new IP to the store server (all terminals and Back Office) and writes the change to the audit log. Editing outside Choose Destination doesn't change the destination being chosen. Read-only staff don't see Edit IP.</li>
+</ul>
+</li>
+<li><strong>Admin-configured printers have no Edit IP.</strong> Re-routing never changes their configuration. If one of them has a wrong IP, staff re-route to another printer and the admin corrects the IP in Back Office › Printers.</li>
 <li>Completed steps turn green with a check, the current step is white with an open circle, later steps are grey, as in Close Day.</li>
 <li>If the server doesn't confirm, step 4 shows "The re-route wasn't activated" with <strong>Back</strong> and <strong>Try Again</strong>. If another terminal changed the routing, it shows "Routing changed while you were reviewing" with <strong>Cancel</strong> and <strong>Load Latest</strong>.</li>
 <li>In Change Destination mode, step 1's message names the current destination, which can't be selected and stays active until the new one is approved and confirmed.</li>
@@ -831,215 +838,221 @@ Other store alerts (Db [Replication], Pay Device [Unbatched]) have no View. Clos
 <tr>
 <td>TC-15</td>
 <td>Edit IP</td>
+<td>Add an online printer from the POS, then open Support › Devices and its Printer details</td>
+<td>Edit IP is next to its IP in Choose Destination, in Terminal Devices / Printer Re-Routing rows ("Added on POS") and in Printer details; changing the IP there updates it everywhere</td>
+</tr>
+<tr>
+<td>TC-16</td>
+<td>Edit IP</td>
 <td>Open the unavailable list for a printer set up by an admin (e.g. Patio Bar Printer)</td>
 <td>No Edit IP button; its IP can only be changed in Back Office › Printers</td>
 </tr>
 <tr>
-<td>TC-16</td>
+<td>TC-17</td>
 <td>Case 1</td>
 <td>Choose Spare Kitchen Printer, confirm</td>
 <td>New Hot Line and Grill tickets print on Spare Kitchen Printer; its configuration stays "Not assigned"</td>
 </tr>
 <tr>
-<td>TC-17</td>
+<td>TC-18</td>
 <td>Case 2</td>
 <td>Choose Expo Printer, confirm</td>
 <td>Re-routed tickets print on Expo with the REROUTED header; Expo keeps printing its own tickets; Expo's categories are unchanged</td>
 </tr>
 <tr>
-<td>TC-18</td>
+<td>TC-19</td>
 <td>Case 3</td>
 <td>A printer with a configured fallback in its prep area goes offline, no manual re-route</td>
 <td>Tickets print on the fallback automatically</td>
 </tr>
 <tr>
-<td>TC-19</td>
+<td>TC-20</td>
 <td>Approval</td>
 <td>Review step, tap Continue to Manager Approval</td>
 <td>Manager Authorization opens; nothing is sent yet</td>
 </tr>
 <tr>
-<td>TC-20</td>
+<td>TC-21</td>
 <td>Approval</td>
 <td>Store manager enters own PIN and taps Accept</td>
 <td>Request is sent; approver recorded as the store manager; "Waiting for the system to confirm"</td>
 </tr>
 <tr>
-<td>TC-21</td>
+<td>TC-22</td>
 <td>Approval</td>
 <td>Cashier requests; manager approves with PIN, fingerprint or manager card</td>
 <td>Request is sent; requester = cashier, approver = manager</td>
 </tr>
 <tr>
-<td>TC-22</td>
+<td>TC-23</td>
 <td>Approval</td>
 <td>Enter a wrong PIN 3 times</td>
 <td>Attempts left shown; after the third, PIN entry locks for 5 minutes; fingerprint and card stay available; each attempt is in the Audit Log</td>
 </tr>
 <tr>
-<td>TC-23</td>
+<td>TC-24</td>
 <td>Approval</td>
 <td>Tap Back on Manager Authorization</td>
 <td>Returns to review; nothing is sent; no re-route is created</td>
 </tr>
 <tr>
-<td>TC-24</td>
+<td>TC-25</td>
 <td>Confirm</td>
 <td>Server confirms</td>
 <td>Toast; status bar orange; alert becomes [Rerouted]; Printer Re-Routing button shows "1 active" with badge 1; A's row shows the re-routing strip</td>
 </tr>
 <tr>
-<td>TC-25</td>
+<td>TC-26</td>
 <td>Confirm</td>
 <td>"Reprint 3 tickets" on / off</td>
 <td>Queued tickets reprint on the destination only when on</td>
 </tr>
 <tr>
-<td>TC-26</td>
+<td>TC-27</td>
 <td>Confirm</td>
 <td>Server doesn't confirm within 15 s</td>
 <td>"The reroute wasn't activated"; routing unchanged; Try again</td>
 </tr>
 <tr>
-<td>TC-27</td>
+<td>TC-28</td>
 <td>Confirm</td>
 <td>Another terminal re-routes A during review</td>
 <td>"Routing changed while you were reviewing"; the other change is kept</td>
 </tr>
 <tr>
-<td>TC-28</td>
+<td>TC-29</td>
 <td>Terminal Devices</td>
 <td>Support › Devices after re-routing A</td>
 <td>No banners or history section; A's row shows Stop Rerouting and the re-routing strip</td>
 </tr>
 <tr>
-<td>TC-29</td>
+<td>TC-30</td>
 <td>Monitoring</td>
 <td>Destination goes offline after activation</td>
 <td>A's strip turns red, says when it went offline, offers Change Destination</td>
 </tr>
 <tr>
-<td>TC-30</td>
+<td>TC-31</td>
 <td>No auto stop</td>
 <td>Kitchen Printer A comes back online</td>
 <td>Re-routing stays on; strip, alert ([Online again]) and status bar say A is back and point to Stop Rerouting; no pop-up</td>
 </tr>
 <tr>
-<td>TC-31</td>
+<td>TC-32</td>
 <td>Stop</td>
 <td>Stop Rerouting on A, confirm</td>
 <td>Toast "Original routing restored"; strip removed; button count drops to 0 active</td>
 </tr>
 <tr>
-<td>TC-32</td>
+<td>TC-33</td>
 <td>Stop</td>
 <td>Stop Rerouting while A is still offline</td>
 <td>Dialog warns and leads with Change Destination Instead; Stop Anyway possible</td>
 </tr>
 <tr>
-<td>TC-33</td>
+<td>TC-34</td>
 <td>Stop</td>
 <td>Stop request times out</td>
 <td>"Couldn't confirm the reroute was removed"; strip shows status unconfirmed; Try stopping again</td>
 </tr>
 <tr>
-<td>TC-34</td>
+<td>TC-35</td>
 <td>Report</td>
 <td>Functions › Reports</td>
 <td>Choose Report shows Printer Re-Routing next to the existing reports</td>
 </tr>
 <tr>
-<td>TC-35</td>
+<td>TC-36</td>
 <td>Report</td>
 <td>Open Printer Re-Routing report after stopping the re-route</td>
 <td>The re-route is listed with Started, Started By, Approved By, Stopped, Stopped By, Tickets and Duration; totals in cyan; summary cards updated</td>
 </tr>
 <tr>
-<td>TC-36</td>
+<td>TC-37</td>
 <td>Audit</td>
 <td>Switch the report to Audit Log</td>
 <td>Events grouped by day with a sentence per event, an icon and an outcome badge; the approval, re-route, reprint and stop from the story are listed</td>
 </tr>
 <tr>
-<td>TC-37</td>
+<td>TC-38</td>
 <td>Audit</td>
 <td>Tap the Approvals and Problems filters</td>
 <td>Only approval events, or only failures and denials, are shown; counts match the chips</td>
 </tr>
 <tr>
-<td>TC-38</td>
+<td>TC-39</td>
 <td>Report</td>
 <td>Switch Today / 7 Days / 30 Days</td>
 <td>Rows and totals change to the period; an active re-route shows "Active"</td>
 </tr>
 <tr>
-<td>TC-39</td>
+<td>TC-40</td>
 <td>Permissions</td>
 <td>Read-only staff opens Printer Re-Routing</td>
 <td>Reroute and Stop Rerouting disabled with a reason</td>
 </tr>
 <tr>
-<td>TC-40</td>
+<td>TC-41</td>
 <td>Configuration</td>
 <td>Compare Kitchen Printer A's IP, prep groups and menu items before and after a re-route</td>
 <td>Identical</td>
 </tr>
 <tr>
-<td>TC-41</td>
+<td>TC-42</td>
 <td>Back office</td>
 <td>Dashboard › Printer Re-Routing Report (default Range, last 30 days)</td>
 <td>Five tiles, the by-printer card and the table show the store's re-routes, including the active one</td>
 </tr>
 <tr>
-<td>TC-42</td>
+<td>TC-43</td>
 <td>Back office</td>
 <td>Open the period dropdown, choose Last Month, Apply</td>
 <td>Panel shows the ten options in two columns with Clear and Apply; the date field shows the October range and only October re-routes are listed</td>
 </tr>
 <tr>
-<td>TC-43</td>
+<td>TC-44</td>
 <td>Back office</td>
 <td>Choose Today, Apply, then tap ‹</td>
 <td>Today's re-routes are shown; ‹ moves to the previous day</td>
 </tr>
 <tr>
-<td>TC-44</td>
+<td>TC-45</td>
 <td>Back office</td>
 <td>Choose Custom, set From and To, Apply; then Clear</td>
 <td>Custom range applied; Clear returns to Range (last 30 days)</td>
 </tr>
 <tr>
-<td>TC-45</td>
+<td>TC-46</td>
 <td>Back office</td>
 <td>Tap Active Now, then tap the Original Printer name on a row</td>
 <td>Only the active re-route is listed; the drawer shows troubleshooting checks and the timeline</td>
 </tr>
 <tr>
-<td>TC-46</td>
+<td>TC-47</td>
 <td>Back office</td>
 <td>Search by printer name (e.g. Patio Bar)</td>
 <td>Only re-routes of that printer are shown</td>
 </tr>
 <tr>
-<td>TC-47</td>
+<td>TC-48</td>
 <td>Back office</td>
 <td>App Settings › Plum POS › Printers while Kitchen Printer A is re-routed</td>
 <td>Only the new Re-Routing column is added: Kitchen Printer A shows "Re-routed → Kitchen Printer B", Kitchen Printer B "Receiving from Kitchen Printer A", others "–"</td>
 </tr>
 <tr>
-<td>TC-48</td>
+<td>TC-49</td>
 <td>Back office</td>
 <td>Tap the re-routing badge on the Printers page</td>
 <td>Nothing happens; the badge is information only</td>
 </tr>
 <tr>
-<td>TC-49</td>
+<td>TC-50</td>
 <td>Back office</td>
 <td>Tap Print / PDF, choose Save as PDF</td>
 <td>Print dialog shows the A4 landscape report with title, store, period, filter, summary, table and totals; it saves as a PDF</td>
 </tr>
 <tr>
-<td>TC-50</td>
+<td>TC-51</td>
 <td>Back office</td>
 <td>Tap Export CSV</td>
 <td>A CSV file downloads with the same columns and rows as the table</td>
@@ -1129,7 +1142,7 @@ Other store alerts (Db [Replication], Pay Device [Unbatched]) have no View. Clos
 <li class="check">Only online, fault-free, compatible kitchen printers are listed for selection; the others are collapsed under "Show unavailable kitchen printers (N)" with a reason, and the original printer is never offered.</li>
 <li class="check">Every printer row in Choose Destination has its own Verify button.</li>
 <li class="check">A kitchen printer can be added from Choose Destination with name, IP, port and type; duplicates are rejected; it is saved to the store server (and cloud) with no prep group, shown in Back Office › Printers, selected when usable, and audited.</li>
-<li class="check">A printer added from the POS that doesn't respond can be fixed with Edit IP; after a successful test it becomes selectable and is selected; the IP change is saved to the server and audited. Admin-configured printers have no Edit IP.</li>
+<li class="check">Every printer added from the POS has Edit IP next to its IP address in Choose Destination, Terminal Devices, Printer Re-Routing and Printer details; a fixed printer becomes selectable; IP changes are saved to the server and audited. Admin-configured printers have no Edit IP.</li>
 <li class="check">Continue to Manager Approval always leads to Manager Authorization; nothing is sent before approval; read-only staff can't re-route.</li>
 <li class="check">Three wrong PINs lock PIN entry for 5 minutes while fingerprint and manager card stay available.</li>
 <li class="check">Every approval, denial, activation, reprint, failure, stop and printer added appears in the Audit Log as a plain-language line, grouped by day, filterable by Re-routes, Approvals and Problems.</li>
@@ -1941,9 +1954,9 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
               <div style="display: grid; grid-template-columns: 220px 150px 110px 150px minmax(0, 1fr) 250px; align-items: center; gap: 12px; padding: 9px 10px 9px 80px; background: {{r.rowBg}}">
                 <div style="min-width: 0">
                   <button type="button" class="namebtn" onClick="{{r.open}}" style="border: 0; background: transparent; padding: 0; color: #FFFFFF; font-size: 16px; text-align: left; display: inline-flex; align-items: center; gap: 4px; min-height: 28px">{{r.name}}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C98BE6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
-                  <div style="color: #7AD4F2; font-size: 14px">remotePrinter</div>
+                  <div style="color: #7AD4F2; font-size: 14px">{{r.typeLabel}}</div>
                 </div>
-                <div><div>{{r.ip}}</div><div style="color: #7AD4F2; font-size: 14px">IP Address</div></div>
+                <div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">{{r.ip}}<sc-if value="{{r.canEdit}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{r.edit}}" aria-label="Edit IP of {{r.name}}" style="display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 10px; border: 0; border-radius: 14px; background: #8E3FB4; color: #FFFFFF; font-size: 12.5px; font-weight: 600; white-space: nowrap">✎ Edit IP</button></sc-if></div><div style="color: #7AD4F2; font-size: 14px">IP Address</div></div>
                 <div>
                   <div style="display: flex; align-items: center; gap: 6px; color: {{r.statusFg}}; font-weight: 600"><span class="{{r.dotClass}}" style="width: 8px; height: 8px; border-radius: 50%; background: {{r.statusFg}}"></span>{{r.statusLabel}}</div>
                   <div style="color: {{r.statusSubFg}}; font-size: 14px">{{r.statusSub}}</div>
@@ -2087,7 +2100,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
             </sc-if>
             <div style="background: #3A3B3D; border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px">
               <h3 style="margin: 0; font-size: 18px; font-weight: 500; color: #E8A6E8">Configuration</h3>
-              <div><div>{{sel.ip}}</div><div style="color: #7AD4F2; font-size: 13px">IP Address</div></div>
+              <div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">{{sel.ip}}<sc-if value="{{sel.canEdit}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{sel.edit}}" aria-label="Edit IP of {{sel.name}}" style="display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 10px; border: 0; border-radius: 14px; background: #8E3FB4; color: #FFFFFF; font-size: 12.5px; font-weight: 600; white-space: nowrap">✎ Edit IP</button></sc-if></div><div style="color: #7AD4F2; font-size: 13px">IP Address</div></div>
               <div><div>{{sel.model}}</div><div style="color: #7AD4F2; font-size: 13px">Model</div></div>
               <div><div>{{sel.groupsText}}</div><div style="color: #7AD4F2; font-size: 13px">Prep Group</div></div>
               <div><div>{{sel.items}}</div><div style="color: #7AD4F2; font-size: 13px">Menu Items</div></div>
@@ -2144,7 +2157,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
               <label class="{{d.hl}}" style="cursor: pointer; display: grid; grid-template-columns: 40px minmax(0, 1.5fr) 1fr 1fr 1fr 1.6fr 110px; align-items: center; padding: 10px 2px; border-bottom: 1px solid #E6E6E6; background: {{d.rowBg}}">
                 <input type="radio" id="{{d.rid}}" name="dest" checked="{{d.selected}}" disabled="{{d.disabled}}" onChange="{{d.pick}}" style="width: 20px; height: 20px; margin: 0; accent-color: #3DBE8B"/>
                 <span style="font-weight: 600">{{d.name}}<sc-if value="{{d.isNew}}" hint-placeholder-val="{{ false }}"><span style="margin-left: 8px; font-size: 12px; font-weight: 700; color: #F0C4F0; border: 1px solid #8E5FA0; border-radius: 10px; padding: 1px 8px">New</span></sc-if></span>
-                <span>{{d.ip}}</span>
+                <span style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">{{d.ip}}<sc-if value="{{d.canEdit}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{d.edit}}" aria-label="Edit IP of {{d.name}}" style="display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 10px; border: 0; border-radius: 14px; background: #8E3FB4; color: #FFFFFF; font-size: 12.5px; font-weight: 600; white-space: nowrap">✎ Edit IP</button></sc-if></span>
                 <span><span style="display: flex; align-items: center; gap: 6px; color: {{d.statusFg}}"><span class="{{d.dotClass}}" style="width: 8px; height: 8px; border-radius: 50%; background: {{d.statusFg}}"></span>{{d.statusLabel}}</span><span style="display: block; font-size: 13px; color: #B9BEC4">{{d.statusSub}}</span></span>
                 <span>{{d.groups}}</span>
                 <span style="color: #C9CDD3">{{d.category}}</span>
@@ -2517,21 +2530,22 @@ class Component extends DCLogic {
       var pr = P(this.state.editId), oldIp = pr.ip;
       this.addTestRun(ok => {
         var kindName = f.kind === 'kds' ? 'Kitchen Display System' : (f.kind === 'label' ? 'label printer' : 'kitchen printer');
-        Object.assign(pr, { name: f.name.trim(), ip: f.ip.trim(), kind: f.kind, online: ok, seen: ok ? 'responding in 6 ms' : 'no response', model: f.kind === 'label' ? 'Label printer' : (f.kind === 'kds' ? 'Kitchen Display System' : 'Thermal printer, 80 mm') });
+        Object.assign(pr, { port: f.port || '9100', name: f.name.trim(), ip: f.ip.trim(), kind: f.kind, online: ok, seen: ok ? 'responding in 6 ms' : 'no response', model: f.kind === 'label' ? 'Label printer' : (f.kind === 'kds' ? 'Kitchen Display System' : 'Thermal printer, 80 mm') });
         var usable = ok && f.kind === 'thermal';
-        this.setState({ addOpen: false, editId: null, dest: usable ? pr.id : this.state.dest, verified: Object.assign({}, this.state.verified, { [pr.id]: true }) });
+        this.setState({ addOpen: false, editId: null, dest: usable && this.state.dialog === 'reroute' && this.state.step === 'select' ? pr.id : this.state.dest, verified: Object.assign({}, this.state.verified, { [pr.id]: true }) });
         this.log({ event: 'Printer IP updated', outcome: ok ? 'Confirmed' : 'Not responding', k: ok ? OK : WARN, from: '', to: pr.name, groups: '', note: 'IP changed from ' + oldIp + ' to ' + pr.ip + ':' + (f.port || '9100') + ' (' + kindName + '). Saved to the store server.' + (ok ? (usable ? ' Now online and selected as destination.' : ' Now online.') : ' Still not responding.') });
       });
       return;
     }
     this.addTestRun(ok => {
       var id = 'new' + Date.now(), name = f.name.trim();
-      PRINTERS.push({ id: id, name: name, ip: f.ip.trim(), online: ok, groups: [], model: f.kind === 'label' ? 'Label printer' : (f.kind === 'kds' ? 'Kitchen Display System' : 'Thermal printer, 80 mm'), kind: f.kind, items: 'None', seen: ok ? 'responding in 6 ms' : 'no response', added: true });
+      PRINTERS.push({ id: id, port: f.port || '9100', name: name, ip: f.ip.trim(), online: ok, groups: [], model: f.kind === 'label' ? 'Label printer' : (f.kind === 'kds' ? 'Kitchen Display System' : 'Thermal printer, 80 mm'), kind: f.kind, items: 'None', seen: ok ? 'responding in 6 ms' : 'no response', added: true });
       var usable = ok && f.kind === 'thermal';
       this.setState({ addOpen: false, dest: usable ? id : this.state.dest, verified: Object.assign({}, this.state.verified, { [id]: true }), showUnavail: usable ? this.state.showUnavail : true });
       this.log({ event: 'Kitchen printer added', outcome: ok ? 'Confirmed' : 'Not responding', k: ok ? OK : WARN, from: '', to: name, groups: '', note: name + ' (' + f.ip.trim() + ':' + (f.port || '9100') + ', ' + (f.kind === 'kds' ? 'Kitchen Display System' : (f.kind === 'label' ? 'label printer' : 'kitchen printer')) + ') added from the Choose Destination step and saved to the store server. No prep group or menu items assigned.' + (usable ? ' Selected as destination.' : ' Not usable yet; it can be fixed with Edit IP.') });
     });
   }
+  openEdit(p) { this.setState({ addOpen: true, addMode: 'edit', editId: p.id, addForm: { name: p.name, ip: p.ip, port: p.port || '9100', kind: p.kind }, addState: null, addError: '' }); }
   verify(id) {
     this.setState(s => ({ verifying: Object.assign({}, s.verifying, { [id]: true }) }));
     this.after(1000, () => this.setState(s => ({ verifying: Object.assign({}, s.verifying, { [id]: false }), verified: Object.assign({}, s.verified, { [id]: true }) })));
@@ -2678,6 +2692,7 @@ class Component extends DCLogic {
         showStop: !!out, showReroute: !out, rerouteDisabled: dis,
         rerouteBg: dis ? '#6A7078' : '#8E3FB4', rerouteFg: dis ? '#D5D9DE' : '#FFFFFF',
         reroute: () => this.openDialog('new', p.id), stop: () => this.openStop(out.id),
+        canEdit: !!p.added && !readOnly, edit: () => this.openEdit(p), typeLabel: p.added ? 'remotePrinter · Added on POS' : 'remotePrinter',
         hl: p.id === 'a' ? (hl.rerouteA || '') : '', hlStop: p.id === 'a' ? (hl.stopA || '') : '',
         strip: out ? (function (self) {
           var t = P(out.to), dead = self.down(t), fixed = self.on(p) && !p.fault;
@@ -2695,7 +2710,7 @@ class Component extends DCLogic {
     var offlineText = sp.name + (this.on(sp) && sp.fault ? ' reports a ' + sp.fault.toLowerCase() + '. ' : ' isn’t responding. ');
     offlineText += outgoing ? 'Its tickets are temporarily rerouted to ' + P(outgoing.to).name + '.' : (sp.groups.length ? joinGroups(sp.groups) + ' tickets can’t print. Reroute printing to keep tickets moving.' : '');
     if (incomingSel.length) offlineText += ' Tickets rerouted here from ' + incomingSel.map(r => P(r.from).name).join(', ') + ' also can’t print.';
-    var sel = Object.assign({}, sst, { name: sp.name, ip: sp.ip, model: sp.model, items: sp.items, seen: (!this.on(sp) && sp['online']) ? 'since ' + (s.wentDown[sp.id] || 'just now') : ((this.on(sp) && !sp['online']) ? 'responding again' : (sp.fault ? sp.fault.toLowerCase() : sp.seen)), offline: this.down(sp), offlineText: offlineText, groupsText: sp.groups.length ? sp.groups.join(', ') : 'Not assigned' });
+    var sel = Object.assign({}, sst, { canEdit: !!sp.added && !readOnly, edit: () => this.openEdit(sp), name: sp.name, ip: sp.ip, model: sp.model, items: sp.items, seen: (!this.on(sp) && sp['online']) ? 'since ' + (s.wentDown[sp.id] || 'just now') : ((this.on(sp) && !sp['online']) ? 'responding again' : (sp.fault ? sp.fault.toLowerCase() : sp.seen)), offline: this.down(sp), offlineText: offlineText, groupsText: sp.groups.length ? sp.groups.join(', ') : 'Not assigned' });
     var disabledReason = readOnly ? 'You don’t have permission to reroute printers. Ask a store manager or Plum Support.' : (!outgoing && sp.groups.length === 0 ? 'Not assigned to any prep group, so there’s nothing to reroute.' : '');
     var rerouteDisabled = readOnly || sp.groups.length === 0;
 
@@ -2769,7 +2784,7 @@ class Component extends DCLogic {
       var disabled = elig !== 'compatible', picked = s.dest === p.id;
       return Object.assign({}, st, {
         r: rank[elig], isOrig: p.id === orig.id, name: p.name, ip: p.ip, category: category, reason: reason, rid: 'dest-' + p.id, isNew: !!p.added,
-        canEdit: !!p.added, edit: () => this.setState({ addOpen: true, addMode: 'edit', editId: p.id, addForm: { name: p.name, ip: p.ip, port: '9100', kind: p.kind }, addState: null, addError: '' }),
+        canEdit: !!p.added, edit: () => this.openEdit(p),
         verify: () => this.verify(p.id), verifying: !!s.verifying[p.id], verifyLabel: s.verifying[p.id] ? 'Verifying' : 'Verify',
         statusSub: s.verifying[p.id] ? 'Checking…' : (s.verified[p.id] ? (!this.on(p) ? 'No response' : (p.fault ? 'Paper fault' : ((p.seen.match(/(\d+) ms/) || [])[1] || '5') + ' ms reply')) : ''),
         reasonFg: '#D5D9DE',
@@ -2955,7 +2970,7 @@ class Component extends DCLogic {
       auditFilters: auditFilters, auditDays: auditDays, auditEmpty: auditDays.length === 0,
       openAdd: () => this.setState({ addOpen: true, addMode: 'add', editId: null, addForm: { name: '', ip: '', port: '9100', kind: 'thermal' }, addState: null, addError: '' }),
       addTitle: s.addMode === 'edit' ? 'Update Printer IP' : 'Add Kitchen Printer',
-      addIntro: s.addMode === 'edit' ? 'This printer was added from the POS but isn’t responding. Check the IP on the printer’s self-test slip (hold Feed while switching it on), correct it here, then test.' : 'Add a printer that is connected to this store’s network. It is saved with no prep group or menu items, so it only prints what you re-route to it.',
+      addIntro: s.addMode === 'edit' ? (s.editId && P(s.editId) && P(s.editId).online ? 'This printer was added from the POS, so its IP can be changed here, for example after it was moved or given a new address. Check the IP on the printer’s self-test slip (hold Feed while switching it on).' : 'This printer was added from the POS but isn’t responding. Check the IP on the printer’s self-test slip (hold Feed while switching it on), correct it here, then test.') : 'Add a printer that is connected to this store’s network. It is saved with no prep group or menu items, so it only prints what you re-route to it.',
       addSyncNote: s.addMode === 'edit' ? 'The new IP is saved to the store server and replaces the old one on every terminal and in Back Office › Printers.' : 'Saved to the store server, so it also appears on every terminal and in Back Office › Printers (Source: added on POS).',
       addSaveLabel: s.addMode === 'edit' ? 'Save and Use' : 'Add and Use',
       closeAdd: () => { if (this.state.addState !== 'testing') this.setState({ addOpen: false }); },
