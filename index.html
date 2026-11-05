@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Plum POS – Temporary Printer Rerouting</title>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <style>
 a{color:#7AD4F2}a:hover{color:#B5E8F9}
 button,input{font-family:inherit;font-size:inherit}
@@ -26,6 +27,22 @@ input::placeholder{color:#AEB4BB}
 .fn-btn{height:58px;border:0;border-radius:4px;background:#2B2E31;color:#FFFFFF;font-size:14px;line-height:1.3;box-shadow:0 1px 2px rgba(0,0,0,.35)}
 .fn-btn:disabled{background:#6E747B;color:#B7BCC2}
 .cat-btn{height:48px;border:0;border-radius:3px;background:#4A3048;color:#ECE4EC;font-size:14px;line-height:1.2}
+
+
+.bo button{font-family:inherit;cursor:pointer}
+.bo input{font-family:inherit}
+.bo button:focus-visible,.bo input:focus-visible{outline:2px solid #1A5CFF;outline-offset:2px}
+.bo-row:hover{background:#F7F8FB}
+.bo-side a:hover{background:rgba(255,255,255,0.06)}
+.bo-link{border:0;background:transparent;color:#1A5CFF;padding:0;text-decoration:underline;text-underline-offset:2px}
+
+
+.bo button{font-family:inherit;cursor:pointer}
+.bo input{font-family:inherit}
+.bo button:focus-visible,.bo input:focus-visible{outline:2px solid #1A5CFF;outline-offset:2px}
+.bo-row:hover{background:#F7F8FB}
+.bo-side a:hover{background:rgba(255,255,255,0.06)}
+.bo-link{border:0;background:transparent;color:#1A5CFF;padding:0;text-decoration:underline;text-underline-offset:2px}
 
 
 a{color:#7AD4F2}a:hover{color:#B5E8F9}
@@ -142,7 +159,8 @@ a{color:inherit}
 .story-foot{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 @media (max-width:1100px){.proto-wrap{flex-direction:column;align-items:stretch;padding-right:16px}.story{position:static;max-height:none;flex-basis:auto}}
 /* design */
-.design-tabs{display:flex;gap:6px;justify-content:center;padding:10px 16px 0}
+.design-tabs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:10px 16px 0}
+.design-tabs .bo-sep{width:1px;background:#4A4F57;margin:0 6px}
 .design-tabs a{text-decoration:none;color:#E6E8EB;padding:7px 16px;border-radius:18px;font-size:15px;border:1px solid #4A4F57}
 .design-tabs a:hover{background:#3A3B3D}
 .design-tabs a[aria-current=page]{background:#FFFFFF;color:#1D1A24;border-color:#FFFFFF;font-weight:600}
@@ -178,7 +196,7 @@ a{color:inherit}
 <div id="view-doc" class="doc-view" hidden>
   <nav class="doc-toc" aria-label="Document sections"><p>Contents</p><a href="#doc/overview">Overview</a><a href="#doc/business-requirement">Business Requirement</a><a href="#doc/rd-details">R&amp;D Details</a><a href="#doc/screens-and-functional-requirements">Screens and functional requirements</a><a href="#doc/test-cases">Test Cases</a><a href="#doc/audit-data-and-acceptance-criteria">Audit Data and Acceptance Criteria</a><a class="to-design" href="#design/prototype">Open the design</a></nav>
   <article class="doc-body"><h1 id="temporary-printer-rerouting-functional-specification">Temporary Printer Rerouting – Functional Specification</h1>
-<p>Version 3.3 · 2026-10-30 · matches Design v3.3 (full-page re-routing wizard with Verify and Add Kitchen Printer, friendly audit log, manager authorization and audit, Printer Re-Routing in Support, reporting in Reports)</p>
+<p>Version 3.8 · 2026-11-04 · matches Design v3.8 (back-office report and printer settings indicator, full-page re-routing wizard with Verify and Add Kitchen Printer, friendly audit log, manager authorization and audit, Printer Re-Routing in Support, reporting in Reports)</p>
 <div class="cases-callout"><strong>Printer assignment cases</strong><span>Case 1 no prep area · Case 2 different prep area · Case 3 same prep area fallback</span><a href="#doc/printer-assignment-cases">View cases</a></div>
 
 <h2 id="overview">Overview</h2>
@@ -254,7 +272,7 @@ a{color:inherit}
 </tbody>
 </table>
 <h3 id="scope">Scope</h3>
-<p><strong>In scope:</strong> temporary re-routing of one kitchen printer's tickets to another printer from the POS; manager authorization; audit; opening it from Alert(s) or Support; the re-routing strip in the Kitchen Printer(s) table; stopping by hand; the Printer Re-Routing report.</p>
+<p><strong>In scope:</strong> temporary re-routing of one kitchen printer's tickets to another printer from the POS; the back-office Dashboard report and Printers page indicator for support; manager authorization; audit; opening it from Alert(s) or Support; the re-routing strip in the Kitchen Printer(s) table; stopping by hand; the Printer Re-Routing report.</p>
 <p><strong>Out of scope:</strong> changing printer IP or prep group setup, splitting prep groups across several destinations, scheduled or time-limited re-routes, automatic stop when a printer recovers, re-routing printer groups or kitchen video screens, and automatic chaining of re-routes (A → B → C).</p>
 <h3 id="printer-assignment-cases">Printer assignment cases</h3>
 <p>All three cases can be used for temporary rerouting. A reroute sends the original prep area's tickets to another printer without changing any prep area, menu category or printer assignment.</p>
@@ -547,7 +565,7 @@ Other store alerts (Db [Replication], Pay Device [Unbatched]) have no View. Clos
 </tr>
 <tr>
 <td>4 Confirmation</td>
-<td>While waiting: "Waiting for the store server to confirm. Printing isn't re-routed yet." Then a <strong>Re-Routing Confirmation</strong> receipt in the Close Report style with <strong>Print</strong>: Status, Original Printer, Destination Printer, Prep Groups, Requested By, Approved By (and method), Started, Queued Tickets Reprinted, Duration.</td>
+<td>While waiting: "Waiting for the store server to confirm. Printing isn't re-routed yet." Then a <strong>Re-Routing Confirmation</strong> summary in the Close Report style (no Print button): Status, Original Printer, Destination Printer, Prep Groups, Requested By, Approved By (and method), Started, Queued Tickets Reprinted, Duration.</td>
 <td>–</td>
 <td><strong>Done</strong> – back to where re-routing was opened</td>
 </tr>
@@ -558,12 +576,23 @@ Other store alerts (Db [Replication], Pay Device [Unbatched]) have no View. Clos
 <li><strong>Add Kitchen Printer</strong> opens a form in the POS modal style: <strong>Printer Name</strong>, <strong>IP Address</strong>, <strong>Port</strong> (9100 by default), <strong>Printer Type</strong>, <strong>Test Connection</strong>, <strong>Cancel</strong> and <strong>Add and Use</strong>.<ul>
 <li><strong>Printer Type</strong> is a three-option segmented selector, not a dropdown: <strong>Kitchen Printer</strong> (80 mm tickets), <strong>Label Printer</strong> (labels only), <strong>Kitchen Display System</strong> (on-screen orders). With only three choices on a touch terminal, all options stay visible, each is one large tap, and the choice can be seen at a glance; a dropdown would add a tap and hide the options. Kitchen Printer is selected by default.</li>
 <li>A note under the selector says what the type means for re-routing: only a Kitchen Printer can be a destination; a Label Printer or a Kitchen Display System is saved but listed under unavailable printers ("can't receive printed tickets"). Choosing Kitchen Display System changes the default port from 9100 to 8080.</li>
-<li>The printer is saved to this terminal's devices with <strong>no prep group and no menu items</strong>, so it only prints what is re-routed to it (Case 1).</li>
+<li><strong>Saved on the server, not just the terminal.</strong> The terminal sends the new printer to the store server, which saves it to the store's printer setup in the cloud. It then appears on every terminal in the store and in <strong>Back Office › App Settings › Plum POS › Printers</strong> like any other printer, with <strong>no prep group and no menu items</strong>, so it only prints what is re-routed to it (Case 1). The form says so before saving.</li>
+<li>In Back Office it is marked <strong>Source: Added on POS</strong> with who added it and when, so admins can later give it a prep area, rename it or delete it.</li>
+<li>If the store server can't reach the cloud at that moment, the printer is still saved on the store server and usable for re-routing; it shows "Pending sync" and syncs to the cloud automatically when the connection returns.</li>
 <li>Validation: name required; valid IPv4 address; an IP already used by another printer is rejected with the name of that printer.</li>
 <li><strong>Add and Use</strong> tests the connection. If it responds and is a kitchen ticket printer, it is added, marked <strong>New</strong>, and selected as the destination. If it doesn't respond, or is a Label Printer or Kitchen Display System, it is added but listed under unavailable printers with the reason.</li>
 <li>Every added printer is written to the audit log ("Kitchen printer added").</li>
 </ul>
 </li>
+<li><strong>Fixing a wrong IP (Edit IP).</strong> If a printer added from the POS doesn't respond (usually a typo in the IP), it is listed under unavailable kitchen printers with "Not responding at &lt;IP&gt;" and an <strong>✎ Edit IP</strong> button right next to its IP address.<ol>
+<li>Tap <strong>Edit IP</strong>. <strong>Update Printer IP</strong> opens with the name, IP, port and type pre-filled, and a tip to check the IP on the printer's self-test slip (hold Feed while switching the printer on).</li>
+<li>Correct the IP and tap <strong>Test Connection</strong> (optional) or <strong>Save and Use</strong>.</li>
+<li>Save and Use tests the connection, then saves the new IP to the store server, replacing the old one on every terminal and in Back Office.</li>
+<li>If the printer now responds and is a kitchen printer, it moves up into the selectable list and is selected as the destination, so the user can tap Next straight away. If it still doesn't respond, it stays under unavailable with the new IP, and the user can try again or choose another printer.</li>
+<li>The change is written to the audit log ("updated the IP of … – IP changed from 192.168.2.205 to 192.168.20.205").</li>
+</ol>
+</li>
+<li><strong>Edit IP is only for printers added from the POS.</strong> Printers that were set up by an admin keep their configuration; re-routing never changes it. If one of them has a wrong IP, staff re-route to another printer and the admin corrects the IP in Back Office › Printers.</li>
 <li>Completed steps turn green with a check, the current step is white with an open circle, later steps are grey, as in Close Day.</li>
 <li>If the server doesn't confirm, step 4 shows "The re-route wasn't activated" with <strong>Back</strong> and <strong>Try Again</strong>. If another terminal changed the routing, it shows "Routing changed while you were reviewing" with <strong>Cancel</strong> and <strong>Load Latest</strong>.</li>
 <li>In Change Destination mode, step 1's message names the current destination, which can't be selected and stays active until the new one is approved and confirmed.</li>
@@ -579,7 +608,7 @@ Other store alerts (Db [Replication], Pay Device [Unbatched]) have no View. Clos
 </ul>
 <h3 id="d-active-re-route">D. Active re-route</h3>
 <ul>
-<li><strong>FR-D1</strong> Only after manager approval and server confirmation: the wizard's Confirmation step shows the Re-Routing Confirmation receipt (with Print), and the POS updates the status bar, the alert ([Rerouted]), the Printer Re-Routing button count and the Kitchen Printer(s) row and strip.</li>
+<li><strong>FR-D1</strong> Only after manager approval and server confirmation: the wizard's Confirmation step shows the Re-Routing Confirmation summary, and the POS updates the status bar, the alert ([Rerouted]), the Printer Re-Routing button count and the Kitchen Printer(s) row and strip.</li>
 <li><strong>FR-D2</strong> If the destination goes offline or faults after activation, the row strip, alert and status bar turn red and lead with Change Destination.</li>
 <li><strong>FR-D3</strong> When the original printer comes back online, re-routing stays on. The strip, the alert ([Online again]) and the status bar say so and point to Stop Rerouting. There is no automatic stop and no pop-up prompt.</li>
 </ul>
@@ -604,7 +633,7 @@ Other store alerts (Db [Replication], Pay Device [Unbatched]) have no View. Clos
 <li>Events covered: manager approval given or denied (including the PIN lock), re-route started, failed or blocked, destination changed, waiting tickets reprinted, destination offline or back online, stop not confirmed, re-routing stopped, kitchen printer added.</li>
 </ul>
 </li>
-<li><strong>FR-F4</strong> Back returns to Choose Report; Print sends the report to the receipt printer.</li>
+<li><strong>FR-F4</strong> Back returns to Choose Report; <strong>Print</strong> opens the print dialog with the current view (Re-Routes table with totals, or the Audit Log by day), the summary figures, the period and who printed it; staff choose the store printer or <strong>Save as PDF</strong>.</li>
 </ul>
 <p><strong>Suggested additional reporting (not in this release):</strong></p>
 <ul>
@@ -612,6 +641,38 @@ Other store alerts (Db [Replication], Pay Device [Unbatched]) have no View. Clos
 <li><strong>Close Day › End of Day Check:</strong> warn "1 printer is still re-routed" before closing the day, with a shortcut to Printer Re-Routing, so nothing stays re-routed overnight by accident.</li>
 <li><strong>Back office:</strong> the same report across stores for area managers, to spot printers that fail often.</li>
 </ul>
+<h3 id="g-back-office-dashboard-printer-re-routing-report-support-troubleshooting">G. Back office: Dashboard › Printer Re-Routing Report (support troubleshooting)</h3>
+<p>The same data as the POS report is available in the web Dashboard app, so Plum Support and area managers can troubleshoot without being at the store.</p>
+<ul>
+<li><strong>FR-G1</strong> A new <strong>Printer Re-Routing Report</strong> entry (marked NEW) in the Dashboard's report list, between Batch Report and Enable/Disable Online Ordering Report.</li>
+<li><strong>FR-G2</strong> Header in the Dashboard style, with the standard Dashboard calendar control:<ul>
+<li>a period dropdown (rounded, e.g. "Range ▾") that opens a panel of radio options in two columns: <strong>Today, Yesterday, This Month, Range, Last Week</strong> and <strong>This Day Last Week, This Day Last Year, Last Month, This Week, Custom</strong>, with <strong>Clear</strong> (red) and <strong>Apply</strong> (blue). <strong>Custom</strong> shows From and To dates. Clear goes back to the default (Range, last 30 days);</li>
+<li>next to it, the date field with ‹ and › to move to the previous or next period, and the calendar icon;</li>
+<li>the report title and "Last updated on".</li>
+</ul>
+</li>
+<li><strong>FR-G3</strong> Five colour tiles like the Dashboard home: <strong>Re-Routes</strong>, <strong>Active Now</strong>, <strong>Time Re-Routed</strong>, <strong>Tickets Re-Routed</strong>, <strong>Stopped</strong>. Active Now and Stopped also act as filters.</li>
+<li><strong>FR-G4</strong> One full-width card, <strong>Re-routes by original printer</strong>: a bar per printer with its number of re-routes, total time re-routed and tickets, to spot printers that fail often.</li>
+<li><strong>FR-G5</strong> Table with <strong>Re-Routes / Audit Log</strong> switch, filters <strong>All / Active / Stopped</strong> with counts, search by printer or user, <strong>Export CSV</strong> and <strong>Print / PDF</strong>. Columns: Status, <strong>Started At</strong>, Original Printer, Destination, Prep Areas, Requested By, Approved By, <strong>Stopped At</strong> (or "Active"), Tickets, Duration, with a Total row. There is no Request ID column and no Details column.</li>
+<li><strong>FR-G5a</strong> <strong>Print / PDF</strong> opens the browser's print dialog with a clean A4 landscape version of the report: title, store, period, active filter, who printed it and when, the summary figures, the table and totals. Choosing "Save as PDF" in the dialog produces the PDF. <strong>Export CSV</strong> downloads the same rows as a CSV file.</li>
+<li><strong>FR-G6</strong> Tapping the <strong>Original Printer</strong> name in a row opens a details drawer for support:<ul>
+<li>original and destination printer with IP:port and their <strong>current</strong> status;</li>
+<li>prep areas, requested by, approved by and method, started from (Alert(s) › View, Support › Printer Re-Routing, Terminal Devices), terminal name and ID, started time, store server confirmation time and response time, stopped by and when, duration, tickets re-routed (including reprinted queue), reason;</li>
+<li><strong>Troubleshooting checks</strong> in plain language, for example "Kitchen Printer B is online. Tickets are printing", "Printer configuration unchanged"</li>
+<li>the timeline of that re-route;</li>
+<li>a note that support can't stop a re-route from the back office; the store stops it on the POS;</li>
+<li><strong>Open printer settings</strong> to jump to the Printers page.</li>
+</ul>
+</li>
+</ul>
+<h3 id="h-back-office-printers-settings-shows-re-routing">H. Back office: Printers settings shows re-routing</h3>
+<p>On <strong>Manage Account › App Settings › Plum POS › Printers</strong>, re-routing is shown next to the printer configuration so nobody mistakes a temporary override for a setup change.</p>
+<ul>
+<li><strong>FR-H1</strong> One new column, <strong>Re-Routing</strong>, after Prep Areas: "Re-routed → Kitchen Printer B" (amber) on the original printer, "Receiving from Kitchen Printer A" (purple) on the destination, "–" for every other printer. A short line under the badge gives the start time and prep areas.</li>
+<li><strong>FR-H2</strong> Both rows are tinted and the printer names are bold. The badge is information only and is not clickable; details are in the Dashboard's Printer Re-Routing Report.</li>
+<li><strong>FR-H3</strong> No other changes to the page: no banner and no status column. Existing columns, Edit and Delete stay as they are, and the IP, prep areas and menu items always show the real configuration, never the temporary destination.</li>
+</ul>
+<p><strong>Suggested next steps (not in this release):</strong> when someone edits or deletes a printer that is re-routed or receiving a re-route, warn first ("Kitchen Printer A is temporarily re-routed to Kitchen Printer B. Changes apply after re-routing stops."); add a "Re-routed" filter to the Printers table; send an email or app alert to the store manager when a re-route has been active for more than a set number of hours.</p>
 <h3 id="destination-eligibility">Destination eligibility</h3>
 <p>A printer can be chosen as a destination only if it passes every rule below; the server re-checks all rules on submit.</p>
 <table>
@@ -751,153 +812,237 @@ Other store alerts (Db [Replication], Pay Device [Unbatched]) have no View. Clos
 </tr>
 <tr>
 <td>TC-12</td>
+<td>Add printer</td>
+<td>Add a kitchen printer from the POS, then open Back Office › Printers</td>
+<td>The printer is listed there with no prep areas and Source "Added on POS"; it also appears on the other terminals</td>
+</tr>
+<tr>
+<td>TC-13</td>
+<td>Edit IP</td>
+<td>Add "Back-up Kitchen Printer" with the wrong IP 192.168.2.205</td>
+<td>It is added but listed under unavailable printers with "Not responding at 192.168.2.205" and an Edit IP button</td>
+</tr>
+<tr>
+<td>TC-14</td>
+<td>Edit IP</td>
+<td>Tap Edit IP, change the IP to 192.168.20.205, tap Save and Use</td>
+<td>Connection tested; new IP saved to the store server; the printer moves to the selectable list and is selected; audit log shows the IP change</td>
+</tr>
+<tr>
+<td>TC-15</td>
+<td>Edit IP</td>
+<td>Open the unavailable list for a printer set up by an admin (e.g. Patio Bar Printer)</td>
+<td>No Edit IP button; its IP can only be changed in Back Office › Printers</td>
+</tr>
+<tr>
+<td>TC-16</td>
 <td>Case 1</td>
 <td>Choose Spare Kitchen Printer, confirm</td>
 <td>New Hot Line and Grill tickets print on Spare Kitchen Printer; its configuration stays "Not assigned"</td>
 </tr>
 <tr>
-<td>TC-13</td>
+<td>TC-17</td>
 <td>Case 2</td>
 <td>Choose Expo Printer, confirm</td>
 <td>Re-routed tickets print on Expo with the REROUTED header; Expo keeps printing its own tickets; Expo's categories are unchanged</td>
 </tr>
 <tr>
-<td>TC-14</td>
+<td>TC-18</td>
 <td>Case 3</td>
 <td>A printer with a configured fallback in its prep area goes offline, no manual re-route</td>
 <td>Tickets print on the fallback automatically</td>
 </tr>
 <tr>
-<td>TC-15</td>
+<td>TC-19</td>
 <td>Approval</td>
 <td>Review step, tap Continue to Manager Approval</td>
 <td>Manager Authorization opens; nothing is sent yet</td>
 </tr>
 <tr>
-<td>TC-16</td>
+<td>TC-20</td>
 <td>Approval</td>
 <td>Store manager enters own PIN and taps Accept</td>
 <td>Request is sent; approver recorded as the store manager; "Waiting for the system to confirm"</td>
 </tr>
 <tr>
-<td>TC-17</td>
+<td>TC-21</td>
 <td>Approval</td>
 <td>Cashier requests; manager approves with PIN, fingerprint or manager card</td>
 <td>Request is sent; requester = cashier, approver = manager</td>
 </tr>
 <tr>
-<td>TC-18</td>
+<td>TC-22</td>
 <td>Approval</td>
 <td>Enter a wrong PIN 3 times</td>
 <td>Attempts left shown; after the third, PIN entry locks for 5 minutes; fingerprint and card stay available; each attempt is in the Audit Log</td>
 </tr>
 <tr>
-<td>TC-19</td>
+<td>TC-23</td>
 <td>Approval</td>
 <td>Tap Back on Manager Authorization</td>
 <td>Returns to review; nothing is sent; no re-route is created</td>
 </tr>
 <tr>
-<td>TC-20</td>
+<td>TC-24</td>
 <td>Confirm</td>
 <td>Server confirms</td>
 <td>Toast; status bar orange; alert becomes [Rerouted]; Printer Re-Routing button shows "1 active" with badge 1; A's row shows the re-routing strip</td>
 </tr>
 <tr>
-<td>TC-21</td>
+<td>TC-25</td>
 <td>Confirm</td>
 <td>"Reprint 3 tickets" on / off</td>
 <td>Queued tickets reprint on the destination only when on</td>
 </tr>
 <tr>
-<td>TC-22</td>
+<td>TC-26</td>
 <td>Confirm</td>
 <td>Server doesn't confirm within 15 s</td>
 <td>"The reroute wasn't activated"; routing unchanged; Try again</td>
 </tr>
 <tr>
-<td>TC-23</td>
+<td>TC-27</td>
 <td>Confirm</td>
 <td>Another terminal re-routes A during review</td>
 <td>"Routing changed while you were reviewing"; the other change is kept</td>
 </tr>
 <tr>
-<td>TC-24</td>
+<td>TC-28</td>
 <td>Terminal Devices</td>
 <td>Support › Devices after re-routing A</td>
 <td>No banners or history section; A's row shows Stop Rerouting and the re-routing strip</td>
 </tr>
 <tr>
-<td>TC-25</td>
+<td>TC-29</td>
 <td>Monitoring</td>
 <td>Destination goes offline after activation</td>
 <td>A's strip turns red, says when it went offline, offers Change Destination</td>
 </tr>
 <tr>
-<td>TC-26</td>
+<td>TC-30</td>
 <td>No auto stop</td>
 <td>Kitchen Printer A comes back online</td>
 <td>Re-routing stays on; strip, alert ([Online again]) and status bar say A is back and point to Stop Rerouting; no pop-up</td>
 </tr>
 <tr>
-<td>TC-27</td>
+<td>TC-31</td>
 <td>Stop</td>
 <td>Stop Rerouting on A, confirm</td>
 <td>Toast "Original routing restored"; strip removed; button count drops to 0 active</td>
 </tr>
 <tr>
-<td>TC-28</td>
+<td>TC-32</td>
 <td>Stop</td>
 <td>Stop Rerouting while A is still offline</td>
 <td>Dialog warns and leads with Change Destination Instead; Stop Anyway possible</td>
 </tr>
 <tr>
-<td>TC-29</td>
+<td>TC-33</td>
 <td>Stop</td>
 <td>Stop request times out</td>
 <td>"Couldn't confirm the reroute was removed"; strip shows status unconfirmed; Try stopping again</td>
 </tr>
 <tr>
-<td>TC-30</td>
+<td>TC-34</td>
 <td>Report</td>
 <td>Functions › Reports</td>
 <td>Choose Report shows Printer Re-Routing next to the existing reports</td>
 </tr>
 <tr>
-<td>TC-31</td>
+<td>TC-35</td>
 <td>Report</td>
 <td>Open Printer Re-Routing report after stopping the re-route</td>
 <td>The re-route is listed with Started, Started By, Approved By, Stopped, Stopped By, Tickets and Duration; totals in cyan; summary cards updated</td>
 </tr>
 <tr>
-<td>TC-32</td>
+<td>TC-36</td>
 <td>Audit</td>
 <td>Switch the report to Audit Log</td>
 <td>Events grouped by day with a sentence per event, an icon and an outcome badge; the approval, re-route, reprint and stop from the story are listed</td>
 </tr>
 <tr>
-<td>TC-33</td>
+<td>TC-37</td>
 <td>Audit</td>
 <td>Tap the Approvals and Problems filters</td>
 <td>Only approval events, or only failures and denials, are shown; counts match the chips</td>
 </tr>
 <tr>
-<td>TC-34</td>
+<td>TC-38</td>
 <td>Report</td>
 <td>Switch Today / 7 Days / 30 Days</td>
 <td>Rows and totals change to the period; an active re-route shows "Active"</td>
 </tr>
 <tr>
-<td>TC-35</td>
+<td>TC-39</td>
 <td>Permissions</td>
 <td>Read-only staff opens Printer Re-Routing</td>
 <td>Reroute and Stop Rerouting disabled with a reason</td>
 </tr>
 <tr>
-<td>TC-36</td>
+<td>TC-40</td>
 <td>Configuration</td>
 <td>Compare Kitchen Printer A's IP, prep groups and menu items before and after a re-route</td>
 <td>Identical</td>
+</tr>
+<tr>
+<td>TC-41</td>
+<td>Back office</td>
+<td>Dashboard › Printer Re-Routing Report (default Range, last 30 days)</td>
+<td>Five tiles, the by-printer card and the table show the store's re-routes, including the active one</td>
+</tr>
+<tr>
+<td>TC-42</td>
+<td>Back office</td>
+<td>Open the period dropdown, choose Last Month, Apply</td>
+<td>Panel shows the ten options in two columns with Clear and Apply; the date field shows the October range and only October re-routes are listed</td>
+</tr>
+<tr>
+<td>TC-43</td>
+<td>Back office</td>
+<td>Choose Today, Apply, then tap ‹</td>
+<td>Today's re-routes are shown; ‹ moves to the previous day</td>
+</tr>
+<tr>
+<td>TC-44</td>
+<td>Back office</td>
+<td>Choose Custom, set From and To, Apply; then Clear</td>
+<td>Custom range applied; Clear returns to Range (last 30 days)</td>
+</tr>
+<tr>
+<td>TC-45</td>
+<td>Back office</td>
+<td>Tap Active Now, then tap the Original Printer name on a row</td>
+<td>Only the active re-route is listed; the drawer shows troubleshooting checks and the timeline</td>
+</tr>
+<tr>
+<td>TC-46</td>
+<td>Back office</td>
+<td>Search by printer name (e.g. Patio Bar)</td>
+<td>Only re-routes of that printer are shown</td>
+</tr>
+<tr>
+<td>TC-47</td>
+<td>Back office</td>
+<td>App Settings › Plum POS › Printers while Kitchen Printer A is re-routed</td>
+<td>Only the new Re-Routing column is added: Kitchen Printer A shows "Re-routed → Kitchen Printer B", Kitchen Printer B "Receiving from Kitchen Printer A", others "–"</td>
+</tr>
+<tr>
+<td>TC-48</td>
+<td>Back office</td>
+<td>Tap the re-routing badge on the Printers page</td>
+<td>Nothing happens; the badge is information only</td>
+</tr>
+<tr>
+<td>TC-49</td>
+<td>Back office</td>
+<td>Tap Print / PDF, choose Save as PDF</td>
+<td>Print dialog shows the A4 landscape report with title, store, period, filter, summary, table and totals; it saves as a PDF</td>
+</tr>
+<tr>
+<td>TC-50</td>
+<td>Back office</td>
+<td>Tap Export CSV</td>
+<td>A CSV file downloads with the same columns and rows as the table</td>
 </tr>
 </tbody>
 </table>
@@ -983,7 +1128,8 @@ Other store alerts (Db [Replication], Pay Device [Unbatched]) have no View. Clos
 <li class="check">Support shows a Printer Re-Routing button with "N active · M available" and a badge when N &gt; 0.</li>
 <li class="check">Only online, fault-free, compatible kitchen printers are listed for selection; the others are collapsed under "Show unavailable kitchen printers (N)" with a reason, and the original printer is never offered.</li>
 <li class="check">Every printer row in Choose Destination has its own Verify button.</li>
-<li class="check">A kitchen printer can be added from Choose Destination with name, IP, port and type; duplicates are rejected; it is added with no prep group, selected when usable, and audited.</li>
+<li class="check">A kitchen printer can be added from Choose Destination with name, IP, port and type; duplicates are rejected; it is saved to the store server (and cloud) with no prep group, shown in Back Office › Printers, selected when usable, and audited.</li>
+<li class="check">A printer added from the POS that doesn't respond can be fixed with Edit IP; after a successful test it becomes selectable and is selected; the IP change is saved to the server and audited. Admin-configured printers have no Edit IP.</li>
 <li class="check">Continue to Manager Approval always leads to Manager Authorization; nothing is sent before approval; read-only staff can't re-route.</li>
 <li class="check">Three wrong PINs lock PIN entry for 5 minutes while fingerprint and manager card stay available.</li>
 <li class="check">Every approval, denial, activation, reprint, failure, stop and printer added appears in the Audit Log as a plain-language line, grouped by day, filterable by Re-routes, Approvals and Problems.</li>
@@ -994,12 +1140,14 @@ Other store alerts (Db [Replication], Pay Device [Unbatched]) have no View. Clos
 <li class="check">Stop Rerouting needs confirmation; a failed stop shows status unconfirmed and can be retried.</li>
 <li class="check">Terminal Devices has no re-routing banners or history section.</li>
 <li class="check">Reports › Printer Re-Routing lists every re-route with who started, approved and stopped it, ticket count and duration, for Today, 7 Days and 30 Days.</li>
+<li class="check">The Dashboard has a Printer Re-Routing Report with the standard calendar control (period dropdown with Clear/Apply, ‹ date ›), five tiles (no Problems tile), the by-printer card, All / Active / Stopped filters, search, a support details drawer, Started At / Stopped At columns, working Print / PDF and Export CSV.</li>
+<li class="check">The back-office Printers page adds only a Re-Routing column (not clickable) for re-routed printers, without changing their configuration.</li>
 <li class="check">The original printer's IP, prep groups and menu item assignments are identical before and after a re-route.</li>
 </ul></article>
 </div>
 
 <div id="view-design" hidden>
-  <nav class="design-tabs" aria-label="Design screens"><a href="#design/prototype" data-sub="prototype">Prototype</a><a href="#design/states" data-sub="states">System states</a><a href="#design/components" data-sub="components">Components</a><a class="to-doc" href="#doc">Read the functional document</a></nav>
+  <nav class="design-tabs" aria-label="Design screens"><a href="#design/prototype" data-sub="prototype">Prototype</a><a href="#design/bo-report" data-sub="bo-report">Dashboard: Re-Routing Report</a><a href="#design/bo-printers" data-sub="bo-printers">Settings: Printers</a><a href="#design/states" data-sub="states">System states</a><a href="#design/components" data-sub="components">Components</a><a class="to-doc" href="#doc">Read the functional document</a></nav>
   <div class="design-host proto-wrap" id="host-prototype" hidden>
   <aside class="story" id="story" aria-label="Story guide">
     <div class="story-top"><h2>Story</h2><button type="button" class="story-mini" id="story-collapse" aria-expanded="true">Hide story</button></div>
@@ -1019,7 +1167,7 @@ Other store alerts (Db [Replication], Pay Device [Unbatched]) have no View. Clos
     </div>
   </aside>
   <div class="proto-mount" id="mount-prototype"></div>
-</div><div class="design-host" id="host-states" hidden></div><div class="design-host" id="host-components" hidden></div>
+</div><div class="design-host" id="host-bo-report" hidden></div><div class="design-host" id="host-bo-printers" hidden></div><div class="design-host" id="host-states" hidden></div><div class="design-host" id="host-components" hidden></div>
 </div>
 
 <script>/**
@@ -1449,7 +1597,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
       if (k.charAt(0) === '$') return;
       var s = def.schema[k];
       defaults[k] = s.default;
-      if (s.editor === 'enum' && s.section !== 'Story') controls.push({ key: k, options: s.options });
+      if (s.editor === 'enum' && s.section !== 'Story' && s.section !== 'Back Office') controls.push({ key: k, options: s.options });
     });
     function label(k) { return k.replace(/([A-Z])/g, ' $1').replace(/^./, function (c) { return c.toUpperCase(); }); }
     class App extends React.Component {
@@ -1612,7 +1760,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
         <div role="group" aria-label="Report view" style="display: flex; background: #252A2E; border-radius: 18px; padding: 3px">
           <sc-for list="{{reportViews}}" as="v" hint-placeholder-count="2"><button type="button" onClick="{{v.pick}}" aria-pressed="{{v.on}}" style="height: 30px; padding: 0 14px; border: 0; border-radius: 15px; white-space: nowrap; background: {{v.bg}}; color: {{v.fg}}; font-size: 14px; font-weight: 600">{{v.label}}</button></sc-for>
         </div>
-        <button type="button" style="width: 110px; height: 36px; border: 0; border-radius: 18px; background: #1CC2EA; color: #0E2A33; font-size: 15px">Print</button>
+        <button type="button" onClick="{{reportPrint}}" style="width: 110px; height: 36px; border: 0; border-radius: 18px; background: #1CC2EA; color: #0E2A33; font-size: 15px">Print</button>
         <button type="button" onClick="{{reportBack}}" style="width: 110px; height: 36px; border: 0; border-radius: 18px; background: #E2E2E2; color: #2B2E31; font-size: 15px">Back</button>
       </div>
       <div style="position: relative; padding: 18px 18px 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px">
@@ -2020,7 +2168,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
                 <div style="display: grid; grid-template-columns: 40px minmax(0, 1.5fr) 1fr 1fr 1fr 1.6fr 110px; align-items: center; padding: 10px 2px; border-bottom: 1px solid #3A3A3A; color: #8D939A">
                   <span aria-hidden="true" style="width: 18px; height: 18px; border-radius: 50%; border: 2px solid #4A4F57"></span>
                   <span>{{u.name}}</span>
-                  <span>{{u.ip}}</span>
+                  <span style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">{{u.ip}}<sc-if value="{{u.canEdit}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{u.edit}}" aria-label="Edit IP of {{u.name}}" style="display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 10px; border: 0; border-radius: 14px; background: #8E3FB4; color: #FFFFFF; font-size: 12.5px; font-weight: 600">✎ Edit IP</button></sc-if></span>
                   <span><span style="color: {{u.statusFg}}">{{u.statusLabel}}</span><span style="display: block; font-size: 13px">{{u.statusSub}}</span></span>
                   <span>{{u.groups}}</span>
                   <span style="font-size: 14px"><span style="color: #C9CDD3; font-weight: 600">{{u.eligLabel}}:</span> {{u.reason}}</span>
@@ -2100,8 +2248,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
           </div>
         </sc-if>
         <sc-if value="{{stepDone}}" hint-placeholder-val="{{ false }}">
-          <div style="display: flex; justify-content: flex-end"><button type="button" style="width: 144px; height: 36px; border: 0; border-radius: 18px; background: #1CC2EA; color: #0E2A33; font-size: 15px">Print</button></div>
-          <div style="width: 480px; margin: 0 auto; font-size: 14px">
+          <div style="width: 480px; margin: 16px auto 0; font-size: 14px">
             <div style="text-align: center; font-weight: 700; padding: 10px 0 12px; border-bottom: 1px solid #E6E6E6">Re-Routing Confirmation</div>
             <sc-for list="{{doneRows}}" as="r" hint-placeholder-count="8">
               <div style="display: flex; justify-content: space-between; gap: 16px; padding: 12px 8px; border-bottom: 1px solid #E6E6E6"><span>{{r.label}}</span><span style="text-align: right; color: {{r.fg}}">{{r.value}}</span></div>
@@ -2145,9 +2292,10 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
   <sc-if value="{{addOpen}}" hint-placeholder-val="{{ false }}">
     <div style="position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 24">
       <div role="dialog" aria-modal="true" aria-labelledby="add-title" style="position: absolute; left: 290px; top: 70px; width: 700px; background: #5A6068; border-radius: 6px; overflow: hidden">
-        <h2 id="add-title" style="margin: 0; height: 54px; background: #4E5359; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 500">Add Kitchen Printer</h2>
+        <h2 id="add-title" style="margin: 0; height: 54px; background: #4E5359; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 500">{{addTitle}}</h2>
         <div style="padding: 20px 28px; display: flex; flex-direction: column; gap: 14px">
-          <div style="font-size: 14px; color: #E6E8EB">Add a printer that is connected to this store’s network. It is saved to the terminal with <strong>no prep group or menu items</strong>, so it only prints what you re-route to it.</div>
+          <div style="font-size: 14px; color: #E6E8EB">{{addIntro}}</div>
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #CFE6F8; background: #213A4F; border: 1px solid #3F6E93; border-radius: 4px; padding: 7px 10px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 19H7a5 5 0 1 1 .9-9.9A6 6 0 0 1 19 11a4 4 0 0 1-1.5 8z"></path></svg>{{addSyncNote}}</div>
           <div style="display: grid; grid-template-columns: 1.4fr 1fr 110px; gap: 14px">
             <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: #7AD4F2">Printer Name<input type="text" value="{{addForm.name}}" onChange="{{addName}}" placeholder="e.g. Back-up Kitchen Printer" style="height: 44px; border: 1px solid {{addNameBorder}}; border-radius: 4px; background: #2B2E31; color: #FFFFFF; padding: 0 12px; font-size: 16px"/></label>
             <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: #7AD4F2">IP Address<input type="text" inputmode="decimal" value="{{addForm.ip}}" onChange="{{addIp}}" placeholder="192.168.20.x" style="height: 44px; border: 1px solid {{addIpBorder}}; border-radius: 4px; background: #2B2E31; color: #FFFFFF; padding: 0 12px; font-size: 16px"/></label>
@@ -2168,7 +2316,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
         </div>
         <div style="height: 62px; background: #4E5359; display: flex; align-items: center; justify-content: center; gap: 14px">
           <button type="button" onClick="{{closeAdd}}" disabled="{{addBusy}}" style="width: 144px; height: 36px; border: 0; border-radius: 18px; background: #E2E2E2; color: #2B2E31; font-size: 15px">Cancel</button>
-          <button type="button" onClick="{{addSave}}" disabled="{{addBusy}}" style="width: 180px; height: 36px; border: 0; border-radius: 18px; background: #5CC48D; color: #FFFFFF; font-size: 15px">Add and Use</button>
+          <button type="button" onClick="{{addSave}}" disabled="{{addBusy}}" style="width: 180px; height: 36px; border: 0; border-radius: 18px; background: #5CC48D; color: #FFFFFF; font-size: 15px">{{addSaveLabel}}</button>
         </div>
       </div>
     </div>
@@ -2281,7 +2429,7 @@ class Component extends DCLogic {
   initialState() {
     PRINTERS.length = BASE_PRINTERS;
     return {
-      screen: 'pos', addOpen: false, addForm: { name: '', ip: '', port: '9100', kind: 'thermal' }, addState: null, addError: '', auditFilter: 'all', reportView: 'summary', finished: [], reportPeriod: 30, reportFrom: 'pos', reportSeen: false, viaAlerts: false, focusRow: null, storyDone: false, openPrinters: true, openServices: false, openHistory: false, panel: false, query: '', selectedId: 'a', verifying: {},
+      screen: 'pos', addMode: 'add', editId: null, addOpen: false, addForm: { name: '', ip: '', port: '9100', kind: 'thermal' }, addState: null, addError: '', auditFilter: 'all', reportView: 'summary', finished: [], reportPeriod: 30, reportFrom: 'pos', reportSeen: false, viaAlerts: false, focusRow: null, storyDone: false, openPrinters: true, openServices: false, openHistory: false, panel: false, query: '', selectedId: 'a', verifying: {},
       reroutes: [],
       dialog: null, mode: 'new', origId: null, step: 'select', dest: null, ack: false, checking: false, checkedAt: '',
       activateAttempts: 0, conflictDone: false, pin: '', pinError: '', pinFails: 0, approver: '', stopId: null, stopStep: 'confirm', stopAttempts: 0, toast: null, verified: {}, moveChain: false, reprint: true, showUnavail: false, pinLocked: false, onlineOverride: {}, kept: {}, queued: { a: 3 }, wentDown: {},
@@ -2353,7 +2501,8 @@ class Component extends DCLogic {
   addTestRun(then) {
     var f = this.state.addForm, ip = (f.ip || '').trim();
     if (!/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.test(ip) || ip.split('.').some(n => +n > 255)) { this.setState({ addError: 'Enter a valid IP address, for example 192.168.20.205.', addState: null }); return; }
-    if (PRINTERS.some(p => p.ip === ip)) { this.setState({ addError: 'A printer with IP ' + ip + ' is already set up (' + PRINTERS.filter(p => p.ip === ip)[0].name + ').', addState: null }); return; }
+    var dup = PRINTERS.filter(p => p.ip === ip && p.id !== this.state.editId)[0];
+    if (dup) { this.setState({ addError: 'A printer with IP ' + ip + ' is already set up (' + dup.name + ').', addState: null }); return; }
     this.setState({ addState: 'testing', addError: '' });
     this.after(1100, () => {
       var ok = ip.indexOf('192.168.20.') === 0;
@@ -2364,12 +2513,23 @@ class Component extends DCLogic {
   addSave() {
     var f = this.state.addForm;
     if (!(f.name || '').trim()) { this.setState({ addError: 'Enter a printer name.' }); return; }
+    if (this.state.addMode === 'edit') {
+      var pr = P(this.state.editId), oldIp = pr.ip;
+      this.addTestRun(ok => {
+        var kindName = f.kind === 'kds' ? 'Kitchen Display System' : (f.kind === 'label' ? 'label printer' : 'kitchen printer');
+        Object.assign(pr, { name: f.name.trim(), ip: f.ip.trim(), kind: f.kind, online: ok, seen: ok ? 'responding in 6 ms' : 'no response', model: f.kind === 'label' ? 'Label printer' : (f.kind === 'kds' ? 'Kitchen Display System' : 'Thermal printer, 80 mm') });
+        var usable = ok && f.kind === 'thermal';
+        this.setState({ addOpen: false, editId: null, dest: usable ? pr.id : this.state.dest, verified: Object.assign({}, this.state.verified, { [pr.id]: true }) });
+        this.log({ event: 'Printer IP updated', outcome: ok ? 'Confirmed' : 'Not responding', k: ok ? OK : WARN, from: '', to: pr.name, groups: '', note: 'IP changed from ' + oldIp + ' to ' + pr.ip + ':' + (f.port || '9100') + ' (' + kindName + '). Saved to the store server.' + (ok ? (usable ? ' Now online and selected as destination.' : ' Now online.') : ' Still not responding.') });
+      });
+      return;
+    }
     this.addTestRun(ok => {
       var id = 'new' + Date.now(), name = f.name.trim();
       PRINTERS.push({ id: id, name: name, ip: f.ip.trim(), online: ok, groups: [], model: f.kind === 'label' ? 'Label printer' : (f.kind === 'kds' ? 'Kitchen Display System' : 'Thermal printer, 80 mm'), kind: f.kind, items: 'None', seen: ok ? 'responding in 6 ms' : 'no response', added: true });
       var usable = ok && f.kind === 'thermal';
       this.setState({ addOpen: false, dest: usable ? id : this.state.dest, verified: Object.assign({}, this.state.verified, { [id]: true }), showUnavail: usable ? this.state.showUnavail : true });
-      this.log({ event: 'Kitchen printer added', outcome: ok ? 'Confirmed' : 'Not responding', k: ok ? OK : WARN, from: '', to: name, groups: '', note: name + ' (' + f.ip.trim() + ':' + (f.port || '9100') + ', ' + (f.kind === 'kds' ? 'Kitchen Display System' : (f.kind === 'label' ? 'label printer' : 'kitchen printer')) + ') added from the Choose Destination step. No prep group or menu items assigned.' + (usable ? ' Selected as destination.' : '') });
+      this.log({ event: 'Kitchen printer added', outcome: ok ? 'Confirmed' : 'Not responding', k: ok ? OK : WARN, from: '', to: name, groups: '', note: name + ' (' + f.ip.trim() + ':' + (f.port || '9100') + ', ' + (f.kind === 'kds' ? 'Kitchen Display System' : (f.kind === 'label' ? 'label printer' : 'kitchen printer')) + ') added from the Choose Destination step and saved to the store server. No prep group or menu items assigned.' + (usable ? ' Selected as destination.' : ' Not usable yet; it can be fixed with Edit IP.') });
     });
   }
   verify(id) {
@@ -2609,6 +2769,7 @@ class Component extends DCLogic {
       var disabled = elig !== 'compatible', picked = s.dest === p.id;
       return Object.assign({}, st, {
         r: rank[elig], isOrig: p.id === orig.id, name: p.name, ip: p.ip, category: category, reason: reason, rid: 'dest-' + p.id, isNew: !!p.added,
+        canEdit: !!p.added, edit: () => this.setState({ addOpen: true, addMode: 'edit', editId: p.id, addForm: { name: p.name, ip: p.ip, port: '9100', kind: p.kind }, addState: null, addError: '' }),
         verify: () => this.verify(p.id), verifying: !!s.verifying[p.id], verifyLabel: s.verifying[p.id] ? 'Verifying' : 'Verify',
         statusSub: s.verifying[p.id] ? 'Checking…' : (s.verified[p.id] ? (!this.on(p) ? 'No response' : (p.fault ? 'Paper fault' : ((p.seen.match(/(\d+) ms/) || [])[1] || '5') + ' ms reply')) : ''),
         reasonFg: '#D5D9DE',
@@ -2717,7 +2878,7 @@ class Component extends DCLogic {
       { value: top || '—', label: 'Most Re-Routed Printer', fg: '#1CC2EA' }
     ];
     // ---- friendly audit log ----
-    var kindOf = e => /authorization/.test(e.event) ? 'approval' : (/Failed|Denied|Rejected|Not confirmed|Not printing|Not responding/.test(e.outcome) || /went offline/.test(e.event) ? 'problem' : (/activated|stopped|changed|added/.test(e.event) ? 'start' : 'other'));
+    var kindOf = e => /authorization/.test(e.event) ? 'approval' : (/Failed|Denied|Rejected|Not confirmed|Not printing|Not responding/.test(e.outcome) || /went offline/.test(e.event) ? 'problem' : (/activated|stopped|changed|added|updated/.test(e.event) ? 'start' : 'other'));
     var sentenceOf = e => {
       var who = (e.user || '').split(' (')[0];
       var appr = ((e.note || '').match(/Approved by ([^.(]+)/) || [])[1];
@@ -2733,6 +2894,7 @@ class Component extends DCLogic {
         case 'Stop attempt': return ['Stop request for ' + e.from + ' wasn’t confirmed', e.note || ''];
         case 'Reroute stopped': return [who + ' stopped re-routing ' + e.from, e.from + ' prints its own tickets again.'];
         case 'Kitchen printer added': return [who + ' added kitchen printer ' + e.to, e.note || ''];
+        case 'Printer IP updated': return [who + ' updated the IP of ' + e.to, e.note || ''];
         default: return [e.event, e.note || ''];
       }
     };
@@ -2740,7 +2902,7 @@ class Component extends DCLogic {
     var BADGE = { Confirmed: ['#7EE2A0', '#1F3D2B'], Approved: ['#7EE2A0', '#1F3D2B'], Denied: ['#FFB4AC', '#4A2422'], Failed: ['#FFB4AC', '#4A2422'], Rejected: ['#FFC27A', '#4A3418'], 'Not confirmed': ['#FFB4AC', '#4A2422'], 'Not printing': ['#FFB4AC', '#4A2422'], 'Not responding': ['#FFC27A', '#4A3418'], Info: ['#9FD0F5', '#213A4F'] };
     var today0 = new Date(); today0.setHours(0, 0, 0, 0);
     var auditAll = s.audit.map(e => {
-      var parts = String(e.when).split(', '), d = new Date(parts[0]), k = kindOf(e), sen = sentenceOf(e), ic = e.event === 'Kitchen printer added' ? ['+', '#43304A', '#F0C4F0'] : ICON[k], b = BADGE[e.outcome] || ['#E6E8EB', '#46494E'];
+      var parts = String(e.when).split(', '), d = new Date(parts[0]), k = kindOf(e), sen = sentenceOf(e), ic = e.event === 'Kitchen printer added' ? ['+', '#43304A', '#F0C4F0'] : (e.event === 'Printer IP updated' ? ['✎', '#43304A', '#F0C4F0'] : ICON[k]), b = BADGE[e.outcome] || ['#E6E8EB', '#46494E'];
       var daysAgo = isNaN(d) ? 0 : Math.round((today0 - d) / 86400000);
       return { kind: k, daysAgo: daysAgo, dayKey: parts[0], dayLabel: daysAgo <= 0 ? 'Today' : (daysAgo === 1 ? 'Yesterday' : d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })),
         time: (parts[1] || '').replace(' AM', 'a').replace(' PM', 'p'), icon: ic[0], iconBg: ic[1], iconFg: ic[2], sentence: sen[0], detail: sen[1], badge: e.outcome, badgeFg: b[0], badgeBg: b[1] };
@@ -2791,7 +2953,11 @@ class Component extends DCLogic {
       reportViews: [['summary', 'Re-Routes'], ['audit', 'Audit Log']].map(v => ({ label: v[1], on: (s.reportView || 'summary') === v[0], bg: (s.reportView || 'summary') === v[0] ? '#8E3FB4' : 'transparent', fg: (s.reportView || 'summary') === v[0] ? '#FFFFFF' : '#C9CDD3', pick: () => this.setState({ reportView: v[0] }) })),
       reportSummary: (s.reportView || 'summary') === 'summary', reportAudit: s.reportView === 'audit',
       auditFilters: auditFilters, auditDays: auditDays, auditEmpty: auditDays.length === 0,
-      openAdd: () => this.setState({ addOpen: true, addForm: { name: '', ip: '', port: '9100', kind: 'thermal' }, addState: null, addError: '' }),
+      openAdd: () => this.setState({ addOpen: true, addMode: 'add', editId: null, addForm: { name: '', ip: '', port: '9100', kind: 'thermal' }, addState: null, addError: '' }),
+      addTitle: s.addMode === 'edit' ? 'Update Printer IP' : 'Add Kitchen Printer',
+      addIntro: s.addMode === 'edit' ? 'This printer was added from the POS but isn’t responding. Check the IP on the printer’s self-test slip (hold Feed while switching it on), correct it here, then test.' : 'Add a printer that is connected to this store’s network. It is saved with no prep group or menu items, so it only prints what you re-route to it.',
+      addSyncNote: s.addMode === 'edit' ? 'The new IP is saved to the store server and replaces the old one on every terminal and in Back Office › Printers.' : 'Saved to the store server, so it also appears on every terminal and in Back Office › Printers (Source: added on POS).',
+      addSaveLabel: s.addMode === 'edit' ? 'Save and Use' : 'Add and Use',
       closeAdd: () => { if (this.state.addState !== 'testing') this.setState({ addOpen: false }); },
       addOpen: s.addOpen, addForm: s.addForm, addBusy: s.addState === 'testing',
       addName: (e) => this.setState({ addForm: Object.assign({}, this.state.addForm, { name: e.target.value }), addError: '' }),
@@ -2810,6 +2976,30 @@ class Component extends DCLogic {
       reportPeriods: [[1, 'Today'], [7, '7 Days'], [30, '30 Days']].map(x => ({ label: x[1], on: s.reportPeriod === x[0], fg: s.reportPeriod === x[0] ? '#FFFFFF' : '#8D939A', dot: s.reportPeriod === x[0] ? '#2FBF71' : 'transparent', pick: () => this.setState({ reportPeriod: x[0] }) })),
       reportRows: reportRows, reportCards: reportCards,
       reportTotalText: reportRows.length + (reportRows.length === 1 ? ' re-route' : ' re-routes'), reportTotalTickets: String(reportTickets), reportTotalDuration: durText(reportMins),
+      reportPrint: () => {
+        var esc = t => String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        var period = { 1: 'Today', 7: 'Last 7 days', 30: 'Last 30 days' }[s.reportPeriod] || '';
+        var audit = s.reportView === 'audit';
+        var body = audit
+          ? '<h2>Audit Log</h2>' + auditDays.map(d => '<h3>' + esc(d.label) + '</h3><table>' + d.items.map(e => '<tr><td class="t">' + esc(e.time) + '</td><td>' + esc(e.sentence) + '<div class="d">' + esc(e.detail) + '</div></td><td class="o">' + esc(e.badge) + '</td></tr>').join('') + '</table>').join('')
+          : '<table><thead><tr><th>Started</th><th>Original</th><th>Destination</th><th>Prep Groups</th><th>Started By</th><th>Approved By</th><th>Stopped</th><th>Stopped By</th><th class="n">Tickets</th><th class="n">Duration</th></tr></thead><tbody>' +
+            reportRows.map(x => '<tr><td>' + esc(x.start) + '</td><td>' + esc(x.from) + '</td><td>' + esc(x.to) + '</td><td>' + esc(x.groups) + '</td><td>' + esc(x.by) + '</td><td>' + esc(x.approvedBy) + '</td><td>' + esc(x.stopped) + '</td><td>' + esc(x.stoppedBy) + '</td><td class="n">' + esc(x.tickets) + '</td><td class="n">' + esc(x.duration) + '</td></tr>').join('') +
+            '</tbody><tfoot><tr><td colspan="8">Total · ' + reportRows.length + ' re-routes</td><td class="n">' + reportTickets + '</td><td class="n">' + esc(durText(reportMins)) + '</td></tr></tfoot></table>';
+        var html = '<!doctype html><html><head><meta charset="utf-8"><title>Printer Re-Routing Report – ' + esc(period) + '</title><style>@page{size:A4 landscape;margin:12mm}body{font-family:Arial,sans-serif;font-size:11px;color:#111;margin:0}' +
+          'header{display:flex;justify-content:space-between;border-bottom:2px solid #111;padding-bottom:6px;margin-bottom:10px}h1{font-size:17px;margin:0}h2{font-size:13px;margin:6px 0}h3{font-size:12px;margin:10px 0 4px;color:#555}' +
+          '.cards{display:flex;gap:8px;margin-bottom:10px}.cards div{flex:1;border:1px solid #bbb;border-radius:4px;padding:6px;text-align:center}.cards b{display:block;font-size:15px}' +
+          'table{width:100%;border-collapse:collapse}th{text-align:left;border-bottom:1px solid #111;padding:5px}td{padding:5px;border-bottom:1px solid #ddd;vertical-align:top}.n{text-align:right}.t{width:60px;color:#555}.o{width:110px;text-align:right;font-weight:bold}.d{color:#666;font-size:10px}tfoot td{font-weight:bold;border-top:1px solid #111}</style></head><body>' +
+          '<header><div><h1>Printer Re-Routing Report</h1><div>Store 1042 · Cashier Station</div></div><div style="text-align:right">Period: ' + esc(period) + '<br>View: ' + (audit ? 'Audit Log' : 'Re-Routes') + '<br>Printed by ' + esc(this.me()) + '</div></header>' +
+          '<div class="cards">' + reportCards.map(c => '<div><b>' + esc(c.value) + '</b>' + esc(c.label) + '</div>').join('') + '</div>' + body + '</body></html>';
+        var f = document.createElement('iframe');
+        f.setAttribute('title', 'Printer Re-Routing Report print');
+        f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';
+        document.body.appendChild(f);
+        var d = f.contentWindow.document; d.open(); d.write(html); d.close();
+        window.__lastPosPrintHtml = html;
+        this.showToast('Sending report to print', 'Choose a printer, or Save as PDF.');
+        setTimeout(() => { try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) {} setTimeout(() => { if (f.parentNode) f.parentNode.removeChild(f); }, 1500); }, 250);
+      },
       devTitle: s.screen === 'reroute' ? 'Printer Re-Routing' : 'Terminal Devices', rerouteMode: s.screen === 'reroute', showDeviceInfo: s.screen !== 'reroute',
       rrActiveCount: String(s.reroutes.length), rrActiveColor: s.reroutes.length ? '#FFC27A' : '#FFFFFF', rrNeedCount: String(rrNeed), rrNeedColor: rrNeed ? '#FFB4AC' : '#FFFFFF',
       hl: { closeAlerts: hl.closeAlerts || '', alert: hl.alert || '', functions: hl.functions || '', closeDevices: hl.closeDevices || '', toReview: hl.toReview || '', toAuth: hl.toAuth || '', accept: hl.accept || '', doStop: hl.doStop || '' },
@@ -2890,6 +3080,906 @@ class Component extends DCLogic {
 }
 
 DC.define("prototype", document.getElementById("tpl-prototype").textContent, Component, {"role": {"editor": "enum", "options": ["Store manager", "Cashier", "Plum support agent", "Read-only staff"], "default": "Store manager", "section": "Prototype"}, "activationOutcome": {"editor": "enum", "options": ["Confirmed", "System error, then confirmed on retry", "Concurrent update by another user"], "default": "Confirmed", "section": "Prototype"}, "managerAuth": {"editor": "enum", "options": ["Approves", "Wrong PIN first, then approves", "Wrong PIN 3 times (locks PIN entry)"], "default": "Approves", "section": "Prototype"}, "printerA": {"editor": "enum", "options": ["Offline", "Repaired (online)"], "default": "Offline", "section": "Prototype"}, "destinationOffline": {"editor": "enum", "options": ["No", "Yes: Kitchen Printer B goes offline"], "default": "No", "section": "Prototype"}, "reversalOutcome": {"editor": "enum", "options": ["Confirmed", "Fails first, confirmed on retry"], "default": "Confirmed", "section": "Prototype"}, "story": {"editor": "enum", "options": ["On", "Off"], "default": "On", "section": "Story"}, "storyRun": {"editor": "number", "default": 0, "section": "Story"}, "$preview": {"width": 1280, "height": 800}}, {w:1280,h:800});
+})();</script><script type="text/x-template" id="tpl-bo-report">
+
+<div class="bo" style="width: 1440px; height: 900px; position: relative; overflow: hidden; background: #F3F4F7; color: #1F2433; font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; font-size: 13px; display: flex; flex-direction: column">
+
+  <!-- Top bar -->
+  <header style="height: 50px; flex: 0 0 auto; background: #0D1B3E; display: flex; align-items: center; gap: 18px; padding: 0 16px; color: #FFFFFF">
+    <div style="width: 34px; height: 34px; border-radius: 8px; background: #FFFFFF; display: flex; align-items: center; justify-content: center"><span style="width: 22px; height: 22px; border-radius: 50%; background: #8E2C6E; display: block"></span></div>
+    <span style="display: flex; align-items: center; gap: 6px; font-size: 13px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>{{appLabel}} ▾</span>
+    <sc-if value="{{pageReport}}" hint-placeholder-val="{{ true }}">
+      <span style="display: flex; align-items: center; gap: 6px; font-size: 13px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>Apple Valley #020 Dunn Brothe...</span>
+      <span style="margin-left: auto; margin-right: auto; font-size: 13px">60°F  |  10:07 America/Chicago</span>
+    </sc-if>
+    <sc-if value="{{pagePrinters}}" hint-placeholder-val="{{ false }}"><span style="margin-left: auto"></span></sc-if>
+    <span style="background: #FFFFFF; color: #1F2433; border-radius: 18px; padding: 7px 16px; font-size: 13px; display: flex; align-items: center; gap: 8px"><span style="color: #E2533F">▦</span>Maha Bilal ▾</span>
+    <span style="width: 32px; height: 32px; border-radius: 50%; background: #D7DAE3; display: block"></span>
+  </header>
+
+  <!-- ================= Dashboard › Printer Re-Routing Report ================= -->
+  <sc-if value="{{pageReport}}" hint-placeholder-val="{{ true }}">
+    <div style="flex: 1 1 auto; display: flex; min-height: 0">
+      <nav class="bo-side" aria-label="Reports" style="width: 270px; flex: 0 0 auto; background: #0F1D40; overflow-y: auto; padding: 6px 0">
+        <sc-for list="{{sideItems}}" as="it" hint-placeholder-count="20">
+          <a href="#" onClick="{{it.press}}" aria-current="{{it.current}}" style="display: flex; align-items: center; gap: 12px; padding: 9px 16px; color: #FFFFFF; text-decoration: none; font-size: 12.5px; background: {{it.bg}}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C9CFDD" stroke-width="1.6" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
+            <span style="flex: 1 1 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.label}}</span>
+            <sc-if value="{{it.isNew}}" hint-placeholder-val="{{ false }}"><span style="font-size: 10px; font-weight: 700; background: #F5A54A; color: #0F1D40; border-radius: 8px; padding: 1px 6px">NEW</span></sc-if>
+          </a>
+        </sc-for>
+      </nav>
+
+      <main style="flex: 1 1 auto; min-width: 0; overflow-y: auto; padding: 0 18px 18px">
+        <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; position: relative">
+          <div style="position: relative">
+            <button type="button" onClick="{{toggleCal}}" aria-expanded="{{calOpen}}" aria-haspopup="dialog" style="min-width: 150px; height: 36px; padding: 0 14px; border: 1px solid #AEB4C2; border-radius: 18px; background: #FFFFFF; color: #1F2433; font-size: 13px; display: flex; align-items: center; justify-content: space-between; gap: 12px">{{periodLabel}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A5065" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+            <sc-if value="{{calOpen}}" hint-placeholder-val="{{ false }}">
+              <div role="dialog" aria-label="Choose period" style="position: absolute; left: 0; top: 44px; width: 380px; background: #FFFFFF; border-radius: 6px; box-shadow: 0 6px 20px rgba(13,27,62,0.22); z-index: 20; padding: 14px 0 0">
+                <div role="radiogroup" aria-label="Period" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; padding: 0 16px 12px">
+                  <sc-for list="{{calOptions}}" as="o" hint-placeholder-count="10">
+                    <label style="display: flex; align-items: center; gap: 10px; height: 32px; font-size: 13px; color: #1F2433; cursor: pointer">
+                      <input type="radio" name="bo-period" checked="{{o.on}}" onChange="{{o.pick}}" style="width: 15px; height: 15px; margin: 0; accent-color: #1565C0"/>{{o.label}}
+                    </label>
+                  </sc-for>
+                </div>
+                <sc-if value="{{calCustom}}" hint-placeholder-val="{{ false }}">
+                  <div style="display: flex; gap: 10px; padding: 0 16px 12px">
+                    <label style="flex: 1 1 0; display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; color: #4A5065">From<input type="date" value="{{calFrom}}" onChange="{{onFrom}}" style="height: 30px; border: 1px solid #D7DAE3; border-radius: 4px; padding: 0 6px; font-size: 12px"/></label>
+                    <label style="flex: 1 1 0; display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; color: #4A5065">To<input type="date" value="{{calTo}}" onChange="{{onTo}}" style="height: 30px; border: 1px solid #D7DAE3; border-radius: 4px; padding: 0 6px; font-size: 12px"/></label>
+                  </div>
+                </sc-if>
+                <div style="display: flex; justify-content: space-between; padding: 12px 16px; border-top: 1px solid #E5E7EE">
+                  <button type="button" onClick="{{calClear}}" style="height: 28px; padding: 0 18px; border: 0; border-radius: 14px; background: #D32F2F; color: #FFFFFF; font-size: 12.5px; font-weight: 600">Clear</button>
+                  <button type="button" onClick="{{calApply}}" style="height: 28px; padding: 0 18px; border: 0; border-radius: 14px; background: #1E7FA8; color: #FFFFFF; font-size: 12.5px; font-weight: 600">Apply</button>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          <div style="display: flex; align-items: center; height: 36px; border: 1px solid #D7DAE3; border-radius: 18px; background: #FFFFFF; overflow: hidden">
+            <button type="button" onClick="{{prevDay}}" aria-label="Previous" style="width: 36px; height: 36px; border: 0; border-right: 1px solid #E5E7EE; background: transparent; color: #E2533F; font-size: 16px">‹</button>
+            <span style="padding: 0 14px; display: flex; align-items: center; gap: 8px; color: #4A5065; font-size: 13px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8A90A2" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>{{rangeText}}<span style="color: #E2533F">⌄</span></span>
+            <button type="button" onClick="{{nextDay}}" disabled="{{nextDisabled}}" aria-label="Next" style="width: 36px; height: 36px; border: 0; border-left: 1px solid #E5E7EE; background: transparent; color: {{nextFg}}; font-size: 16px">›</button>
+          </div>
+          <h1 style="flex: 1 1 auto; text-align: center; margin: 0; font-size: 16px; font-weight: 700">Printer Re-Routing Report</h1>
+          <span style="font-weight: 600; font-size: 12.5px">Last updated on 11/03/2026 10:06 AM</span>
+        </div>
+
+        <!-- KPI tiles -->
+        <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+          <sc-for list="{{tiles}}" as="t" hint-placeholder-count="5">
+            <button type="button" onClick="{{t.press}}" style="height: 68px; border: 0; border-radius: 2px; background: {{t.bg}}; color: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: {{t.ring}}">
+              <span style="font-size: 23px; line-height: 1.1">{{t.value}}</span><span style="font-size: 12.5px">{{t.label}}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <!-- By printer -->
+        <section style="background: #FFFFFF; border: 1px solid #E5E7EE; padding: 12px 16px; margin-top: 14px">
+          <div style="display: grid; grid-template-columns: 200px minmax(0, 1fr) 110px 110px 100px; gap: 12px; align-items: center; padding-bottom: 6px; border-bottom: 1px solid #EEF0F4; font-weight: 600">
+            <h2 style="margin: 0; font-size: 13.5px; font-weight: 600">Re-routes by original printer</h2><span></span>
+            <span style="text-align: right; color: #8A90A2; font-size: 12px">Re-routes</span><span style="text-align: right; color: #8A90A2; font-size: 12px">Time</span><span style="text-align: right; color: #8A90A2; font-size: 12px">Tickets</span>
+          </div>
+          <sc-for list="{{byPrinter}}" as="b" hint-placeholder-count="3">
+            <div style="display: grid; grid-template-columns: 200px minmax(0, 1fr) 110px 110px 100px; gap: 12px; align-items: center; padding: 7px 0">
+              <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{b.label}}</span>
+              <span style="height: 12px; background: #EEF1F6; border-radius: 6px; overflow: hidden"><span style="display: block; height: 12px; width: {{b.pct}}; background: #4BA8E0; border-radius: 6px"></span></span>
+              <span style="text-align: right">{{b.value}}</span><span style="text-align: right">{{b.time}}</span><span style="text-align: right">{{b.tickets}}</span>
+            </div>
+          </sc-for>
+          <sc-if value="{{noByPrinter}}" hint-placeholder-val="{{ false }}"><div style="padding: 10px 0; color: #8A90A2">No re-routes in this period.</div></sc-if>
+        </section>
+
+        <!-- Table card -->
+        <section style="background: #FFFFFF; border: 1px solid #E5E7EE; margin-top: 14px">
+          <div style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #E5E7EE">
+            <sc-for list="{{views}}" as="v" hint-placeholder-count="2"><button type="button" onClick="{{v.pick}}" aria-pressed="{{v.on}}" style="height: 30px; padding: 0 16px; border: 0; border-radius: 15px; background: {{v.bg}}; color: {{v.fg}}; font-size: 12.5px; font-weight: 600">{{v.label}}</button></sc-for>
+            <span style="width: 1px; height: 22px; background: #E5E7EE; margin: 0 4px"></span>
+            <sc-for list="{{filters}}" as="f" hint-placeholder-count="4"><button type="button" onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="height: 28px; padding: 0 12px; border: 1px solid {{f.border}}; border-radius: 14px; background: {{f.bg}}; color: {{f.fg}}; font-size: 12px">{{f.label}} <span style="opacity: 0.7">{{f.count}}</span></button></sc-for>
+            <span style="flex: 1 1 auto"></span>
+            <label style="display: flex; align-items: center; gap: 6px; border: 1px solid #D7DAE3; border-radius: 4px; padding: 0 10px; height: 30px; color: #8A90A2"><span aria-hidden="true">⌕</span><input type="search" aria-label="Search printer or user" placeholder="Search printer or user" value="{{search}}" onChange="{{onSearch}}" style="border: 0; outline: none; width: 220px; font-size: 12px; color: #1F2433"/></label>
+            <button type="button" onClick="{{exportCsv}}" style="height: 30px; padding: 0 14px; border: 1px solid #1A5CFF; border-radius: 4px; background: #FFFFFF; color: #1A5CFF; font-size: 12px; font-weight: 600">Export CSV</button>
+            <button type="button" onClick="{{printReport}}" style="height: 30px; padding: 0 14px; border: 0; border-radius: 4px; background: #1A5CFF; color: #FFFFFF; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"></path><rect x="3" y="9" width="18" height="8" rx="2"></rect><path d="M6 14h12v7H6z"></path></svg>Print / PDF</button>
+          </div>
+
+          <sc-if value="{{viewRoutes}}" hint-placeholder-val="{{ true }}">
+            <table style="width: 100%; border-collapse: collapse; font-size: 12px">
+              <thead>
+                <tr style="background: #F0F1F4; text-align: left">
+                  <th scope="col" style="padding: 9px 10px; font-weight: 600">Status</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600">Started At</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600">Original Printer</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600">Destination</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600">Prep Areas</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600">Requested By</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600">Approved By</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600">Stopped At</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600; text-align: right">Tickets</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600; text-align: right">Duration</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+                  <tr class="bo-row" style="border-bottom: 1px solid #EEF0F4; background: {{r.bg}}">
+                    <td style="padding: 9px 10px"><span style="font-size: 11px; font-weight: 700; color: {{r.stFg}}; background: {{r.stBg}}; border-radius: 10px; padding: 2px 9px; white-space: nowrap">{{r.status}}</span></td>
+                    <td style="padding: 9px 8px; white-space: nowrap">{{r.start}}</td>
+                    <td style="padding: 9px 8px"><button type="button" onClick="{{r.open}}" aria-label="{{r.aria}}" class="bo-link" style="font-size: 12px; font-weight: 600; text-align: left">{{r.from}}</button></td>
+                    <td style="padding: 9px 8px">{{r.to}}</td>
+                    <td style="padding: 9px 8px">{{r.areas}}</td>
+                    <td style="padding: 9px 8px">{{r.by}}</td>
+                    <td style="padding: 9px 8px">{{r.approver}}</td>
+                    <td style="padding: 9px 8px; white-space: nowrap; color: {{r.stopFg}}">{{r.stopped}}</td>
+                    <td style="padding: 9px 8px; text-align: right">{{r.tickets}}</td>
+                    <td style="padding: 9px 8px; text-align: right; white-space: nowrap">{{r.duration}}</td>
+                  </tr>
+                </sc-for>
+                <tr style="color: #B5277F; font-weight: 600">
+                  <td style="padding: 10px" colspan="8">Total · {{totalText}}</td>
+                  <td style="padding: 10px 8px; text-align: right">{{totalTickets}}</td>
+                  <td style="padding: 10px 8px; text-align: right">{{totalDuration}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <sc-if value="{{noRows}}" hint-placeholder-val="{{ false }}"><div style="padding: 24px; text-align: center; color: #8A90A2">No re-routes match this filter.</div></sc-if>
+          </sc-if>
+
+          <sc-if value="{{viewAudit}}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 4px 16px 14px">
+              <sc-for list="{{auditDays}}" as="day" hint-placeholder-count="2">
+                <div style="font-size: 12px; font-weight: 700; color: #B5277F; padding: 10px 0 6px; border-bottom: 1px solid #EEF0F4">{{day.label}}</div>
+                <ol style="list-style: none; margin: 0; padding: 0">
+                  <sc-for list="{{day.items}}" as="e" hint-placeholder-count="3">
+                    <li style="display: grid; grid-template-columns: 64px 30px minmax(0, 1fr) 230px auto; gap: 10px; align-items: start; padding: 9px 0; border-bottom: 1px solid #F3F4F7">
+                      <span style="color: #8A90A2; text-align: right; padding-top: 4px">{{e.time}}</span>
+                      <span aria-hidden="true" style="width: 26px; height: 26px; border-radius: 50%; background: {{e.iconBg}}; color: {{e.iconFg}}; display: flex; align-items: center; justify-content: center; font-weight: 700">{{e.icon}}</span>
+                      <span><span style="display: block; font-size: 12.5px">{{e.sentence}}</span><span style="display: block; color: #8A90A2; font-size: 11.5px">{{e.detail}}</span></span>
+                      <span style="color: #8A90A2; font-size: 11.5px; padding-top: 4px">{{e.route}}</span>
+                      <span style="font-size: 11px; font-weight: 700; color: {{e.badgeFg}}; background: {{e.badgeBg}}; border-radius: 10px; padding: 2px 9px; white-space: nowrap; margin-top: 3px">{{e.badge}}</span>
+                    </li>
+                  </sc-for>
+                </ol>
+              </sc-for>
+            </div>
+          </sc-if>
+        </section>
+      </main>
+    </div>
+  </sc-if>
+
+  <!-- ================= Manage Account › App Settings › Plum POS › Printers ================= -->
+  <sc-if value="{{pagePrinters}}" hint-placeholder-val="{{ false }}">
+    <div style="flex: 1 1 auto; overflow-y: auto">
+      <nav aria-label="Breadcrumb" style="background: #FFFFFF; border-bottom: 1px solid #E5E7EE; padding: 10px 14px; font-size: 12px; display: flex; gap: 10px">
+        <span>Manage Account</span><span style="color: #B5277F">›</span><span>App Settings</span><span style="color: #B5277F">›</span><span>Plum POS</span><span style="color: #B5277F">›</span><span style="color: #B5277F; font-weight: 600">Printers</span>
+      </nav>
+      <section style="margin: 10px; background: #FFFFFF; border: 1px solid #E5E7EE; border-radius: 4px">
+        <div style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid #E5E7EE">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B5277F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"></path><rect x="3" y="9" width="18" height="8" rx="2"></rect><path d="M6 14h12v7H6z"></path></svg>
+          <h1 style="margin: 0; font-size: 14.5px; font-weight: 600">Printers</h1>
+        </div>
+        <div style="padding: 12px 14px 4px">Please add or update the Printers currently in use at the store. <span style="color: #E2533F">(Label Printer feature will be available for subscribed stores only.)</span></div>
+
+
+        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 12px 14px">
+          <span style="font-weight: 600; font-size: 12px">Select Store to View IP Address</span>
+          <span style="border: 1px solid #D7DAE3; border-radius: 4px; padding: 7px 12px; min-width: 170px; color: #4A5065">Apple Valley #020 Dunn ... ▾</span>
+          <button type="button" style="height: 30px; padding: 0 16px; border: 0; border-radius: 15px; background: #1A5CFF; color: #FFFFFF; font-weight: 600; font-size: 12px">+ ADD</button>
+        </div>
+
+        <div style="padding: 0 14px 14px">
+          <table style="width: 100%; border-collapse: collapse; font-size: 12px">
+            <thead>
+              <tr style="background: #F0F1F4">
+                <th scope="col" style="padding: 9px 8px; font-weight: 600">External ID</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600">ID</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600; text-align: left">Printer Name</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600">IP Address</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600">KDS Adaptor</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600">Printer Type</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600; text-align: left">Prep Areas</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600; text-align: left; background: #FFF1DD">Re-Routing</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600">Action(s)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{printers}}" as="p" hint-placeholder-count="8">
+                <tr class="bo-row" style="border-bottom: 1px solid #EEF0F4; background: {{p.bg}}">
+                  <td style="padding: 8px; text-align: center">-</td>
+                  <td style="padding: 8px; text-align: center">{{p.num}}</td>
+                  <td style="padding: 8px; font-weight: {{p.weight}}">{{p.name}}</td>
+                  <td style="padding: 8px; text-align: center">{{p.ip}}</td>
+                  <td style="padding: 8px; text-align: center">{{p.adaptor}}</td>
+                  <td style="padding: 8px; text-align: center">{{p.type}}</td>
+                  <td style="padding: 8px">{{p.areas}}</td>
+                  <td style="padding: 8px">
+                    <sc-if value="{{p.rr}}" hint-placeholder-val="{{ false }}">
+                      <span style="display: inline-block; border: 1px solid {{p.rr.border}}; background: {{p.rr.bg}}; color: {{p.rr.fg}}; border-radius: 12px; padding: 3px 10px; font-size: 11.5px; font-weight: 600">{{p.rr.label}}</span>
+                      <span style="display: block; color: #8A90A2; font-size: 11px; margin-top: 2px">{{p.rr.sub}}</span>
+                    </sc-if>
+                    <sc-if value="{{p.noRr}}" hint-placeholder-val="{{ true }}"><span style="color: #A0A5B4">–</span></sc-if>
+                  </td>
+                  <td style="padding: 8px; text-align: center; white-space: nowrap">
+                    <button type="button" aria-label="Edit {{p.name}}" style="border: 0; background: transparent; color: #1A9FE0; font-size: 15px">✎</button>
+                    <button type="button" aria-label="Delete {{p.name}}" style="border: 0; background: transparent; color: #E2533F; font-size: 15px">🗑</button>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </sc-if>
+
+  <!-- ================= Details drawer (shared) ================= -->
+  <sc-if value="{{drawer}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 50px 0 0 0; background: rgba(13, 27, 62, 0.35); z-index: 10">
+      <aside role="dialog" aria-modal="true" aria-labelledby="dr-title" style="position: absolute; right: 0; top: 0; bottom: 0; width: 520px; background: #FFFFFF; box-shadow: -8px 0 24px rgba(0,0,0,0.18); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px; border-bottom: 1px solid #E5E7EE; display: flex; align-items: flex-start; gap: 12px">
+          <div style="flex: 1 1 auto">
+            <div style="font-size: 11.5px; color: #8A90A2">{{drawer.kicker}}</div>
+            <h2 id="dr-title" style="margin: 2px 0 0; font-size: 16px; font-weight: 600">{{drawer.title}}</h2>
+            <span style="display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 700; color: {{drawer.stFg}}; background: {{drawer.stBg}}; border-radius: 10px; padding: 2px 9px">{{drawer.status}}</span>
+          </div>
+          <button type="button" onClick="{{closeDrawer}}" aria-label="Close details" style="width: 32px; height: 32px; border: 0; border-radius: 50%; background: #F0F1F4; font-size: 16px">✕</button>
+        </div>
+        <div style="flex: 1 1 auto; overflow-y: auto; padding: 14px 18px; display: flex; flex-direction: column; gap: 16px">
+          <div style="display: grid; grid-template-columns: 1fr 30px 1fr; align-items: center">
+            <div style="border: 1px solid #E5E7EE; border-radius: 6px; padding: 8px 10px"><div style="font-size: 11px; color: #8A90A2">Original printer</div><div style="font-weight: 600">{{drawer.from}}</div><div style="font-size: 11.5px; color: #4A5065">{{drawer.fromIp}}</div><div style="font-size: 11.5px; font-weight: 600; color: {{drawer.fromFg}}">{{drawer.fromStatus}}</div></div>
+            <span style="text-align: center; color: #E07B12; font-size: 18px" aria-label="re-routed to">→</span>
+            <div style="border: 1px solid #F2C792; background: #FFFBF5; border-radius: 6px; padding: 8px 10px"><div style="font-size: 11px; color: #8A90A2">Destination</div><div style="font-weight: 600">{{drawer.to}}</div><div style="font-size: 11.5px; color: #4A5065">{{drawer.toIp}}</div><div style="font-size: 11.5px; font-weight: 600; color: {{drawer.toFg}}">{{drawer.toStatus}}</div></div>
+          </div>
+          <div>
+            <h3 style="margin: 0 0 6px; font-size: 13px; font-weight: 600">Details</h3>
+            <dl style="margin: 0; display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 6px 10px; font-size: 12px">
+              <sc-for list="{{drawer.facts}}" as="f" hint-placeholder-count="10"><dt style="color: #8A90A2">{{f.k}}</dt><dd style="margin: 0">{{f.v}}</dd></sc-for>
+            </dl>
+          </div>
+          <div>
+            <h3 style="margin: 0 0 6px; font-size: 13px; font-weight: 600">Troubleshooting checks</h3>
+            <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px">
+              <sc-for list="{{drawer.checks}}" as="c" hint-placeholder-count="4"><li style="display: flex; gap: 8px; font-size: 12px"><span aria-hidden="true" style="width: 18px; height: 18px; border-radius: 50%; background: {{c.bg}}; color: {{c.fg}}; font-weight: 700; font-size: 11px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto">{{c.icon}}</span><span>{{c.text}}</span></li></sc-for>
+            </ul>
+          </div>
+          <div>
+            <h3 style="margin: 0 0 6px; font-size: 13px; font-weight: 600">Timeline</h3>
+            <ol style="list-style: none; margin: 0; padding: 0">
+              <sc-for list="{{drawer.timeline}}" as="e" hint-placeholder-count="4"><li style="display: grid; grid-template-columns: 64px 12px minmax(0, 1fr); gap: 8px; padding: 5px 0; font-size: 12px"><span style="color: #8A90A2; text-align: right">{{e.time}}</span><span style="width: 8px; height: 8px; border-radius: 50%; background: {{e.dot}}; margin-top: 5px"></span><span>{{e.text}}</span></li></sc-for>
+            </ol>
+          </div>
+          <div style="background: #F3F6FF; border: 1px solid #C9D5F5; border-radius: 6px; padding: 10px 12px; font-size: 12px; color: #26386B">{{drawer.note}}</div>
+        </div>
+        <div style="padding: 12px 18px; border-top: 1px solid #E5E7EE; display: flex; gap: 10px; justify-content: flex-end">
+          <button type="button" onClick="{{drawer.altPress}}" style="height: 32px; padding: 0 14px; border: 1px solid #1A5CFF; border-radius: 4px; background: #FFFFFF; color: #1A5CFF; font-size: 12px; font-weight: 600">{{drawer.altLabel}}</button>
+          <button type="button" onClick="{{closeDrawer}}" style="height: 32px; padding: 0 16px; border: 0; border-radius: 4px; background: #1A5CFF; color: #FFFFFF; font-size: 12px; font-weight: 600">Close</button>
+        </div>
+      </aside>
+    </div>
+  </sc-if>
+</div>
+</script>
+<script>(function(){
+
+var BP = {
+  a: { num: 1, name: 'Kitchen Printer A', ip: '192.168.20.187', adaptor: 'Escp', type: 'Kitchen Printer', areas: 'Hot Line, Grill', status: 'Offline', statusSub: 'since 11/02 11:52 PM', stFg: '#D0382B' },
+  b: { num: 2, name: 'Kitchen Printer B', ip: '192.168.20.188', adaptor: 'Escp', type: 'Kitchen Printer', areas: 'Hot Line', status: 'Online', statusSub: 'checked 10:05 AM', stFg: '#1E9E5A' },
+  expo: { num: 3, name: 'Expo Printer', ip: '192.168.20.190', adaptor: 'Escp', type: 'Kitchen Printer', areas: 'Expo', status: 'Online', statusSub: 'checked 10:05 AM', stFg: '#1E9E5A' },
+  cold: { num: 4, name: 'Cold Line Printer', ip: '192.168.20.191', adaptor: 'Escp', type: 'Kitchen Printer', areas: 'Cold Line', status: 'Fault', statusSub: 'paper-feed fault', stFg: '#D97706' },
+  spare: { num: 5, name: 'Spare Kitchen Printer', ip: '192.168.20.193', adaptor: 'Escp', type: 'Kitchen Printer', areas: '0', status: 'Online', statusSub: 'checked 10:05 AM', stFg: '#1E9E5A' },
+  label: { num: 6, name: 'Packaging Label Printer', ip: '192.168.20.199', adaptor: 'Label', type: 'Label Printer', areas: 'Packaging', status: 'Online', statusSub: 'checked 10:05 AM', stFg: '#1E9E5A' },
+  patio: { num: 7, name: 'Patio Bar Printer', ip: '192.168.20.201', adaptor: 'Escp', type: 'Kitchen Printer', areas: 'Patio Bar', status: 'Offline', statusSub: 'since 11/02 10:05 PM', stFg: '#D0382B' },
+  kds: { num: 8, name: 'Food KDS', ip: '10.110.15.55', adaptor: 'ChefTab', type: 'Kitchen Display System', areas: 'Food KDS', status: 'Online', statusSub: 'checked 10:05 AM', stFg: '#1E9E5A' }
+};
+var ORDER = ['a', 'b', 'expo', 'cold', 'spare', 'label', 'patio', 'kds'];
+var RR = [
+  { id: 'RR-1042-0031', status: 'Active', from: 'a', to: 'b', areas: 'Hot Line, Grill', start: '11/03/2026 9:22 AM', day: 0, by: 'D. Emp (Cashier)', approver: 'Meera Joshi (General manager)', method: 'Manager PIN', source: 'Alert(s) › View', terminal: 'POS PRIMARY · acb01b95-448d-4e66-be21-3bbdc5d65a51', confirmed: '9:22:41 AM (1.3 s)', stopped: '', stoppedBy: '', tickets: 41, reprinted: 3, mins: 105, reason: 'Offline',
+    timeline: [['9:21 AM', '#7A6FCF', 'D. Emp opened re-routing from the Kitchen Printer A alert'], ['9:22 AM', '#1E9E5A', 'Meera Joshi approved with manager PIN'], ['9:22 AM', '#1E9E5A', 'Store server confirmed. Hot Line and Grill tickets print on Kitchen Printer B'], ['9:22 AM', '#4BA8E0', '3 waiting tickets reprinted on Kitchen Printer B']] },
+  { id: 'RR-1042-0030', status: 'Stopped', from: 'cold', to: 'spare', areas: 'Cold Line', start: '10/29/2026 11:05 AM', day: 5, by: 'Goutam K. (Store manager)', approver: 'Goutam K. (Store manager)', method: 'Manager PIN', source: 'Support › Printer Re-Routing', terminal: 'POS PRIMARY · acb01b95-448d-4e66-be21-3bbdc5d65a51', confirmed: '11:05:12 AM (0.9 s)', stopped: '10/29/2026 12:20 PM', stoppedBy: 'D. Emp (Cashier)', tickets: 22, reprinted: 0, mins: 75, reason: 'Fault',
+    timeline: [['11:05 AM', '#1E9E5A', 'Goutam K. re-routed Cold Line Printer to Spare Kitchen Printer (approved with his PIN)'], ['12:20 PM', '#8A90A2', 'D. Emp stopped re-routing; Cold Line Printer prints its own tickets again']] },
+  { id: 'RR-1042-0029', status: 'Stopped', from: 'patio', to: 'expo', areas: 'Patio Bar', start: '10/24/2026 6:10 PM', day: 10, by: 'D. Emp (Cashier)', approver: 'Meera Joshi (General manager)', method: 'Manager card', source: 'Alert(s) › View', terminal: 'Register 2 · 5f2c9e10-7a41-4f0b-9d3e-11c2ab7e4f90', confirmed: '6:10:31 PM (1.1 s)', stopped: '10/24/2026 8:45 PM', stoppedBy: 'Goutam K. (Store manager)', tickets: 41, reprinted: 2, mins: 155, reason: 'Offline',
+    timeline: [['6:10 PM', '#1E9E5A', 'D. Emp re-routed Patio Bar Printer to Expo Printer; Meera Joshi approved with manager card'], ['8:45 PM', '#8A90A2', 'Goutam K. stopped re-routing']] },
+  { id: 'RR-1042-0027', status: 'Stopped', from: 'a', to: 'expo', areas: 'Hot Line, Grill', start: '10/12/2026 7:02 PM', day: 22, by: 'Goutam K. (Store manager)', approver: 'Goutam K. (Store manager)', method: 'Manager PIN', source: 'Terminal Devices', terminal: 'POS PRIMARY · acb01b95-448d-4e66-be21-3bbdc5d65a51', confirmed: '7:02:20 PM (1.0 s)', stopped: '10/12/2026 9:20 PM', stoppedBy: 'Goutam K. (Store manager)', tickets: 64, reprinted: 4, mins: 138, reason: 'Offline',
+    timeline: [['7:02 PM', '#1E9E5A', 'Goutam K. re-routed Kitchen Printer A to Kitchen Printer B'], ['7:31 PM', '#4BA8E0', 'Destination changed to Expo Printer'], ['9:20 PM', '#8A90A2', 'Goutam K. stopped re-routing; original routing restored']] }
+];
+var ST = { Active: ['#9A4A00', '#FFE8CC'], Stopped: ['#4A5065', '#ECEEF3'] };
+var SIDE = ['Weekly Server Summary Report', 'Monthly Sales Report', 'Discount Report', 'Void/Comp Report', 'WSA Report', 'Item Discount Report', 'Credit Card Transaction Report', 'Credit Card Settled Transaction Report', 'Failed Transactions in Batch', 'CC Transaction Report', 'Paid In/Out Report', 'Quickbooks Report', 'House Account Report', 'Gift Card Report', 'Batch Report', 'Printer Re-Routing Report', 'Enable/Disable Online Ordering Report', 'Refund Report', 'Cash Drawer Audit Report', 'Tax Report', 'Employee Time Loss Report', 'User Management', 'Workflow', 'Ai Dashboard', 'Reporting'];
+function dur(m) { if (!m) return '–'; var h = Math.floor(m / 60); return (h ? h + 'h ' : '') + (m % 60) + 'm'; }
+
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { page: props.page || 'report', pkey: 'range', pend: 'range', shift: 0, cfrom: '2026-10-04', cto: '2026-11-03', calOpen: false, view: 'routes', filter: 'all', search: '', drawer: null }; }
+  span() {
+    var s = this.state, k = s.calOpen ? s.pkey : s.pkey;
+    var M = { today: [0, 0], yesterday: [1, 1], thisWeek: [0, 2], lastWeek: [3, 9], thisMonth: [0, 2], lastMonth: [3, 33], dayLastWeek: [7, 7], dayLastYear: [365, 365], range: [0, 30] };
+    if (k === 'custom') { var t = new Date('2026-11-03T00:00:00'), f = new Date(s.cfrom + 'T00:00:00'), e = new Date(s.cto + 'T00:00:00'); return [Math.max(0, Math.round((t - e) / 86400000)), Math.round((t - f) / 86400000)]; }
+    var r = M[k] || M.range; return [r[0] + s.shift, r[1] + s.shift];
+  }
+  componentDidUpdate(prev) { if (prev.page !== this.props.page) this.setState({ page: this.props.page, drawer: null }); }
+  rrDrawer(r, altToPrinters) {
+    var f = BP[r.from], t = BP[r.to], st = ST[r.status] || ST.Stopped;
+    var checks = [];
+    if (r.status === 'Active') {
+      checks.push(f.status !== 'Online' ? { icon: '!', bg: '#FDE3E1', fg: '#B42318', text: f.name + ' is ' + f.status.toLowerCase() + ' (' + f.statusSub + '). Re-routing is covering it.' } : { icon: 'i', bg: '#E3EEFF', fg: '#1A5CFF', text: f.name + ' is back online. Re-routing stays on until someone stops it on the POS.' });
+      checks.push(t.status === 'Online' ? { icon: '✓', bg: '#DDF4E7', fg: '#1E7A45', text: t.name + ' is online (' + t.statusSub + '). Tickets are printing.' } : { icon: '!', bg: '#FDE3E1', fg: '#B42318', text: t.name + ' is ' + t.status.toLowerCase() + '. Tickets are NOT printing. Ask the store to change the destination.' });
+    }
+    checks.push({ icon: '✓', bg: '#DDF4E7', fg: '#1E7A45', text: 'Printer configuration unchanged: IP, prep areas and menu items are the same as before.' });
+    checks.push({ icon: '✓', bg: '#DDF4E7', fg: '#1E7A45', text: 'Approved by ' + r.approver + ' with ' + (r.method === 'Manager PIN' ? 'their manager PIN' : 'a ' + r.method.toLowerCase()) + '.' });
+    return {
+      kicker: 'Printer Re-Routing', title: f.name + ' → ' + t.name, status: r.status, stFg: st[0], stBg: st[1],
+      from: f.name, fromIp: f.ip + ':9100', fromStatus: 'Now: ' + f.status, fromFg: f.stFg, to: t.name, toIp: t.ip + ':9100', toStatus: 'Now: ' + t.status, toFg: t.stFg,
+      facts: [['Prep areas', r.areas], ['Requested by', r.by], ['Approved by', r.approver + (' · ' + r.method)], ['Started from', r.source], ['Terminal', r.terminal], ['Started', r.start], ['Store server confirmed', r.confirmed], ['Stopped', r.stopped ? r.stopped + ' by ' + r.stoppedBy : (r.status === 'Active' ? 'Still active' : '–')], ['Duration', r.status === 'Active' ? dur(r.mins) + ' so far' : dur(r.mins)], ['Tickets re-routed', r.tickets + (r.reprinted ? ' (incl. ' + r.reprinted + ' reprinted from the queue)' : '')], ['Reason', r.reason]].map(x => ({ k: x[0], v: x[1] })),
+      checks: checks, timeline: r.timeline.map(e => ({ time: e[0], dot: e[1], text: e[2] })),
+      note: r.status === 'Active' ? 'Support can’t stop a re-route from the back office. The store stops it on the POS: Functions › Support › Printer Re-Routing › Stop Rerouting.' : 'This re-route has ended. Its full history is kept in the audit log.',
+      altLabel: altToPrinters ? 'Open printer settings' : 'Open in Re-Routing Report',
+      altPress: altToPrinters ? () => this.setState({ page: 'printers', drawer: null }) : () => this.setState({ page: 'report', view: 'routes', filter: 'all', search: BP[r.from].name, drawer: { kind: 'rr', id: r.id } })
+    };
+  }
+  reportData() {
+    var s = this.state, q = s.search.trim().toLowerCase();
+    var FIL = { all: () => true, active: r => r.status === 'Active', stopped: r => r.status === 'Stopped' };
+    var sp = this.span();
+    return RR.filter(r => r.day >= sp[0] && r.day <= sp[1]).filter(FIL[s.filter]).filter(r => !q || [BP[r.from].name, BP[r.to].name, r.by, r.approver, r.stoppedBy].join(' ').toLowerCase().indexOf(q) >= 0);
+  }
+  rangeText() {
+    var sp = this.span(), d = n => { var x = new Date('2026-11-03T00:00:00'); x.setDate(x.getDate() - n); return ('0' + (x.getMonth() + 1)).slice(-2) + '/' + ('0' + x.getDate()).slice(-2) + '/' + x.getFullYear(); };
+    return sp[0] === sp[1] ? d(sp[0]) : d(sp[1]) + ' – ' + d(sp[0]);
+  }
+  printReport() {
+    var rows = this.reportData(), s = this.state;
+    var esc = t => String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    var done = rows;
+    var mins = done.reduce((a, r) => a + r.mins, 0), tickets = done.reduce((a, r) => a + r.tickets, 0);
+    var filt = { all: 'All', active: 'Active', stopped: 'Stopped' }[s.filter] + (s.search ? ' · search “' + s.search + '”' : '');
+    var tr = rows.map(r => '<tr><td>' + esc(r.status) + '</td><td>' + esc(r.start) + '</td><td>' + esc(BP[r.from].name) + '</td><td>' + esc(BP[r.to].name) + '</td><td>' + esc(r.areas) + '</td><td>' + esc(r.by.split(' (')[0]) + '</td><td>' + esc(r.approver.split(' (')[0]) + '</td><td>' + esc(r.status === 'Active' ? 'Active' : (r.stopped || '–')) + '</td><td class="n">' + r.tickets + '</td><td class="n">' + esc(dur(r.mins)) + '</td></tr>').join('');
+    var html = '<!doctype html><html><head><meta charset="utf-8"><title>Printer Re-Routing Report – Apple Valley #020 – ' + esc(this.rangeText()) + '</title><style>' +
+      '@page{size:A4 landscape;margin:14mm}body{font-family:Poppins,Segoe UI,Arial,sans-serif;color:#1F2433;font-size:11px;margin:0}' +
+      'header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #0D1B3E;padding-bottom:8px;margin-bottom:12px}h1{margin:0;font-size:18px}' +
+      '.meta{color:#4A5065;font-size:11px;text-align:right}.tiles{display:flex;gap:8px;margin-bottom:12px}.tile{flex:1;border:1px solid #D7DAE3;border-radius:4px;padding:8px;text-align:center}' +
+      '.tile b{display:block;font-size:16px}table{width:100%;border-collapse:collapse}th{background:#F0F1F4;text-align:left;padding:6px;font-weight:600;border-bottom:1px solid #D7DAE3}' +
+      'td{padding:6px;border-bottom:1px solid #EEF0F4;vertical-align:top}td.n,th.n{text-align:right}tfoot td{font-weight:700;color:#B5277F;border-top:1px solid #1F2433}' +
+      'footer{margin-top:14px;color:#8A90A2;font-size:10px;display:flex;justify-content:space-between}</style></head><body>' +
+      '<header><div><h1>Printer Re-Routing Report</h1><div>Apple Valley #020 Dunn Brothers</div></div><div class="meta">Period: ' + esc(this.rangeText()) + '<br>Filter: ' + esc(filt) + '<br>Printed by Maha Bilal on 11/03/2026 10:07 AM</div></header>' +
+      '<div class="tiles"><div class="tile"><b>' + done.length + '</b>Re-Routes</div><div class="tile"><b>' + rows.filter(r => r.status === 'Active').length + '</b>Active Now</div><div class="tile"><b>' + esc(dur(mins)) + '</b>Time Re-Routed</div><div class="tile"><b>' + tickets + '</b>Tickets Re-Routed</div><div class="tile"><b>' + rows.filter(r => r.status === 'Stopped').length + '</b>Stopped</div></div>' +
+      '<table><thead><tr><th>Status</th><th>Started At</th><th>Original Printer</th><th>Destination</th><th>Prep Areas</th><th>Requested By</th><th>Approved By</th><th>Stopped At</th><th class="n">Tickets</th><th class="n">Duration</th></tr></thead><tbody>' + (tr || '<tr><td colspan="10">No re-routes for this period and filter.</td></tr>') + '</tbody>' +
+      '<tfoot><tr><td colspan="8">Total · ' + done.length + ' re-routes</td><td class="n">' + tickets + '</td><td class="n">' + esc(dur(mins)) + '</td></tr></tfoot></table>' +
+      '<footer><span>Plum POS · Dashboard</span><span>Re-routing never changes printer configuration. Approvals and every step are kept in the audit log.</span></footer></body></html>';
+    var f = document.createElement('iframe');
+    f.setAttribute('title', 'Printer Re-Routing Report print');
+    f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';
+    document.body.appendChild(f);
+    var d = f.contentWindow.document; d.open(); d.write(html); d.close();
+    window.__lastPrintHtml = html;
+    setTimeout(() => { try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) {} setTimeout(() => { if (f.parentNode) f.parentNode.removeChild(f); }, 1500); }, 250);
+  }
+  exportCsv() {
+    var rows = this.reportData(), q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+    var csv = ['Status,Started At,Original Printer,Destination,Prep Areas,Requested By,Approved By,Stopped At,Tickets,Duration'].concat(rows.map(r => [r.status, r.start, BP[r.from].name, BP[r.to].name, r.areas, r.by, r.approver, r.status === 'Active' ? 'Active' : (r.stopped || ''), r.tickets, dur(r.mins)].map(q).join(','))).join('\n');
+    try { var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'printer-re-routing-report.csv'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); } catch (e) {}
+  }
+  renderVals() {
+    var s = this.state;
+    var spn = this.span();
+    var inPeriod = RR.filter(r => r.day >= spn[0] && r.day <= spn[1]);
+    var q = s.search.trim().toLowerCase();
+    var match = r => !q || [BP[r.from].name, BP[r.to].name, r.by, r.approver, r.stoppedBy].join(' ').toLowerCase().indexOf(q) >= 0;
+    var FIL = { all: () => true, active: r => r.status === 'Active', stopped: r => r.status === 'Stopped' };
+    var shown = inPeriod.filter(FIL[s.filter]).filter(match);
+    var activeRR = RR.filter(r => r.status === 'Active');
+    var done = inPeriod;
+    var mins = done.reduce((a, r) => a + r.mins, 0), tickets = done.reduce((a, r) => a + r.tickets, 0);
+    var agg = {}; done.forEach(r => { var g = agg[r.from] || (agg[r.from] = { n: 0, m: 0, t: 0 }); g.n++; g.m += r.mins; g.t += r.tickets; });
+    var maxC = Math.max(1, ...Object.values(agg).map(g => g.n));
+    var setF = f => () => this.setState({ filter: f, view: 'routes' });
+    var tiles = [
+      { value: String(done.length), label: 'Re-Routes', bg: '#EF4258', f: 'all' },
+      { value: String(inPeriod.filter(r => r.status === 'Active').length), label: 'Active Now', bg: '#F5A54A', f: 'active' },
+      { value: dur(mins), label: 'Time Re-Routed', bg: '#1BB28B', f: 'all' },
+      { value: String(tickets), label: 'Tickets Re-Routed', bg: '#1DC8D8', f: 'all' },
+      { value: String(inPeriod.filter(r => r.status === 'Stopped').length), label: 'Stopped', bg: '#7A6FCF', f: 'stopped' }
+    ].map(t => Object.assign(t, { press: setF(t.f), ring: s.filter === t.f && t.f !== 'all' ? 'inset 0 0 0 3px rgba(255,255,255,0.8)' : 'none' }));
+    var rows = shown.map(r => { var st = ST[r.status]; var sel = s.drawer && s.drawer.id === r.id;
+      return { id: r.id, status: r.status, stFg: st[0], stBg: st[1], start: r.start, from: BP[r.from].name, to: BP[r.to].name, areas: r.areas, by: r.by.split(' (')[0], approver: r.approver.split(' (')[0], stopped: r.status === 'Active' ? 'Active' : (r.stopped || '–'), stopFg: r.status === 'Active' ? '#9A4A00' : '#1F2433', tickets: String(r.tickets), duration: dur(r.mins), bg: sel ? '#EEF3FF' : (r.status === 'Active' ? '#FFFBF4' : '#FFFFFF'), aria: 'View details: ' + BP[r.from].name + ' to ' + BP[r.to].name + ', ' + r.start, open: () => this.setState({ drawer: { kind: 'rr', id: r.id } }) }; });
+    // audit
+    var aud = [];
+    inPeriod.forEach(r => r.timeline.forEach(e => aud.push({ day: r.day, dayLabel: r.day === 0 ? 'Today' : r.start.split(' ')[0], time: e[0], dot: e[1], text: e[2], ref: r.id, route: BP[r.from].name + ' → ' + BP[r.to].name, status: r.status })));
+    var kindIcon = d => d === '#1E9E5A' ? ['✓', '#DDF4E7', '#1E7A45'] : (d === '#7A6FCF' ? ['↪', '#ECE8FB', '#5B4BC4'] : ['i', '#E3EEFF', '#1A5CFF']);
+    var auditDays = [];
+    aud.filter(e => match(RR.filter(r => r.id === e.ref)[0])).filter(e => FIL[s.filter](RR.filter(r => r.id === e.ref)[0])).forEach(e => {
+      var g = auditDays[auditDays.length - 1]; if (!g || g.label !== e.dayLabel) auditDays.push(g = { label: e.dayLabel, items: [] });
+      var ic = kindIcon(e.dot), bad = false;
+      g.items.push({ time: e.time.replace(' AM', 'a').replace(' PM', 'p'), icon: ic[0], iconBg: ic[1], iconFg: ic[2], sentence: e.text, detail: '', ref: e.ref, route: e.route, badge: bad ? 'Problem' : (e.dot === '#1E9E5A' ? 'Confirmed' : 'Info'), badgeFg: bad ? '#B42318' : (e.dot === '#1E9E5A' ? '#1E7A45' : '#1A5CFF'), badgeBg: bad ? '#FDE3E1' : (e.dot === '#1E9E5A' ? '#DDF4E7' : '#E3EEFF') });
+    });
+    // printers page
+    var printers = ORDER.map(k => { var p = BP[k];
+      var out = activeRR.filter(r => r.from === k)[0], inc = activeRR.filter(r => r.to === k)[0];
+      var rr = out ? { label: 'Re-routed → ' + BP[out.to].name, sub: 'since ' + out.start.split(' ').slice(1).join(' ') + ' · ' + out.areas, bg: '#FFE8CC', fg: '#7A3300', border: '#F2C792' }
+        : (inc ? { label: 'Receiving from ' + BP[inc.from].name, sub: 'printing ' + inc.areas + ' tickets', bg: '#ECE8FB', fg: '#4B3BA8', border: '#CFC6F5' } : null);
+      return Object.assign({}, p, { rr: rr, noRr: !rr, bg: out ? '#FFFBF4' : (inc ? '#FAF9FF' : '#FFFFFF'), weight: rr ? 600 : 400 }); });
+    var a = activeRR[0];
+    var drawer = null;
+    if (s.drawer) { var r = RR.filter(x => x.id === s.drawer.id)[0]; if (r) drawer = this.rrDrawer(r, s.page === 'report'); }
+    return {
+      pageReport: s.page === 'report', pagePrinters: s.page === 'printers', appLabel: s.page === 'report' ? 'My App' : 'My Apps',
+      sideItems: SIDE.map(l => ({ label: l, isNew: l === 'Printer Re-Routing Report', current: l === 'Printer Re-Routing Report' ? 'page' : 'false', bg: l === 'Printer Re-Routing Report' ? '#6B2A5E' : 'transparent', press: (e) => { if (e && e.preventDefault) e.preventDefault(); } })),
+      rangeText: this.rangeText(),
+      periodLabel: ([['today', 'Today'], ['dayLastWeek', 'This Day Last Week'], ['yesterday', 'Yesterday'], ['dayLastYear', 'This Day Last Year'], ['thisMonth', 'This Month'], ['lastMonth', 'Last Month'], ['range', 'Range'], ['thisWeek', 'This Week'], ['lastWeek', 'Last Week'], ['custom', 'Custom']].filter(o => o[0] === s.pkey)[0] || [0, 'Range'])[1],
+      calOpen: s.calOpen, toggleCal: () => this.setState({ calOpen: !this.state.calOpen, pend: this.state.pkey }),
+      calOptions: [['today', 'Today'], ['dayLastWeek', 'This Day Last Week'], ['yesterday', 'Yesterday'], ['dayLastYear', 'This Day Last Year'], ['thisMonth', 'This Month'], ['lastMonth', 'Last Month'], ['range', 'Range'], ['thisWeek', 'This Week'], ['lastWeek', 'Last Week'], ['custom', 'Custom']].map(o => ({ label: o[1], on: s.pend === o[0], pick: () => this.setState({ pend: o[0] }) })),
+      calCustom: s.pend === 'custom', calFrom: s.cfrom, calTo: s.cto,
+      onFrom: (e) => this.setState({ cfrom: e.target.value || this.state.cfrom }), onTo: (e) => this.setState({ cto: e.target.value || this.state.cto }),
+      calClear: () => this.setState({ pend: 'range', pkey: 'range', shift: 0, calOpen: false }),
+      calApply: () => this.setState({ pkey: this.state.pend, shift: 0, calOpen: false }),
+      prevDay: () => this.setState({ shift: this.state.shift + (spn[1] - spn[0] + 1) }), nextDay: () => this.setState({ shift: Math.max(0, this.state.shift - (spn[1] - spn[0] + 1)) }),
+      nextDisabled: s.shift === 0 || s.pkey === 'custom', nextFg: s.shift === 0 ? '#C9CDD3' : '#E2533F',
+      tiles: tiles,
+      byPrinter: Object.keys(agg).sort((a, b) => agg[b].n - agg[a].n).map(k => ({ label: BP[k].name, value: String(agg[k].n), time: dur(agg[k].m), tickets: String(agg[k].t), pct: Math.round(agg[k].n / maxC * 100) + '%' })), noByPrinter: Object.keys(agg).length === 0,
+      views: [['routes', 'Re-Routes'], ['audit', 'Audit Log']].map(v => ({ label: v[1], on: s.view === v[0], bg: s.view === v[0] ? '#B5277F' : 'transparent', fg: s.view === v[0] ? '#FFFFFF' : '#4A5065', pick: () => this.setState({ view: v[0] }) })),
+      filters: [['all', 'All'], ['active', 'Active'], ['stopped', 'Stopped']].map(f => { var on = s.filter === f[0]; return { label: f[1], count: String(inPeriod.filter(FIL[f[0]]).length), on: on, bg: on ? '#0F1D40' : '#FFFFFF', fg: on ? '#FFFFFF' : '#4A5065', border: on ? '#0F1D40' : '#D7DAE3', pick: () => this.setState({ filter: f[0] }) }; }),
+      printReport: () => this.printReport(), exportCsv: () => this.exportCsv(),
+      search: s.search, onSearch: (e) => this.setState({ search: e.target.value }),
+      viewRoutes: s.view === 'routes', viewAudit: s.view === 'audit', rows: rows, noRows: rows.length === 0,
+      totalText: shown.length + (shown.length === 1 ? ' re-route' : ' re-routes'), totalTickets: String(shown.reduce((x, r) => x + r.tickets, 0)), totalDuration: dur(shown.reduce((x, r) => x + r.mins, 0)),
+      auditDays: auditDays,
+      printers: printers, hasActive: !!a,
+      bannerTitle: a ? activeRR.length + ' printer temporarily re-routed: ' + BP[a.from].name + ' → ' + BP[a.to].name : '',
+      bannerText: a ? 'Since ' + a.start + ' · ' + a.areas + ' · requested by ' + a.by.split(' (')[0] + ', approved by ' + a.approver.split(' (')[0] + '. The printer setup below has not been changed; re-routing is applied on the store’s POS until someone stops it.' : '',
+      bannerView: () => a && this.setState({ drawer: { kind: 'pr', id: a.id } }),
+      toReport: () => this.setState({ page: 'report', drawer: null }),
+      drawer: drawer, closeDrawer: () => this.setState({ drawer: null })
+    };
+  }
+}
+
+DC.define("bo-report", document.getElementById("tpl-bo-report").textContent, Component, {"page": {"editor": "enum", "options": ["report", "printers"], "default": "report", "section": "Back Office"}, "$preview": {"width": 1440, "height": 900}}, {w:1440,h:900});
+})();</script><script type="text/x-template" id="tpl-bo-printers">
+
+<div class="bo" style="width: 1440px; height: 900px; position: relative; overflow: hidden; background: #F3F4F7; color: #1F2433; font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; font-size: 13px; display: flex; flex-direction: column">
+
+  <!-- Top bar -->
+  <header style="height: 50px; flex: 0 0 auto; background: #0D1B3E; display: flex; align-items: center; gap: 18px; padding: 0 16px; color: #FFFFFF">
+    <div style="width: 34px; height: 34px; border-radius: 8px; background: #FFFFFF; display: flex; align-items: center; justify-content: center"><span style="width: 22px; height: 22px; border-radius: 50%; background: #8E2C6E; display: block"></span></div>
+    <span style="display: flex; align-items: center; gap: 6px; font-size: 13px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>{{appLabel}} ▾</span>
+    <sc-if value="{{pageReport}}" hint-placeholder-val="{{ true }}">
+      <span style="display: flex; align-items: center; gap: 6px; font-size: 13px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>Apple Valley #020 Dunn Brothe...</span>
+      <span style="margin-left: auto; margin-right: auto; font-size: 13px">60°F  |  10:07 America/Chicago</span>
+    </sc-if>
+    <sc-if value="{{pagePrinters}}" hint-placeholder-val="{{ false }}"><span style="margin-left: auto"></span></sc-if>
+    <span style="background: #FFFFFF; color: #1F2433; border-radius: 18px; padding: 7px 16px; font-size: 13px; display: flex; align-items: center; gap: 8px"><span style="color: #E2533F">▦</span>Maha Bilal ▾</span>
+    <span style="width: 32px; height: 32px; border-radius: 50%; background: #D7DAE3; display: block"></span>
+  </header>
+
+  <!-- ================= Dashboard › Printer Re-Routing Report ================= -->
+  <sc-if value="{{pageReport}}" hint-placeholder-val="{{ true }}">
+    <div style="flex: 1 1 auto; display: flex; min-height: 0">
+      <nav class="bo-side" aria-label="Reports" style="width: 270px; flex: 0 0 auto; background: #0F1D40; overflow-y: auto; padding: 6px 0">
+        <sc-for list="{{sideItems}}" as="it" hint-placeholder-count="20">
+          <a href="#" onClick="{{it.press}}" aria-current="{{it.current}}" style="display: flex; align-items: center; gap: 12px; padding: 9px 16px; color: #FFFFFF; text-decoration: none; font-size: 12.5px; background: {{it.bg}}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C9CFDD" stroke-width="1.6" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
+            <span style="flex: 1 1 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.label}}</span>
+            <sc-if value="{{it.isNew}}" hint-placeholder-val="{{ false }}"><span style="font-size: 10px; font-weight: 700; background: #F5A54A; color: #0F1D40; border-radius: 8px; padding: 1px 6px">NEW</span></sc-if>
+          </a>
+        </sc-for>
+      </nav>
+
+      <main style="flex: 1 1 auto; min-width: 0; overflow-y: auto; padding: 0 18px 18px">
+        <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; position: relative">
+          <div style="position: relative">
+            <button type="button" onClick="{{toggleCal}}" aria-expanded="{{calOpen}}" aria-haspopup="dialog" style="min-width: 150px; height: 36px; padding: 0 14px; border: 1px solid #AEB4C2; border-radius: 18px; background: #FFFFFF; color: #1F2433; font-size: 13px; display: flex; align-items: center; justify-content: space-between; gap: 12px">{{periodLabel}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A5065" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+            <sc-if value="{{calOpen}}" hint-placeholder-val="{{ false }}">
+              <div role="dialog" aria-label="Choose period" style="position: absolute; left: 0; top: 44px; width: 380px; background: #FFFFFF; border-radius: 6px; box-shadow: 0 6px 20px rgba(13,27,62,0.22); z-index: 20; padding: 14px 0 0">
+                <div role="radiogroup" aria-label="Period" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; padding: 0 16px 12px">
+                  <sc-for list="{{calOptions}}" as="o" hint-placeholder-count="10">
+                    <label style="display: flex; align-items: center; gap: 10px; height: 32px; font-size: 13px; color: #1F2433; cursor: pointer">
+                      <input type="radio" name="bo-period" checked="{{o.on}}" onChange="{{o.pick}}" style="width: 15px; height: 15px; margin: 0; accent-color: #1565C0"/>{{o.label}}
+                    </label>
+                  </sc-for>
+                </div>
+                <sc-if value="{{calCustom}}" hint-placeholder-val="{{ false }}">
+                  <div style="display: flex; gap: 10px; padding: 0 16px 12px">
+                    <label style="flex: 1 1 0; display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; color: #4A5065">From<input type="date" value="{{calFrom}}" onChange="{{onFrom}}" style="height: 30px; border: 1px solid #D7DAE3; border-radius: 4px; padding: 0 6px; font-size: 12px"/></label>
+                    <label style="flex: 1 1 0; display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; color: #4A5065">To<input type="date" value="{{calTo}}" onChange="{{onTo}}" style="height: 30px; border: 1px solid #D7DAE3; border-radius: 4px; padding: 0 6px; font-size: 12px"/></label>
+                  </div>
+                </sc-if>
+                <div style="display: flex; justify-content: space-between; padding: 12px 16px; border-top: 1px solid #E5E7EE">
+                  <button type="button" onClick="{{calClear}}" style="height: 28px; padding: 0 18px; border: 0; border-radius: 14px; background: #D32F2F; color: #FFFFFF; font-size: 12.5px; font-weight: 600">Clear</button>
+                  <button type="button" onClick="{{calApply}}" style="height: 28px; padding: 0 18px; border: 0; border-radius: 14px; background: #1E7FA8; color: #FFFFFF; font-size: 12.5px; font-weight: 600">Apply</button>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          <div style="display: flex; align-items: center; height: 36px; border: 1px solid #D7DAE3; border-radius: 18px; background: #FFFFFF; overflow: hidden">
+            <button type="button" onClick="{{prevDay}}" aria-label="Previous" style="width: 36px; height: 36px; border: 0; border-right: 1px solid #E5E7EE; background: transparent; color: #E2533F; font-size: 16px">‹</button>
+            <span style="padding: 0 14px; display: flex; align-items: center; gap: 8px; color: #4A5065; font-size: 13px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8A90A2" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>{{rangeText}}<span style="color: #E2533F">⌄</span></span>
+            <button type="button" onClick="{{nextDay}}" disabled="{{nextDisabled}}" aria-label="Next" style="width: 36px; height: 36px; border: 0; border-left: 1px solid #E5E7EE; background: transparent; color: {{nextFg}}; font-size: 16px">›</button>
+          </div>
+          <h1 style="flex: 1 1 auto; text-align: center; margin: 0; font-size: 16px; font-weight: 700">Printer Re-Routing Report</h1>
+          <span style="font-weight: 600; font-size: 12.5px">Last updated on 11/03/2026 10:06 AM</span>
+        </div>
+
+        <!-- KPI tiles -->
+        <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+          <sc-for list="{{tiles}}" as="t" hint-placeholder-count="5">
+            <button type="button" onClick="{{t.press}}" style="height: 68px; border: 0; border-radius: 2px; background: {{t.bg}}; color: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: {{t.ring}}">
+              <span style="font-size: 23px; line-height: 1.1">{{t.value}}</span><span style="font-size: 12.5px">{{t.label}}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <!-- By printer -->
+        <section style="background: #FFFFFF; border: 1px solid #E5E7EE; padding: 12px 16px; margin-top: 14px">
+          <div style="display: grid; grid-template-columns: 200px minmax(0, 1fr) 110px 110px 100px; gap: 12px; align-items: center; padding-bottom: 6px; border-bottom: 1px solid #EEF0F4; font-weight: 600">
+            <h2 style="margin: 0; font-size: 13.5px; font-weight: 600">Re-routes by original printer</h2><span></span>
+            <span style="text-align: right; color: #8A90A2; font-size: 12px">Re-routes</span><span style="text-align: right; color: #8A90A2; font-size: 12px">Time</span><span style="text-align: right; color: #8A90A2; font-size: 12px">Tickets</span>
+          </div>
+          <sc-for list="{{byPrinter}}" as="b" hint-placeholder-count="3">
+            <div style="display: grid; grid-template-columns: 200px minmax(0, 1fr) 110px 110px 100px; gap: 12px; align-items: center; padding: 7px 0">
+              <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{b.label}}</span>
+              <span style="height: 12px; background: #EEF1F6; border-radius: 6px; overflow: hidden"><span style="display: block; height: 12px; width: {{b.pct}}; background: #4BA8E0; border-radius: 6px"></span></span>
+              <span style="text-align: right">{{b.value}}</span><span style="text-align: right">{{b.time}}</span><span style="text-align: right">{{b.tickets}}</span>
+            </div>
+          </sc-for>
+          <sc-if value="{{noByPrinter}}" hint-placeholder-val="{{ false }}"><div style="padding: 10px 0; color: #8A90A2">No re-routes in this period.</div></sc-if>
+        </section>
+
+        <!-- Table card -->
+        <section style="background: #FFFFFF; border: 1px solid #E5E7EE; margin-top: 14px">
+          <div style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #E5E7EE">
+            <sc-for list="{{views}}" as="v" hint-placeholder-count="2"><button type="button" onClick="{{v.pick}}" aria-pressed="{{v.on}}" style="height: 30px; padding: 0 16px; border: 0; border-radius: 15px; background: {{v.bg}}; color: {{v.fg}}; font-size: 12.5px; font-weight: 600">{{v.label}}</button></sc-for>
+            <span style="width: 1px; height: 22px; background: #E5E7EE; margin: 0 4px"></span>
+            <sc-for list="{{filters}}" as="f" hint-placeholder-count="4"><button type="button" onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="height: 28px; padding: 0 12px; border: 1px solid {{f.border}}; border-radius: 14px; background: {{f.bg}}; color: {{f.fg}}; font-size: 12px">{{f.label}} <span style="opacity: 0.7">{{f.count}}</span></button></sc-for>
+            <span style="flex: 1 1 auto"></span>
+            <label style="display: flex; align-items: center; gap: 6px; border: 1px solid #D7DAE3; border-radius: 4px; padding: 0 10px; height: 30px; color: #8A90A2"><span aria-hidden="true">⌕</span><input type="search" aria-label="Search printer or user" placeholder="Search printer or user" value="{{search}}" onChange="{{onSearch}}" style="border: 0; outline: none; width: 220px; font-size: 12px; color: #1F2433"/></label>
+            <button type="button" onClick="{{exportCsv}}" style="height: 30px; padding: 0 14px; border: 1px solid #1A5CFF; border-radius: 4px; background: #FFFFFF; color: #1A5CFF; font-size: 12px; font-weight: 600">Export CSV</button>
+            <button type="button" onClick="{{printReport}}" style="height: 30px; padding: 0 14px; border: 0; border-radius: 4px; background: #1A5CFF; color: #FFFFFF; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"></path><rect x="3" y="9" width="18" height="8" rx="2"></rect><path d="M6 14h12v7H6z"></path></svg>Print / PDF</button>
+          </div>
+
+          <sc-if value="{{viewRoutes}}" hint-placeholder-val="{{ true }}">
+            <table style="width: 100%; border-collapse: collapse; font-size: 12px">
+              <thead>
+                <tr style="background: #F0F1F4; text-align: left">
+                  <th scope="col" style="padding: 9px 10px; font-weight: 600">Status</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600">Started At</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600">Original Printer</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600">Destination</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600">Prep Areas</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600">Requested By</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600">Approved By</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600">Stopped At</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600; text-align: right">Tickets</th>
+                  <th scope="col" style="padding: 9px 8px; font-weight: 600; text-align: right">Duration</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+                  <tr class="bo-row" style="border-bottom: 1px solid #EEF0F4; background: {{r.bg}}">
+                    <td style="padding: 9px 10px"><span style="font-size: 11px; font-weight: 700; color: {{r.stFg}}; background: {{r.stBg}}; border-radius: 10px; padding: 2px 9px; white-space: nowrap">{{r.status}}</span></td>
+                    <td style="padding: 9px 8px; white-space: nowrap">{{r.start}}</td>
+                    <td style="padding: 9px 8px"><button type="button" onClick="{{r.open}}" aria-label="{{r.aria}}" class="bo-link" style="font-size: 12px; font-weight: 600; text-align: left">{{r.from}}</button></td>
+                    <td style="padding: 9px 8px">{{r.to}}</td>
+                    <td style="padding: 9px 8px">{{r.areas}}</td>
+                    <td style="padding: 9px 8px">{{r.by}}</td>
+                    <td style="padding: 9px 8px">{{r.approver}}</td>
+                    <td style="padding: 9px 8px; white-space: nowrap; color: {{r.stopFg}}">{{r.stopped}}</td>
+                    <td style="padding: 9px 8px; text-align: right">{{r.tickets}}</td>
+                    <td style="padding: 9px 8px; text-align: right; white-space: nowrap">{{r.duration}}</td>
+                  </tr>
+                </sc-for>
+                <tr style="color: #B5277F; font-weight: 600">
+                  <td style="padding: 10px" colspan="8">Total · {{totalText}}</td>
+                  <td style="padding: 10px 8px; text-align: right">{{totalTickets}}</td>
+                  <td style="padding: 10px 8px; text-align: right">{{totalDuration}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <sc-if value="{{noRows}}" hint-placeholder-val="{{ false }}"><div style="padding: 24px; text-align: center; color: #8A90A2">No re-routes match this filter.</div></sc-if>
+          </sc-if>
+
+          <sc-if value="{{viewAudit}}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 4px 16px 14px">
+              <sc-for list="{{auditDays}}" as="day" hint-placeholder-count="2">
+                <div style="font-size: 12px; font-weight: 700; color: #B5277F; padding: 10px 0 6px; border-bottom: 1px solid #EEF0F4">{{day.label}}</div>
+                <ol style="list-style: none; margin: 0; padding: 0">
+                  <sc-for list="{{day.items}}" as="e" hint-placeholder-count="3">
+                    <li style="display: grid; grid-template-columns: 64px 30px minmax(0, 1fr) 230px auto; gap: 10px; align-items: start; padding: 9px 0; border-bottom: 1px solid #F3F4F7">
+                      <span style="color: #8A90A2; text-align: right; padding-top: 4px">{{e.time}}</span>
+                      <span aria-hidden="true" style="width: 26px; height: 26px; border-radius: 50%; background: {{e.iconBg}}; color: {{e.iconFg}}; display: flex; align-items: center; justify-content: center; font-weight: 700">{{e.icon}}</span>
+                      <span><span style="display: block; font-size: 12.5px">{{e.sentence}}</span><span style="display: block; color: #8A90A2; font-size: 11.5px">{{e.detail}}</span></span>
+                      <span style="color: #8A90A2; font-size: 11.5px; padding-top: 4px">{{e.route}}</span>
+                      <span style="font-size: 11px; font-weight: 700; color: {{e.badgeFg}}; background: {{e.badgeBg}}; border-radius: 10px; padding: 2px 9px; white-space: nowrap; margin-top: 3px">{{e.badge}}</span>
+                    </li>
+                  </sc-for>
+                </ol>
+              </sc-for>
+            </div>
+          </sc-if>
+        </section>
+      </main>
+    </div>
+  </sc-if>
+
+  <!-- ================= Manage Account › App Settings › Plum POS › Printers ================= -->
+  <sc-if value="{{pagePrinters}}" hint-placeholder-val="{{ false }}">
+    <div style="flex: 1 1 auto; overflow-y: auto">
+      <nav aria-label="Breadcrumb" style="background: #FFFFFF; border-bottom: 1px solid #E5E7EE; padding: 10px 14px; font-size: 12px; display: flex; gap: 10px">
+        <span>Manage Account</span><span style="color: #B5277F">›</span><span>App Settings</span><span style="color: #B5277F">›</span><span>Plum POS</span><span style="color: #B5277F">›</span><span style="color: #B5277F; font-weight: 600">Printers</span>
+      </nav>
+      <section style="margin: 10px; background: #FFFFFF; border: 1px solid #E5E7EE; border-radius: 4px">
+        <div style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid #E5E7EE">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B5277F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"></path><rect x="3" y="9" width="18" height="8" rx="2"></rect><path d="M6 14h12v7H6z"></path></svg>
+          <h1 style="margin: 0; font-size: 14.5px; font-weight: 600">Printers</h1>
+        </div>
+        <div style="padding: 12px 14px 4px">Please add or update the Printers currently in use at the store. <span style="color: #E2533F">(Label Printer feature will be available for subscribed stores only.)</span></div>
+
+
+        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 12px 14px">
+          <span style="font-weight: 600; font-size: 12px">Select Store to View IP Address</span>
+          <span style="border: 1px solid #D7DAE3; border-radius: 4px; padding: 7px 12px; min-width: 170px; color: #4A5065">Apple Valley #020 Dunn ... ▾</span>
+          <button type="button" style="height: 30px; padding: 0 16px; border: 0; border-radius: 15px; background: #1A5CFF; color: #FFFFFF; font-weight: 600; font-size: 12px">+ ADD</button>
+        </div>
+
+        <div style="padding: 0 14px 14px">
+          <table style="width: 100%; border-collapse: collapse; font-size: 12px">
+            <thead>
+              <tr style="background: #F0F1F4">
+                <th scope="col" style="padding: 9px 8px; font-weight: 600">External ID</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600">ID</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600; text-align: left">Printer Name</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600">IP Address</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600">KDS Adaptor</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600">Printer Type</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600; text-align: left">Prep Areas</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600; text-align: left; background: #FFF1DD">Re-Routing</th>
+                <th scope="col" style="padding: 9px 8px; font-weight: 600">Action(s)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{printers}}" as="p" hint-placeholder-count="8">
+                <tr class="bo-row" style="border-bottom: 1px solid #EEF0F4; background: {{p.bg}}">
+                  <td style="padding: 8px; text-align: center">-</td>
+                  <td style="padding: 8px; text-align: center">{{p.num}}</td>
+                  <td style="padding: 8px; font-weight: {{p.weight}}">{{p.name}}</td>
+                  <td style="padding: 8px; text-align: center">{{p.ip}}</td>
+                  <td style="padding: 8px; text-align: center">{{p.adaptor}}</td>
+                  <td style="padding: 8px; text-align: center">{{p.type}}</td>
+                  <td style="padding: 8px">{{p.areas}}</td>
+                  <td style="padding: 8px">
+                    <sc-if value="{{p.rr}}" hint-placeholder-val="{{ false }}">
+                      <span style="display: inline-block; border: 1px solid {{p.rr.border}}; background: {{p.rr.bg}}; color: {{p.rr.fg}}; border-radius: 12px; padding: 3px 10px; font-size: 11.5px; font-weight: 600">{{p.rr.label}}</span>
+                      <span style="display: block; color: #8A90A2; font-size: 11px; margin-top: 2px">{{p.rr.sub}}</span>
+                    </sc-if>
+                    <sc-if value="{{p.noRr}}" hint-placeholder-val="{{ true }}"><span style="color: #A0A5B4">–</span></sc-if>
+                  </td>
+                  <td style="padding: 8px; text-align: center; white-space: nowrap">
+                    <button type="button" aria-label="Edit {{p.name}}" style="border: 0; background: transparent; color: #1A9FE0; font-size: 15px">✎</button>
+                    <button type="button" aria-label="Delete {{p.name}}" style="border: 0; background: transparent; color: #E2533F; font-size: 15px">🗑</button>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </sc-if>
+
+  <!-- ================= Details drawer (shared) ================= -->
+  <sc-if value="{{drawer}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 50px 0 0 0; background: rgba(13, 27, 62, 0.35); z-index: 10">
+      <aside role="dialog" aria-modal="true" aria-labelledby="dr-title" style="position: absolute; right: 0; top: 0; bottom: 0; width: 520px; background: #FFFFFF; box-shadow: -8px 0 24px rgba(0,0,0,0.18); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px; border-bottom: 1px solid #E5E7EE; display: flex; align-items: flex-start; gap: 12px">
+          <div style="flex: 1 1 auto">
+            <div style="font-size: 11.5px; color: #8A90A2">{{drawer.kicker}}</div>
+            <h2 id="dr-title" style="margin: 2px 0 0; font-size: 16px; font-weight: 600">{{drawer.title}}</h2>
+            <span style="display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 700; color: {{drawer.stFg}}; background: {{drawer.stBg}}; border-radius: 10px; padding: 2px 9px">{{drawer.status}}</span>
+          </div>
+          <button type="button" onClick="{{closeDrawer}}" aria-label="Close details" style="width: 32px; height: 32px; border: 0; border-radius: 50%; background: #F0F1F4; font-size: 16px">✕</button>
+        </div>
+        <div style="flex: 1 1 auto; overflow-y: auto; padding: 14px 18px; display: flex; flex-direction: column; gap: 16px">
+          <div style="display: grid; grid-template-columns: 1fr 30px 1fr; align-items: center">
+            <div style="border: 1px solid #E5E7EE; border-radius: 6px; padding: 8px 10px"><div style="font-size: 11px; color: #8A90A2">Original printer</div><div style="font-weight: 600">{{drawer.from}}</div><div style="font-size: 11.5px; color: #4A5065">{{drawer.fromIp}}</div><div style="font-size: 11.5px; font-weight: 600; color: {{drawer.fromFg}}">{{drawer.fromStatus}}</div></div>
+            <span style="text-align: center; color: #E07B12; font-size: 18px" aria-label="re-routed to">→</span>
+            <div style="border: 1px solid #F2C792; background: #FFFBF5; border-radius: 6px; padding: 8px 10px"><div style="font-size: 11px; color: #8A90A2">Destination</div><div style="font-weight: 600">{{drawer.to}}</div><div style="font-size: 11.5px; color: #4A5065">{{drawer.toIp}}</div><div style="font-size: 11.5px; font-weight: 600; color: {{drawer.toFg}}">{{drawer.toStatus}}</div></div>
+          </div>
+          <div>
+            <h3 style="margin: 0 0 6px; font-size: 13px; font-weight: 600">Details</h3>
+            <dl style="margin: 0; display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 6px 10px; font-size: 12px">
+              <sc-for list="{{drawer.facts}}" as="f" hint-placeholder-count="10"><dt style="color: #8A90A2">{{f.k}}</dt><dd style="margin: 0">{{f.v}}</dd></sc-for>
+            </dl>
+          </div>
+          <div>
+            <h3 style="margin: 0 0 6px; font-size: 13px; font-weight: 600">Troubleshooting checks</h3>
+            <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px">
+              <sc-for list="{{drawer.checks}}" as="c" hint-placeholder-count="4"><li style="display: flex; gap: 8px; font-size: 12px"><span aria-hidden="true" style="width: 18px; height: 18px; border-radius: 50%; background: {{c.bg}}; color: {{c.fg}}; font-weight: 700; font-size: 11px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto">{{c.icon}}</span><span>{{c.text}}</span></li></sc-for>
+            </ul>
+          </div>
+          <div>
+            <h3 style="margin: 0 0 6px; font-size: 13px; font-weight: 600">Timeline</h3>
+            <ol style="list-style: none; margin: 0; padding: 0">
+              <sc-for list="{{drawer.timeline}}" as="e" hint-placeholder-count="4"><li style="display: grid; grid-template-columns: 64px 12px minmax(0, 1fr); gap: 8px; padding: 5px 0; font-size: 12px"><span style="color: #8A90A2; text-align: right">{{e.time}}</span><span style="width: 8px; height: 8px; border-radius: 50%; background: {{e.dot}}; margin-top: 5px"></span><span>{{e.text}}</span></li></sc-for>
+            </ol>
+          </div>
+          <div style="background: #F3F6FF; border: 1px solid #C9D5F5; border-radius: 6px; padding: 10px 12px; font-size: 12px; color: #26386B">{{drawer.note}}</div>
+        </div>
+        <div style="padding: 12px 18px; border-top: 1px solid #E5E7EE; display: flex; gap: 10px; justify-content: flex-end">
+          <button type="button" onClick="{{drawer.altPress}}" style="height: 32px; padding: 0 14px; border: 1px solid #1A5CFF; border-radius: 4px; background: #FFFFFF; color: #1A5CFF; font-size: 12px; font-weight: 600">{{drawer.altLabel}}</button>
+          <button type="button" onClick="{{closeDrawer}}" style="height: 32px; padding: 0 16px; border: 0; border-radius: 4px; background: #1A5CFF; color: #FFFFFF; font-size: 12px; font-weight: 600">Close</button>
+        </div>
+      </aside>
+    </div>
+  </sc-if>
+</div>
+</script>
+<script>(function(){
+
+var BP = {
+  a: { num: 1, name: 'Kitchen Printer A', ip: '192.168.20.187', adaptor: 'Escp', type: 'Kitchen Printer', areas: 'Hot Line, Grill', status: 'Offline', statusSub: 'since 11/02 11:52 PM', stFg: '#D0382B' },
+  b: { num: 2, name: 'Kitchen Printer B', ip: '192.168.20.188', adaptor: 'Escp', type: 'Kitchen Printer', areas: 'Hot Line', status: 'Online', statusSub: 'checked 10:05 AM', stFg: '#1E9E5A' },
+  expo: { num: 3, name: 'Expo Printer', ip: '192.168.20.190', adaptor: 'Escp', type: 'Kitchen Printer', areas: 'Expo', status: 'Online', statusSub: 'checked 10:05 AM', stFg: '#1E9E5A' },
+  cold: { num: 4, name: 'Cold Line Printer', ip: '192.168.20.191', adaptor: 'Escp', type: 'Kitchen Printer', areas: 'Cold Line', status: 'Fault', statusSub: 'paper-feed fault', stFg: '#D97706' },
+  spare: { num: 5, name: 'Spare Kitchen Printer', ip: '192.168.20.193', adaptor: 'Escp', type: 'Kitchen Printer', areas: '0', status: 'Online', statusSub: 'checked 10:05 AM', stFg: '#1E9E5A' },
+  label: { num: 6, name: 'Packaging Label Printer', ip: '192.168.20.199', adaptor: 'Label', type: 'Label Printer', areas: 'Packaging', status: 'Online', statusSub: 'checked 10:05 AM', stFg: '#1E9E5A' },
+  patio: { num: 7, name: 'Patio Bar Printer', ip: '192.168.20.201', adaptor: 'Escp', type: 'Kitchen Printer', areas: 'Patio Bar', status: 'Offline', statusSub: 'since 11/02 10:05 PM', stFg: '#D0382B' },
+  kds: { num: 8, name: 'Food KDS', ip: '10.110.15.55', adaptor: 'ChefTab', type: 'Kitchen Display System', areas: 'Food KDS', status: 'Online', statusSub: 'checked 10:05 AM', stFg: '#1E9E5A' }
+};
+var ORDER = ['a', 'b', 'expo', 'cold', 'spare', 'label', 'patio', 'kds'];
+var RR = [
+  { id: 'RR-1042-0031', status: 'Active', from: 'a', to: 'b', areas: 'Hot Line, Grill', start: '11/03/2026 9:22 AM', day: 0, by: 'D. Emp (Cashier)', approver: 'Meera Joshi (General manager)', method: 'Manager PIN', source: 'Alert(s) › View', terminal: 'POS PRIMARY · acb01b95-448d-4e66-be21-3bbdc5d65a51', confirmed: '9:22:41 AM (1.3 s)', stopped: '', stoppedBy: '', tickets: 41, reprinted: 3, mins: 105, reason: 'Offline',
+    timeline: [['9:21 AM', '#7A6FCF', 'D. Emp opened re-routing from the Kitchen Printer A alert'], ['9:22 AM', '#1E9E5A', 'Meera Joshi approved with manager PIN'], ['9:22 AM', '#1E9E5A', 'Store server confirmed. Hot Line and Grill tickets print on Kitchen Printer B'], ['9:22 AM', '#4BA8E0', '3 waiting tickets reprinted on Kitchen Printer B']] },
+  { id: 'RR-1042-0030', status: 'Stopped', from: 'cold', to: 'spare', areas: 'Cold Line', start: '10/29/2026 11:05 AM', day: 5, by: 'Goutam K. (Store manager)', approver: 'Goutam K. (Store manager)', method: 'Manager PIN', source: 'Support › Printer Re-Routing', terminal: 'POS PRIMARY · acb01b95-448d-4e66-be21-3bbdc5d65a51', confirmed: '11:05:12 AM (0.9 s)', stopped: '10/29/2026 12:20 PM', stoppedBy: 'D. Emp (Cashier)', tickets: 22, reprinted: 0, mins: 75, reason: 'Fault',
+    timeline: [['11:05 AM', '#1E9E5A', 'Goutam K. re-routed Cold Line Printer to Spare Kitchen Printer (approved with his PIN)'], ['12:20 PM', '#8A90A2', 'D. Emp stopped re-routing; Cold Line Printer prints its own tickets again']] },
+  { id: 'RR-1042-0029', status: 'Stopped', from: 'patio', to: 'expo', areas: 'Patio Bar', start: '10/24/2026 6:10 PM', day: 10, by: 'D. Emp (Cashier)', approver: 'Meera Joshi (General manager)', method: 'Manager card', source: 'Alert(s) › View', terminal: 'Register 2 · 5f2c9e10-7a41-4f0b-9d3e-11c2ab7e4f90', confirmed: '6:10:31 PM (1.1 s)', stopped: '10/24/2026 8:45 PM', stoppedBy: 'Goutam K. (Store manager)', tickets: 41, reprinted: 2, mins: 155, reason: 'Offline',
+    timeline: [['6:10 PM', '#1E9E5A', 'D. Emp re-routed Patio Bar Printer to Expo Printer; Meera Joshi approved with manager card'], ['8:45 PM', '#8A90A2', 'Goutam K. stopped re-routing']] },
+  { id: 'RR-1042-0027', status: 'Stopped', from: 'a', to: 'expo', areas: 'Hot Line, Grill', start: '10/12/2026 7:02 PM', day: 22, by: 'Goutam K. (Store manager)', approver: 'Goutam K. (Store manager)', method: 'Manager PIN', source: 'Terminal Devices', terminal: 'POS PRIMARY · acb01b95-448d-4e66-be21-3bbdc5d65a51', confirmed: '7:02:20 PM (1.0 s)', stopped: '10/12/2026 9:20 PM', stoppedBy: 'Goutam K. (Store manager)', tickets: 64, reprinted: 4, mins: 138, reason: 'Offline',
+    timeline: [['7:02 PM', '#1E9E5A', 'Goutam K. re-routed Kitchen Printer A to Kitchen Printer B'], ['7:31 PM', '#4BA8E0', 'Destination changed to Expo Printer'], ['9:20 PM', '#8A90A2', 'Goutam K. stopped re-routing; original routing restored']] }
+];
+var ST = { Active: ['#9A4A00', '#FFE8CC'], Stopped: ['#4A5065', '#ECEEF3'] };
+var SIDE = ['Weekly Server Summary Report', 'Monthly Sales Report', 'Discount Report', 'Void/Comp Report', 'WSA Report', 'Item Discount Report', 'Credit Card Transaction Report', 'Credit Card Settled Transaction Report', 'Failed Transactions in Batch', 'CC Transaction Report', 'Paid In/Out Report', 'Quickbooks Report', 'House Account Report', 'Gift Card Report', 'Batch Report', 'Printer Re-Routing Report', 'Enable/Disable Online Ordering Report', 'Refund Report', 'Cash Drawer Audit Report', 'Tax Report', 'Employee Time Loss Report', 'User Management', 'Workflow', 'Ai Dashboard', 'Reporting'];
+function dur(m) { if (!m) return '–'; var h = Math.floor(m / 60); return (h ? h + 'h ' : '') + (m % 60) + 'm'; }
+
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { page: props.page || 'report', pkey: 'range', pend: 'range', shift: 0, cfrom: '2026-10-04', cto: '2026-11-03', calOpen: false, view: 'routes', filter: 'all', search: '', drawer: null }; }
+  span() {
+    var s = this.state, k = s.calOpen ? s.pkey : s.pkey;
+    var M = { today: [0, 0], yesterday: [1, 1], thisWeek: [0, 2], lastWeek: [3, 9], thisMonth: [0, 2], lastMonth: [3, 33], dayLastWeek: [7, 7], dayLastYear: [365, 365], range: [0, 30] };
+    if (k === 'custom') { var t = new Date('2026-11-03T00:00:00'), f = new Date(s.cfrom + 'T00:00:00'), e = new Date(s.cto + 'T00:00:00'); return [Math.max(0, Math.round((t - e) / 86400000)), Math.round((t - f) / 86400000)]; }
+    var r = M[k] || M.range; return [r[0] + s.shift, r[1] + s.shift];
+  }
+  componentDidUpdate(prev) { if (prev.page !== this.props.page) this.setState({ page: this.props.page, drawer: null }); }
+  rrDrawer(r, altToPrinters) {
+    var f = BP[r.from], t = BP[r.to], st = ST[r.status] || ST.Stopped;
+    var checks = [];
+    if (r.status === 'Active') {
+      checks.push(f.status !== 'Online' ? { icon: '!', bg: '#FDE3E1', fg: '#B42318', text: f.name + ' is ' + f.status.toLowerCase() + ' (' + f.statusSub + '). Re-routing is covering it.' } : { icon: 'i', bg: '#E3EEFF', fg: '#1A5CFF', text: f.name + ' is back online. Re-routing stays on until someone stops it on the POS.' });
+      checks.push(t.status === 'Online' ? { icon: '✓', bg: '#DDF4E7', fg: '#1E7A45', text: t.name + ' is online (' + t.statusSub + '). Tickets are printing.' } : { icon: '!', bg: '#FDE3E1', fg: '#B42318', text: t.name + ' is ' + t.status.toLowerCase() + '. Tickets are NOT printing. Ask the store to change the destination.' });
+    }
+    checks.push({ icon: '✓', bg: '#DDF4E7', fg: '#1E7A45', text: 'Printer configuration unchanged: IP, prep areas and menu items are the same as before.' });
+    checks.push({ icon: '✓', bg: '#DDF4E7', fg: '#1E7A45', text: 'Approved by ' + r.approver + ' with ' + (r.method === 'Manager PIN' ? 'their manager PIN' : 'a ' + r.method.toLowerCase()) + '.' });
+    return {
+      kicker: 'Printer Re-Routing', title: f.name + ' → ' + t.name, status: r.status, stFg: st[0], stBg: st[1],
+      from: f.name, fromIp: f.ip + ':9100', fromStatus: 'Now: ' + f.status, fromFg: f.stFg, to: t.name, toIp: t.ip + ':9100', toStatus: 'Now: ' + t.status, toFg: t.stFg,
+      facts: [['Prep areas', r.areas], ['Requested by', r.by], ['Approved by', r.approver + (' · ' + r.method)], ['Started from', r.source], ['Terminal', r.terminal], ['Started', r.start], ['Store server confirmed', r.confirmed], ['Stopped', r.stopped ? r.stopped + ' by ' + r.stoppedBy : (r.status === 'Active' ? 'Still active' : '–')], ['Duration', r.status === 'Active' ? dur(r.mins) + ' so far' : dur(r.mins)], ['Tickets re-routed', r.tickets + (r.reprinted ? ' (incl. ' + r.reprinted + ' reprinted from the queue)' : '')], ['Reason', r.reason]].map(x => ({ k: x[0], v: x[1] })),
+      checks: checks, timeline: r.timeline.map(e => ({ time: e[0], dot: e[1], text: e[2] })),
+      note: r.status === 'Active' ? 'Support can’t stop a re-route from the back office. The store stops it on the POS: Functions › Support › Printer Re-Routing › Stop Rerouting.' : 'This re-route has ended. Its full history is kept in the audit log.',
+      altLabel: altToPrinters ? 'Open printer settings' : 'Open in Re-Routing Report',
+      altPress: altToPrinters ? () => this.setState({ page: 'printers', drawer: null }) : () => this.setState({ page: 'report', view: 'routes', filter: 'all', search: BP[r.from].name, drawer: { kind: 'rr', id: r.id } })
+    };
+  }
+  reportData() {
+    var s = this.state, q = s.search.trim().toLowerCase();
+    var FIL = { all: () => true, active: r => r.status === 'Active', stopped: r => r.status === 'Stopped' };
+    var sp = this.span();
+    return RR.filter(r => r.day >= sp[0] && r.day <= sp[1]).filter(FIL[s.filter]).filter(r => !q || [BP[r.from].name, BP[r.to].name, r.by, r.approver, r.stoppedBy].join(' ').toLowerCase().indexOf(q) >= 0);
+  }
+  rangeText() {
+    var sp = this.span(), d = n => { var x = new Date('2026-11-03T00:00:00'); x.setDate(x.getDate() - n); return ('0' + (x.getMonth() + 1)).slice(-2) + '/' + ('0' + x.getDate()).slice(-2) + '/' + x.getFullYear(); };
+    return sp[0] === sp[1] ? d(sp[0]) : d(sp[1]) + ' – ' + d(sp[0]);
+  }
+  printReport() {
+    var rows = this.reportData(), s = this.state;
+    var esc = t => String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    var done = rows;
+    var mins = done.reduce((a, r) => a + r.mins, 0), tickets = done.reduce((a, r) => a + r.tickets, 0);
+    var filt = { all: 'All', active: 'Active', stopped: 'Stopped' }[s.filter] + (s.search ? ' · search “' + s.search + '”' : '');
+    var tr = rows.map(r => '<tr><td>' + esc(r.status) + '</td><td>' + esc(r.start) + '</td><td>' + esc(BP[r.from].name) + '</td><td>' + esc(BP[r.to].name) + '</td><td>' + esc(r.areas) + '</td><td>' + esc(r.by.split(' (')[0]) + '</td><td>' + esc(r.approver.split(' (')[0]) + '</td><td>' + esc(r.status === 'Active' ? 'Active' : (r.stopped || '–')) + '</td><td class="n">' + r.tickets + '</td><td class="n">' + esc(dur(r.mins)) + '</td></tr>').join('');
+    var html = '<!doctype html><html><head><meta charset="utf-8"><title>Printer Re-Routing Report – Apple Valley #020 – ' + esc(this.rangeText()) + '</title><style>' +
+      '@page{size:A4 landscape;margin:14mm}body{font-family:Poppins,Segoe UI,Arial,sans-serif;color:#1F2433;font-size:11px;margin:0}' +
+      'header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #0D1B3E;padding-bottom:8px;margin-bottom:12px}h1{margin:0;font-size:18px}' +
+      '.meta{color:#4A5065;font-size:11px;text-align:right}.tiles{display:flex;gap:8px;margin-bottom:12px}.tile{flex:1;border:1px solid #D7DAE3;border-radius:4px;padding:8px;text-align:center}' +
+      '.tile b{display:block;font-size:16px}table{width:100%;border-collapse:collapse}th{background:#F0F1F4;text-align:left;padding:6px;font-weight:600;border-bottom:1px solid #D7DAE3}' +
+      'td{padding:6px;border-bottom:1px solid #EEF0F4;vertical-align:top}td.n,th.n{text-align:right}tfoot td{font-weight:700;color:#B5277F;border-top:1px solid #1F2433}' +
+      'footer{margin-top:14px;color:#8A90A2;font-size:10px;display:flex;justify-content:space-between}</style></head><body>' +
+      '<header><div><h1>Printer Re-Routing Report</h1><div>Apple Valley #020 Dunn Brothers</div></div><div class="meta">Period: ' + esc(this.rangeText()) + '<br>Filter: ' + esc(filt) + '<br>Printed by Maha Bilal on 11/03/2026 10:07 AM</div></header>' +
+      '<div class="tiles"><div class="tile"><b>' + done.length + '</b>Re-Routes</div><div class="tile"><b>' + rows.filter(r => r.status === 'Active').length + '</b>Active Now</div><div class="tile"><b>' + esc(dur(mins)) + '</b>Time Re-Routed</div><div class="tile"><b>' + tickets + '</b>Tickets Re-Routed</div><div class="tile"><b>' + rows.filter(r => r.status === 'Stopped').length + '</b>Stopped</div></div>' +
+      '<table><thead><tr><th>Status</th><th>Started At</th><th>Original Printer</th><th>Destination</th><th>Prep Areas</th><th>Requested By</th><th>Approved By</th><th>Stopped At</th><th class="n">Tickets</th><th class="n">Duration</th></tr></thead><tbody>' + (tr || '<tr><td colspan="10">No re-routes for this period and filter.</td></tr>') + '</tbody>' +
+      '<tfoot><tr><td colspan="8">Total · ' + done.length + ' re-routes</td><td class="n">' + tickets + '</td><td class="n">' + esc(dur(mins)) + '</td></tr></tfoot></table>' +
+      '<footer><span>Plum POS · Dashboard</span><span>Re-routing never changes printer configuration. Approvals and every step are kept in the audit log.</span></footer></body></html>';
+    var f = document.createElement('iframe');
+    f.setAttribute('title', 'Printer Re-Routing Report print');
+    f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';
+    document.body.appendChild(f);
+    var d = f.contentWindow.document; d.open(); d.write(html); d.close();
+    window.__lastPrintHtml = html;
+    setTimeout(() => { try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) {} setTimeout(() => { if (f.parentNode) f.parentNode.removeChild(f); }, 1500); }, 250);
+  }
+  exportCsv() {
+    var rows = this.reportData(), q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+    var csv = ['Status,Started At,Original Printer,Destination,Prep Areas,Requested By,Approved By,Stopped At,Tickets,Duration'].concat(rows.map(r => [r.status, r.start, BP[r.from].name, BP[r.to].name, r.areas, r.by, r.approver, r.status === 'Active' ? 'Active' : (r.stopped || ''), r.tickets, dur(r.mins)].map(q).join(','))).join('\n');
+    try { var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'printer-re-routing-report.csv'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); } catch (e) {}
+  }
+  renderVals() {
+    var s = this.state;
+    var spn = this.span();
+    var inPeriod = RR.filter(r => r.day >= spn[0] && r.day <= spn[1]);
+    var q = s.search.trim().toLowerCase();
+    var match = r => !q || [BP[r.from].name, BP[r.to].name, r.by, r.approver, r.stoppedBy].join(' ').toLowerCase().indexOf(q) >= 0;
+    var FIL = { all: () => true, active: r => r.status === 'Active', stopped: r => r.status === 'Stopped' };
+    var shown = inPeriod.filter(FIL[s.filter]).filter(match);
+    var activeRR = RR.filter(r => r.status === 'Active');
+    var done = inPeriod;
+    var mins = done.reduce((a, r) => a + r.mins, 0), tickets = done.reduce((a, r) => a + r.tickets, 0);
+    var agg = {}; done.forEach(r => { var g = agg[r.from] || (agg[r.from] = { n: 0, m: 0, t: 0 }); g.n++; g.m += r.mins; g.t += r.tickets; });
+    var maxC = Math.max(1, ...Object.values(agg).map(g => g.n));
+    var setF = f => () => this.setState({ filter: f, view: 'routes' });
+    var tiles = [
+      { value: String(done.length), label: 'Re-Routes', bg: '#EF4258', f: 'all' },
+      { value: String(inPeriod.filter(r => r.status === 'Active').length), label: 'Active Now', bg: '#F5A54A', f: 'active' },
+      { value: dur(mins), label: 'Time Re-Routed', bg: '#1BB28B', f: 'all' },
+      { value: String(tickets), label: 'Tickets Re-Routed', bg: '#1DC8D8', f: 'all' },
+      { value: String(inPeriod.filter(r => r.status === 'Stopped').length), label: 'Stopped', bg: '#7A6FCF', f: 'stopped' }
+    ].map(t => Object.assign(t, { press: setF(t.f), ring: s.filter === t.f && t.f !== 'all' ? 'inset 0 0 0 3px rgba(255,255,255,0.8)' : 'none' }));
+    var rows = shown.map(r => { var st = ST[r.status]; var sel = s.drawer && s.drawer.id === r.id;
+      return { id: r.id, status: r.status, stFg: st[0], stBg: st[1], start: r.start, from: BP[r.from].name, to: BP[r.to].name, areas: r.areas, by: r.by.split(' (')[0], approver: r.approver.split(' (')[0], stopped: r.status === 'Active' ? 'Active' : (r.stopped || '–'), stopFg: r.status === 'Active' ? '#9A4A00' : '#1F2433', tickets: String(r.tickets), duration: dur(r.mins), bg: sel ? '#EEF3FF' : (r.status === 'Active' ? '#FFFBF4' : '#FFFFFF'), aria: 'View details: ' + BP[r.from].name + ' to ' + BP[r.to].name + ', ' + r.start, open: () => this.setState({ drawer: { kind: 'rr', id: r.id } }) }; });
+    // audit
+    var aud = [];
+    inPeriod.forEach(r => r.timeline.forEach(e => aud.push({ day: r.day, dayLabel: r.day === 0 ? 'Today' : r.start.split(' ')[0], time: e[0], dot: e[1], text: e[2], ref: r.id, route: BP[r.from].name + ' → ' + BP[r.to].name, status: r.status })));
+    var kindIcon = d => d === '#1E9E5A' ? ['✓', '#DDF4E7', '#1E7A45'] : (d === '#7A6FCF' ? ['↪', '#ECE8FB', '#5B4BC4'] : ['i', '#E3EEFF', '#1A5CFF']);
+    var auditDays = [];
+    aud.filter(e => match(RR.filter(r => r.id === e.ref)[0])).filter(e => FIL[s.filter](RR.filter(r => r.id === e.ref)[0])).forEach(e => {
+      var g = auditDays[auditDays.length - 1]; if (!g || g.label !== e.dayLabel) auditDays.push(g = { label: e.dayLabel, items: [] });
+      var ic = kindIcon(e.dot), bad = false;
+      g.items.push({ time: e.time.replace(' AM', 'a').replace(' PM', 'p'), icon: ic[0], iconBg: ic[1], iconFg: ic[2], sentence: e.text, detail: '', ref: e.ref, route: e.route, badge: bad ? 'Problem' : (e.dot === '#1E9E5A' ? 'Confirmed' : 'Info'), badgeFg: bad ? '#B42318' : (e.dot === '#1E9E5A' ? '#1E7A45' : '#1A5CFF'), badgeBg: bad ? '#FDE3E1' : (e.dot === '#1E9E5A' ? '#DDF4E7' : '#E3EEFF') });
+    });
+    // printers page
+    var printers = ORDER.map(k => { var p = BP[k];
+      var out = activeRR.filter(r => r.from === k)[0], inc = activeRR.filter(r => r.to === k)[0];
+      var rr = out ? { label: 'Re-routed → ' + BP[out.to].name, sub: 'since ' + out.start.split(' ').slice(1).join(' ') + ' · ' + out.areas, bg: '#FFE8CC', fg: '#7A3300', border: '#F2C792' }
+        : (inc ? { label: 'Receiving from ' + BP[inc.from].name, sub: 'printing ' + inc.areas + ' tickets', bg: '#ECE8FB', fg: '#4B3BA8', border: '#CFC6F5' } : null);
+      return Object.assign({}, p, { rr: rr, noRr: !rr, bg: out ? '#FFFBF4' : (inc ? '#FAF9FF' : '#FFFFFF'), weight: rr ? 600 : 400 }); });
+    var a = activeRR[0];
+    var drawer = null;
+    if (s.drawer) { var r = RR.filter(x => x.id === s.drawer.id)[0]; if (r) drawer = this.rrDrawer(r, s.page === 'report'); }
+    return {
+      pageReport: s.page === 'report', pagePrinters: s.page === 'printers', appLabel: s.page === 'report' ? 'My App' : 'My Apps',
+      sideItems: SIDE.map(l => ({ label: l, isNew: l === 'Printer Re-Routing Report', current: l === 'Printer Re-Routing Report' ? 'page' : 'false', bg: l === 'Printer Re-Routing Report' ? '#6B2A5E' : 'transparent', press: (e) => { if (e && e.preventDefault) e.preventDefault(); } })),
+      rangeText: this.rangeText(),
+      periodLabel: ([['today', 'Today'], ['dayLastWeek', 'This Day Last Week'], ['yesterday', 'Yesterday'], ['dayLastYear', 'This Day Last Year'], ['thisMonth', 'This Month'], ['lastMonth', 'Last Month'], ['range', 'Range'], ['thisWeek', 'This Week'], ['lastWeek', 'Last Week'], ['custom', 'Custom']].filter(o => o[0] === s.pkey)[0] || [0, 'Range'])[1],
+      calOpen: s.calOpen, toggleCal: () => this.setState({ calOpen: !this.state.calOpen, pend: this.state.pkey }),
+      calOptions: [['today', 'Today'], ['dayLastWeek', 'This Day Last Week'], ['yesterday', 'Yesterday'], ['dayLastYear', 'This Day Last Year'], ['thisMonth', 'This Month'], ['lastMonth', 'Last Month'], ['range', 'Range'], ['thisWeek', 'This Week'], ['lastWeek', 'Last Week'], ['custom', 'Custom']].map(o => ({ label: o[1], on: s.pend === o[0], pick: () => this.setState({ pend: o[0] }) })),
+      calCustom: s.pend === 'custom', calFrom: s.cfrom, calTo: s.cto,
+      onFrom: (e) => this.setState({ cfrom: e.target.value || this.state.cfrom }), onTo: (e) => this.setState({ cto: e.target.value || this.state.cto }),
+      calClear: () => this.setState({ pend: 'range', pkey: 'range', shift: 0, calOpen: false }),
+      calApply: () => this.setState({ pkey: this.state.pend, shift: 0, calOpen: false }),
+      prevDay: () => this.setState({ shift: this.state.shift + (spn[1] - spn[0] + 1) }), nextDay: () => this.setState({ shift: Math.max(0, this.state.shift - (spn[1] - spn[0] + 1)) }),
+      nextDisabled: s.shift === 0 || s.pkey === 'custom', nextFg: s.shift === 0 ? '#C9CDD3' : '#E2533F',
+      tiles: tiles,
+      byPrinter: Object.keys(agg).sort((a, b) => agg[b].n - agg[a].n).map(k => ({ label: BP[k].name, value: String(agg[k].n), time: dur(agg[k].m), tickets: String(agg[k].t), pct: Math.round(agg[k].n / maxC * 100) + '%' })), noByPrinter: Object.keys(agg).length === 0,
+      views: [['routes', 'Re-Routes'], ['audit', 'Audit Log']].map(v => ({ label: v[1], on: s.view === v[0], bg: s.view === v[0] ? '#B5277F' : 'transparent', fg: s.view === v[0] ? '#FFFFFF' : '#4A5065', pick: () => this.setState({ view: v[0] }) })),
+      filters: [['all', 'All'], ['active', 'Active'], ['stopped', 'Stopped']].map(f => { var on = s.filter === f[0]; return { label: f[1], count: String(inPeriod.filter(FIL[f[0]]).length), on: on, bg: on ? '#0F1D40' : '#FFFFFF', fg: on ? '#FFFFFF' : '#4A5065', border: on ? '#0F1D40' : '#D7DAE3', pick: () => this.setState({ filter: f[0] }) }; }),
+      printReport: () => this.printReport(), exportCsv: () => this.exportCsv(),
+      search: s.search, onSearch: (e) => this.setState({ search: e.target.value }),
+      viewRoutes: s.view === 'routes', viewAudit: s.view === 'audit', rows: rows, noRows: rows.length === 0,
+      totalText: shown.length + (shown.length === 1 ? ' re-route' : ' re-routes'), totalTickets: String(shown.reduce((x, r) => x + r.tickets, 0)), totalDuration: dur(shown.reduce((x, r) => x + r.mins, 0)),
+      auditDays: auditDays,
+      printers: printers, hasActive: !!a,
+      bannerTitle: a ? activeRR.length + ' printer temporarily re-routed: ' + BP[a.from].name + ' → ' + BP[a.to].name : '',
+      bannerText: a ? 'Since ' + a.start + ' · ' + a.areas + ' · requested by ' + a.by.split(' (')[0] + ', approved by ' + a.approver.split(' (')[0] + '. The printer setup below has not been changed; re-routing is applied on the store’s POS until someone stops it.' : '',
+      bannerView: () => a && this.setState({ drawer: { kind: 'pr', id: a.id } }),
+      toReport: () => this.setState({ page: 'report', drawer: null }),
+      drawer: drawer, closeDrawer: () => this.setState({ drawer: null })
+    };
+  }
+}
+
+DC.define("bo-printers", document.getElementById("tpl-bo-printers").textContent, Component, {"page": {"editor": "enum", "options": ["report", "printers"], "default": "printers", "section": "Back Office"}, "$preview": {"width": 1440, "height": 900}}, {w:1440,h:900});
 })();</script><script type="text/x-template" id="tpl-states">
 
 
